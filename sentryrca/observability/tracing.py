@@ -10,15 +10,16 @@ Usage:
     update_current_span(usage={"total_tokens": 1200}, metadata={"model": "claude-sonnet-4-6"})
 """
 
-import os
 from collections.abc import Callable
 from typing import Any, TypeVar
+
+from sentryrca.config import settings
 
 F = TypeVar("F", bound=Callable[..., Any])
 
 
 def _langfuse_configured() -> bool:
-    return bool(os.getenv("LANGFUSE_HOST") and os.getenv("LANGFUSE_PUBLIC_KEY"))
+    return bool(settings.langfuse_host and settings.langfuse_public_key)
 
 
 def traced(name: str, capture_io: bool = True) -> Callable[[F], F]:
