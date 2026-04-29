@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ─── 1. Lint ───────────────────────────────────────────────────────────────
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Install deps
+        run: uv sync --group dev
+
+      - name: ruff check
+        run: uv run ruff check sentryrca/ tests/
+
+      - name: ruff format check
+        run: uv run ruff format --check sentryrca/ tests/
+
+      - name: mypy
+        run: uv run mypy --strict sentryrca/
+
+  # ─── 2. Test ───────────────────────────────────────────────────────────────
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Install deps
+        run: uv sync --group dev
+
+      - name: pytest
+        run: uv run pytest tests/unit/ tests/schema/ -v --cov=sentryrca --cov-report=xml
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage.xml
+        continue-on-error: true  # don't block CI on coverage upload failures
+
+  # ─── 3. Build ──────────────────────────────────────────────────────────────
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build docker images
+        run: docker compose build
+
+      - name: Smoke-test API health
+        run: |
+          docker compose up -d postgres
+          sleep 5
+          echo "docker compose build succeeded — API smoke test requires week-2 implementation"
+
+      - name: Tear down
+        run: docker compose down -v
+
+  # ─── 4. Eval gate (stub — wired up in week 3) ────────────────────────────
+  eval-gate:
+    name: Eval gate
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Install deps
+        run: uv sync --group dev
+
+      - name: Run fast eval subset
+        run: make eval-fast
+
+  # ─── 5. Security ───────────────────────────────────────────────────────────
+  security:
+    name: Security
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Install deps
+        run: uv sync --group dev
+
+      - name: pip-audit
+        run: uv run pip-audit --requirement <(uv export --no-hashes) || true
+        # || true: advisory only until we have a lockfile pinned
+
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true  # informational until secrets baseline is stable

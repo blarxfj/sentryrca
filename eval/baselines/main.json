@@ -1,0 +1,14 @@
+{
+  "top_1_accuracy": 0.0,
+  "top_3_accuracy": 0.0,
+  "citation_faithfulness": 1.0,
+  "p95_latency_ms": 0,
+  "eval_set_size": 0,
+  "subsets": {
+    "synthetic": {"top_1_accuracy": 0.0, "eval_set_size": 0},
+    "real_derived": {"top_1_accuracy": 0.0, "eval_set_size": 0},
+    "adversarial": {"top_1_accuracy": 0.0, "eval_set_size": 0}
+  },
+  "generated_at": "2026-04-29T00:00:00Z",
+  "note": "Stub baseline — populate with `make eval` after first real eval run in week 3"
+}
