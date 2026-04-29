@@ -53,3 +53,8 @@ postgres-data/
 
 # Generated
 *.lock.bak
+
+# Data — generated corpus files ARE committed (deterministic eval fixtures).
+# Exclude only raw downloads and intermediate scratch files.
+data/raw/
+data/scratch/
