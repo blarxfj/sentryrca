@@ -56,6 +56,25 @@ test-all:  ## Full test suite including integration (requires docker compose up)
 
 # ─── Eval ────────────────────────────────────────────────────────────────────
 
+# ─── Corpus generation ───────────────────────────────────────────────────────
+
+.PHONY: generate
+generate: generate-synthetic generate-postmortems generate-adversarial  ## Generate full ~70-incident corpus
+
+.PHONY: generate-synthetic
+generate-synthetic:  ## Generate 50 synthetic incidents (calls Claude, ~$0.80)
+	uv run python -m sentryrca.synthetic.generator
+
+.PHONY: generate-postmortems
+generate-postmortems:  ## Parse 10 real-derived incidents from danluu/post-mortems
+	uv run python -m sentryrca.synthetic.postmortems
+
+.PHONY: generate-adversarial
+generate-adversarial:  ## Generate 9 adversarial incidents
+	uv run python -m sentryrca.synthetic.adversarial
+
+# ─── Eval ────────────────────────────────────────────────────────────────────
+
 .PHONY: eval
 eval:  ## Full 70-incident eval benchmark (week 3)
 	@echo "eval harness not implemented yet — coming in week 3"; exit 0

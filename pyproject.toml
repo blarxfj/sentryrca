@@ -70,6 +70,7 @@ module = [
     "streamlit.*",
     "langgraph.*",
     "asyncpg.*",
+    "tenacity.*",
 ]
 ignore_missing_imports = true
 
@@ -83,7 +84,10 @@ addopts = "--cov=sentryrca --cov-report=term-missing --cov-report=xml"
 
 [tool.coverage.run]
 source = ["sentryrca"]
-omit = ["sentryrca/ui/*"]
+omit = [
+    "sentryrca/ui/*",
+    "sentryrca/synthetic/*",  # LLM-driven scripts; covered by integration tests
+]
 
 [tool.coverage.report]
 fail_under = 60
