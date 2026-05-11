@@ -62,6 +62,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Create CI .env
+        run: cp .env.example .env
+
       - name: Build docker images
         run: docker compose build
 
