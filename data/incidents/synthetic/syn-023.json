@@ -1,0 +1,86 @@
+{
+  "id": "syn-023",
+  "subset": "synthetic",
+  "category": "dependency_outage",
+  "affected_service": "frontend",
+  "severity": "high",
+  "alert_text": "ALERT: frontend homepage p99 latency > 8000ms for 5 minutes. Error rate on / endpoint spiked to 34%. Possible dependency degradation detected.",
+  "log_window": "2026-05-07T07:31:02.114Z [frontend] INFO  Next.js server started on port 3000\n2026-05-07T07:31:02.891Z [frontend] INFO  Connected to productcatalog-service at productcatalog:3550\n2026-05-07T07:31:03.204Z [frontend] INFO  Connected to cart-service at cartservice:7070\n2026-05-07T07:31:03.441Z [frontend] INFO  Attempting connection to recommendation-service at recommendationservice:8080\n2026-05-07T07:31:03.889Z [frontend] INFO  recommendation-service connection established\n2026-05-07T07:31:04.002Z [frontend] INFO  All downstream services healthy. Ready to serve traffic.\n2026-05-07T07:33:11.220Z [frontend] INFO  GET / 200 142ms\n2026-05-07T07:33:12.445Z [frontend] INFO  GET / 200 138ms\n2026-05-07T07:33:13.678Z [frontend] INFO  GET / 200 155ms\n2026-05-07T07:33:15.002Z [frontend] INFO  GET /api/recommendations 200 201ms\n2026-05-07T07:33:17.889Z [frontend] INFO  GET / 200 161ms\n2026-05-07T07:34:01.112Z [recommendation-service] level=info msg=\"serving recommendation request\" user_id=\"u-4421\" product_count=5 latency_ms=88\n2026-05-07T07:34:02.334Z [recommendation-service] level=info msg=\"serving recommendation request\" user_id=\"u-8830\" product_count=5 latency_ms=91\n2026-05-07T07:34:10.005Z [frontend] INFO  GET / 200 178ms\n2026-05-07T07:34:12.330Z [frontend] INFO  GET /api/recommendations 200 215ms\n2026-05-07T07:35:00.001Z [recommendation-service] level=warn msg=\"model inference backend slow\" backend=openai-proxy latency_ms=1240 threshold_ms=500\n2026-05-07T07:35:00.887Z [recommendation-service] level=warn msg=\"model inference backend slow\" backend=openai-proxy latency_ms=1880 threshold_ms=500\n2026-05-07T07:35:01.445Z [recommendation-service] level=warn msg=\"model inference backend slow\" backend=openai-proxy latency_ms=3102 threshold_ms=500\n2026-05-07T07:35:02.003Z [recommendation-service] level=error msg=\"model inference backend timeout\" backend=openai-proxy timeout_ms=5000 err=\"context deadline exceeded\"\n2026-05-07T07:35:02.119Z [recommendation-service] level=error msg=\"failed to generate recommendations\" user_id=\"u-2291\" err=\"upstream timeout\" retries=3\n2026-05-07T07:35:02.334Z [frontend] WARN  GET /api/recommendations upstream slow response: 5242ms (threshold: 2000ms)\n2026-05-07T07:35:03.441Z [recommendation-service] level=error msg=\"model inference backend timeout\" backend=openai-proxy timeout_ms=5000 err=\"context deadline exceeded\"\n2026-05-07T07:35:03.889Z [frontend] WARN  GET / upstream dependency slow: recommendation-service latency=5380ms\n2026-05-07T07:35:04.112Z [recommendation-service] level=error msg=\"model inference backend timeout\" backend=openai-proxy timeout_ms=5000 err=\"context deadline exceeded\"\n2026-05-07T07:35:04.220Z [recommendation-service] level=error msg=\"failed to generate recommendations\" user_id=\"u-5512\" err=\"upstream timeout\" retries=3\n2026-05-07T07:35:05.334Z [frontend] ERROR GET /api/recommendations 504 5501ms - recommendation-service did not respond in time\n2026-05-07T07:35:05.778Z [frontend] WARN  circuit-breaker[recommendation-service] state=CLOSED failures=2 threshold=5\n2026-05-07T07:35:06.003Z [recommendation-service] level=fatal msg=\"openai-proxy connection pool exhausted\" active_conns=50 max_conns=50\n  at RecommendationServer.fetchFromModel (server.py:214)\n  at RecommendationServer.handleRequest (server.py:178)\n2026-05-07T07:35:07.112Z [recommendation-service] level=error msg=\"all inference requests queued; queue depth=48\" backend=openai-proxy\n2026-05-07T07:35:08.441Z [frontend] ERROR GET / 500 8012ms - failed to load homepage recommendations\n  at fetchRecommendations (pages/index.tsx:88)\n  at getServerSideProps (pages/index.tsx:54)\n2026-05-07T07:35:09.002Z [frontend] ERROR GET /api/recommendations 504 5500ms - recommendation-service timeout\n2026-05-07T07:35:09.334Z [frontend] WARN  circuit-breaker[recommendation-service] state=CLOSED failures=4 threshold=5\n2026-05-07T07:35:10.112Z [recommendation-service] level=error msg=\"model inference backend timeout\" backend=openai-proxy timeout_ms=5000 err=\"context deadline exceeded\"\n2026-05-07T07:35:10.445Z [recommendation-service] level=error msg=\"failed to generate recommendations\" user_id=\"u-9934\" err=\"upstream timeout\" retries=3\n2026-05-07T07:35:11.003Z [frontend] ERROR GET / 500 8034ms - failed to load homepage recommendations\n2026-05-07T07:35:11.220Z [frontend] WARN  circuit-breaker[recommendation-service] state=OPEN failures=5 threshold=5 half_open_after=30s\n2026-05-07T07:35:11.334Z [frontend] WARN  recommendation-service circuit breaker OPEN: all recommendation calls will be short-circuited\n2026-05-07T07:35:12.003Z [frontend] INFO  GET / returning homepage with empty recommendations (circuit-breaker OPEN) 312ms\n2026-05-07T07:35:13.112Z [frontend] INFO  GET / returning homepage with empty recommendations (circuit-breaker OPEN) 309ms\n2026-05-07T07:35:14.778Z [productcatalog-service] {\"level\":\"info\",\"msg\":\"ListProducts OK\",\"latency_ms\":12,\"items\":48}\n2026-05-07T07:35:15.002Z [frontend] INFO  GET / returning homepage with empty recommendations (circuit-breaker OPEN) 314ms\n2026-05-07T07:35:16.334Z [recommendation-service] level=error msg=\"model inference backend timeout\" backend=openai-proxy timeout_ms=5000 err=\"context deadline exceeded\"\n2026-05-07T07:35:17.112Z [recommendation-service] level=error msg=\"health check failed\" backend=openai-proxy http_status=0 err=\"connection refused\"\n2026-05-07T07:35:17.445Z [recommendation-service] level=error msg=\"health check failed\" backend=openai-proxy http_status=0 err=\"connection refused\"\n2026-05-07T07:35:18.003Z [frontend] INFO  GET / returning homepage with empty recommendations (circuit-breaker OPEN) 298ms\n2026-05-07T07:35:19.112Z [recommendation-service] level=error msg=\"health check failed\" backend=openai-proxy http_status=0 err=\"connection refused\"\n2026-05-07T07:35:20.445Z [recommendation-service] level=fatal msg=\"openai-proxy unreachable; suspending inference workers\" backend=openai-proxy\n2026-05-07T07:35:21.003Z [frontend] INFO  GET / returning homepage with empty recommendations (circuit-breaker OPEN) 302ms\n2026-05-07T07:35:22.334Z [frontend] INFO  GET /cart 200 88ms\n2026-05-07T07:35:22.778Z [frontend] INFO  GET /product/OLJCESPC7Z 200 141ms\n2026-05-07T07:35:23.112Z [cart-service] level=info msg=\"GetCart OK\" session=\"sess-8812\" items=3 latency_ms=5\n2026-05-07T07:35:25.003Z [recommendation-service] level=error msg=\"model inference backend timeout\" backend=openai-proxy timeout_ms=5000 err=\"connection refused\"\n2026-05-07T07:35:26.334Z [recommendation-service] level=error msg=\"model inference backend timeout\" backend=openai-proxy timeout_ms=5000 err=\"connection refused\"\n2026-05-07T07:35:28.778Z [frontend] INFO  GET / returning homepage with empty recommendations (circuit-breaker OPEN) 311ms\n2026-05-07T07:35:30.003Z [frontend] INFO  circuit-breaker[recommendation-service] probing half-open state\n2026-05-07T07:35:30.112Z [recommendation-service] level=error msg=\"model inference backend timeout\" backend=openai-proxy timeout_ms=5000 err=\"connection refused\"\n2026-05-07T07:35:30.334Z [frontend] ERROR circuit-breaker[recommendation-service] half-open probe FAILED: timeout 5001ms; returning to OPEN state\n2026-05-07T07:35:31.003Z [frontend] INFO  GET / returning homepage with empty recommendations (circuit-breaker OPEN) 309ms\n2026-05-07T07:35:35.112Z [recommendation-service] level=error msg=\"health check failed\" backend=openai-proxy http_status=0 err=\"connection refused\"\n2026-05-07T07:35:40.334Z [recommendation-service] level=error msg=\"health check failed\" backend=openai-proxy http_status=0 err=\"connection refused\"\n2026-05-07T07:35:45.003Z [recommendation-service] level=error msg=\"health check failed\" backend=openai-proxy http_status=0 err=\"connection refused\"\n2026-05-07T07:35:50.445Z [frontend] INFO  circuit-breaker[recommendation-service] probing half-open state\n2026-05-07T07:35:50.778Z [frontend] ERROR circuit-breaker[recommendation-service] half-open probe FAILED: connection refused; returning to OPEN state\n2026-05-07T07:35:51.002Z [frontend] WARN  homepage degraded: recommendations section blank for 40s\n2026-05-07T07:36:00.112Z [recommendation-service] level=error msg=\"health check failed\" backend=openai-proxy http_status=0 err=\"connection refused\"\n2026-05-07T07:36:05.334Z [recommendation-service] level=error msg=\"health check failed\" backend=openai-proxy http_status=0 err=\"connection refused\"\n2026-05-07T07:36:10.003Z [frontend] INFO  circuit-breaker[recommendation-service] probing half-open state\n2026-05-07T07:36:10.220Z [frontend] ERROR circuit-breaker[recommendation-service] half-open probe FAILED: connection refused; returning to OPEN state\n2026-05-07T07:36:10.445Z [frontend] WARN  homepage degraded: recommendations section blank for 59s\n2026-05-07T07:36:15.778Z [productcatalog-service] {\"level\":\"info\",\"msg\":\"ListProducts OK\",\"latency_ms\":11,\"items\":48}\n2026-05-07T07:36:20.003Z [recommendation-service] level=error msg=\"health check failed\" backend=openai-proxy http_status=0 err=\"connection refused\"\n2026-05-07T07:36:25.334Z [recommendation-service] level=error msg=\"health check failed\" backend=openai-proxy http_status=0 err=\"connection refused\"\n2026-05-07T07:36:30.003Z [frontend] INFO  circuit-breaker[recommendation-service] probing half-open state\n2026-05-07T07:36:30.112Z [frontend] ERROR circuit-breaker[recommendation-service] half-open probe FAILED: connection refused; returning to OPEN state\n2026-05-07T07:36:30.445Z [frontend] ERROR homepage degraded: recommendations section blank for 79s and counting; alerting on-call\n2026-05-07T07:36:31.003Z [frontend] INFO  GET / returning homepage with empty recommendations (circuit-breaker OPEN) 307ms\n2026-05-07T07:36:32.220Z [frontend] INFO  GET / returning homepage with empty recommendations (circuit-breaker OPEN) 299ms\n2026-05-07T07:36:33.334Z [cart-service] level=info msg=\"AddItem OK\" session=\"sess-9203\" latency_ms=7\n2026-05-07T07:36:35.003Z [frontend] INFO  GET /cart 200 92ms\n2026-05-07T07:36:40.112Z [recommendation-service] level=error msg=\"health check failed\" backend=openai-proxy http_status=0 err=\"connection refused\"\n2026-05-07T07:36:45.778Z [recommendation-service] level=error msg=\"health check failed\" backend=openai-proxy http_status=0 err=\"connection refused\"\n2026-05-07T07:36:50.003Z [frontend] INFO  circuit-breaker[recommendation-service] probing half-open state\n2026-05-07T07:36:50.220Z [frontend] ERROR circuit-breaker[recommendation-service] half-open probe FAILED: connection refused; returning to OPEN state\n2026-05-07T07:36:51.003Z [frontend] ERROR homepage SLO breach: recommendations unavailable > 100s; p99 latency during degradation window was 8140ms",
+  "recent_deploys": [
+    {
+      "sha": "0c5e175889c2",
+      "timestamp": "2026-04-16T13:20:06Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump next (#3269)",
+      "changed_files": [
+        "package.json",
+        "package-lock.json"
+      ]
+    },
+    {
+      "sha": "7d7e533c001a",
+      "timestamp": "2026-04-23T07:59:20Z",
+      "author": "Timur Olzhabayev",
+      "message": "[chore] exclude platform.openai.com and gnu.org from link check (#3289)",
+      "changed_files": [
+        ".github/workflows/link-check.yml",
+        "docs/link-check-config.json"
+      ]
+    },
+    {
+      "sha": "60d18e40e88c",
+      "timestamp": "2026-04-23T08:23:08Z",
+      "author": "Juliano Costa",
+      "message": "[frontend] fix: handle undefined product images across multiple components (#329",
+      "changed_files": [
+        "src/frontend/components/ProductCard.tsx",
+        "src/frontend/components/CartItem.tsx",
+        "src/frontend/components/RecommendationList.tsx",
+        "src/frontend/utils/imageHelpers.ts"
+      ]
+    },
+    {
+      "sha": "3e626da455a9",
+      "timestamp": "2026-04-28T14:08:34Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "bade4db5c2e0",
+      "timestamp": "2026-04-28T14:14:11Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json",
+        "src/recommendationservice/requirements.txt"
+      ]
+    },
+    {
+      "sha": "2b9113d98e20",
+      "timestamp": "2026-04-30T06:51:57Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] execute dependabot every Tuesday 3:00am+ (#3330)",
+      "changed_files": [
+        ".github/dependabot.yml"
+      ]
+    },
+    {
+      "sha": "52a8a76cf862",
+      "timestamp": "2026-05-07T07:06:44Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with ",
+      "changed_files": [
+        "src/recommendationservice/requirements.txt",
+        "src/recommendationservice/recommendation_server.py"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "The recommendation-service's upstream inference backend (openai-proxy) became entirely unreachable at ~07:35 UTC, causing all recommendation RPCs to time out after 5000ms. The openai-proxy connection pool was exhausted (50/50 active connections) before the proxy crashed, as evidenced by 'connection refused' errors in recommendation-service health checks starting at 07:35:17. The frontend circuit breaker correctly opened after 5 consecutive failures but the homepage recommendations section remained blank because openai-proxy never recovered. This is an infrastructure/dependency outage in the recommendation-service tier, not caused by any frontend code change; the most recent frontend-touching deploy (60d18e40e88c) was from 2026-04-23 and unrelated.",
+  "ground_truth_remediation": "1. Immediately: page the recommendation-service / ML-platform on-call team to investigate and restart the openai-proxy service. 2. Verify openai-proxy pod/container health in its namespace and check for OOM kills or crash loops using kubectl logs / describe. 3. Once openai-proxy is restored, manually reset the frontend circuit breaker for recommendation-service (or wait for the next successful half-open probe) to restore homepage recommendations. 4. As a short-term fallback, configure recommendation-service to serve cached or static fallback recommendations when openai-proxy is unavailable, so the frontend can display something rather than blank. All steps achievable within 2 hours assuming the openai-proxy process can be restarted or its resource limits corrected.",
+  "red_herring": null
+}

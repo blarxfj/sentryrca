@@ -1,0 +1,74 @@
+{
+  "id": "real-005",
+  "subset": "real_derived",
+  "category": "config_error",
+  "affected_service": "frontend",
+  "severity": "critical",
+  "alert_text": "CRITICAL: Service discovery health check failure rate >95% across all services. frontend, checkout-service, payment-service and 7 other services reporting no healthy upstream errors. Error budget exhausted.",
+  "log_window": "2024-03-14T10:02:01.003Z [service-discovery] INFO  Starting service registry refresh cycle id=cycle-8821\n2024-03-14T10:02:01.045Z [service-discovery] INFO  Polling 14 registered client endpoints for health status\n2024-03-14T10:02:01.112Z [service-discovery] INFO  client=frontend healthy=true latency=12ms\n2024-03-14T10:02:01.118Z [service-discovery] INFO  client=checkout-service healthy=true latency=15ms\n2024-03-14T10:02:01.125Z [service-discovery] INFO  client=payment-service healthy=true latency=11ms\n2024-03-14T10:02:01.133Z [service-discovery] INFO  client=cart-service healthy=true latency=14ms\n2024-03-14T10:02:01.140Z [service-discovery] INFO  client=currency-service healthy=true latency=9ms\n2024-03-14T10:02:01.148Z [service-discovery] INFO  client=recommendation-service healthy=true latency=18ms\n2024-03-14T10:02:01.156Z [service-discovery] INFO  client=email-service healthy=true latency=22ms\n2024-03-14T10:02:01.165Z [service-discovery] INFO  client=ad-service healthy=true latency=13ms\n2024-03-14T10:02:01.220Z [service-discovery] WARN  client=internal-metrics-collector connect timeout after 5000ms retrying attempt=1\n2024-03-14T10:02:06.221Z [service-discovery] WARN  client=internal-metrics-collector connect timeout after 5000ms retrying attempt=2\n2024-03-14T10:02:11.223Z [service-discovery] ERROR client=internal-metrics-collector all retries exhausted max_retries=2 marking_unhealthy=true\n2024-03-14T10:02:11.224Z [service-discovery] ERROR FATAL: dependent client internal-metrics-collector is unhealthy and flagged as require_healthy=true in registry config -- aborting registry refresh\n2024-03-14T10:02:11.225Z [service-discovery] ERROR Registry refresh cycle id=cycle-8821 terminated abnormally, last known good state will NOT be preserved\n2024-03-14T10:02:11.226Z [service-discovery] ERROR Clearing all cached upstream endpoints -- registry entering EMPTY state\n2024-03-14T10:02:11.230Z [frontend] ERROR service_discovery_lookup failed: registry returned 0 upstreams for service=checkout-service\n2024-03-14T10:02:11.231Z [frontend] ERROR service_discovery_lookup failed: registry returned 0 upstreams for service=payment-service\n2024-03-14T10:02:11.232Z [frontend] ERROR service_discovery_lookup failed: registry returned 0 upstreams for service=currency-service\n2024-03-14T10:02:11.233Z [checkout-service] ERROR service_discovery_lookup failed: registry returned 0 upstreams for service=payment-service\n2024-03-14T10:02:11.234Z [checkout-service] ERROR service_discovery_lookup failed: registry returned 0 upstreams for service=cart-service\n2024-03-14T10:02:11.235Z [payment-service] ERROR service_discovery_lookup failed: registry returned 0 upstreams for service=currency-service\n2024-03-14T10:02:11.240Z [frontend] ERROR HTTP 503 upstream_not_found path=/checkout attempt=1\n2024-03-14T10:02:11.241Z [frontend] ERROR HTTP 503 upstream_not_found path=/cart attempt=1\n2024-03-14T10:02:11.245Z [frontend] ERROR HTTP 503 upstream_not_found path=/product/list attempt=1\n2024-03-14T10:02:11.502Z [service-discovery] INFO  Next scheduled refresh in 30s -- registry still EMPTY\n2024-03-14T10:02:15.882Z [frontend] ERROR [span=a1b2c3d4] TraceID=9f8e7d6c service=checkout-service no healthy upstream found, returning 503 to client\n2024-03-14T10:02:15.883Z [frontend] ERROR [span=a1b2c3d4] all 0 known endpoints for checkout-service are in state=REMOVED\n2024-03-14T10:02:20.001Z [service-discovery] WARN  Refresh attempt cycle-8822 starting\n2024-03-14T10:02:20.044Z [service-discovery] WARN  client=internal-metrics-collector still unreachable, require_healthy=true -- aborting cycle-8822\n2024-03-14T10:02:20.045Z [service-discovery] ERROR Registry remains EMPTY, no upstream data published\n2024-03-14T10:02:22.300Z [checkout-service] ERROR checkout request failed: unable to resolve payment-service endpoint err=no upstreams registered\n2024-03-14T10:02:22.301Z [checkout-service] ERROR returning HTTP 503 to caller order_id=ORD-991827\n2024-03-14T10:02:25.110Z [cart-service] ERROR redis connection OK but service-discovery for recommendation-service returned empty result\n2024-03-14T10:02:27.009Z [ad-service] ERROR grpc dial failed: service_discovery resolve frontend -> [] (no records) code=Unavailable\n2024-03-14T10:02:30.118Z [service-discovery] WARN  Refresh attempt cycle-8823 starting\n2024-03-14T10:02:35.119Z [service-discovery] WARN  client=internal-metrics-collector still unreachable attempt=3 -- aborting cycle-8823\n2024-03-14T10:02:35.120Z [service-discovery] ERROR Registry remains EMPTY\n2024-03-14T10:02:35.210Z [frontend] ERROR 500 InternalServerError: failed to initialize page -- downstream services unavailable\n2024-03-14T10:02:35.211Z [frontend] ERROR stack: Error: no healthy upstream\n    at ServiceDiscoveryClient.resolve (sd-client.js:142)\n    at CheckoutProxy.getEndpoint (checkout-proxy.js:88)\n    at async renderCheckoutPage (frontend/server.js:301)\n2024-03-14T10:02:40.005Z [service-discovery] INFO  Checking registry config version=deployed config_sha=c7f3a91\n2024-03-14T10:02:40.006Z [service-discovery] INFO  Config: internal-metrics-collector require_healthy=true (introduced in config_sha=c7f3a91)\n2024-03-14T10:02:40.007Z [service-discovery] WARN  internal-metrics-collector is a non-critical auxiliary service -- require_healthy=true may be misconfigured\n2024-03-14T10:02:45.330Z [frontend] ERROR 503 rate now 98.2% over last 60s\n2024-03-14T10:02:45.331Z [frontend] ERROR active_requests=0 queued_requests=1842 dropped_requests=1842\n2024-03-14T10:02:50.001Z [service-discovery] WARN  Refresh attempt cycle-8824 starting\n2024-03-14T10:02:55.002Z [service-discovery] WARN  client=internal-metrics-collector still unreachable -- aborting cycle-8824, registry EMPTY\n2024-03-14T10:03:00.001Z [service-discovery] WARN  Refresh attempt cycle-8825 starting\n2024-03-14T10:03:05.002Z [service-discovery] WARN  client=internal-metrics-collector still unreachable -- aborting cycle-8825, registry EMPTY\n2024-03-14T10:03:07.445Z [ops-oncall] PAGE  service_discovery_empty_registry duration=56s affected_services=all\n2024-03-14T10:03:10.001Z [service-discovery] WARN  Refresh attempt cycle-8826 starting\n2024-03-14T10:03:15.002Z [service-discovery] WARN  client=internal-metrics-collector still unreachable -- aborting cycle-8826\n2024-03-14T10:03:20.880Z [ops-oncall] INFO  Engineer on-call acknowledged alert, beginning investigation\n2024-03-14T10:03:35.002Z [service-discovery] WARN  Refresh attempt cycle-8827 starting, registry still EMPTY\n2024-03-14T10:04:10.002Z [service-discovery] INFO  Config reload triggered by operator -- new config_sha=d9b2e44\n2024-03-14T10:04:10.003Z [service-discovery] INFO  Config diff: internal-metrics-collector require_healthy changed true -> false\n2024-03-14T10:04:10.112Z [service-discovery] INFO  Starting refresh cycle-8841 with updated config\n2024-03-14T10:04:10.180Z [service-discovery] INFO  client=internal-metrics-collector marked optional, skipping health gate\n2024-03-14T10:04:10.220Z [service-discovery] INFO  Registry rebuilt successfully: 14 clients registered, 14 endpoints published\n2024-03-14T10:04:10.225Z [frontend] INFO  service_discovery_lookup OK service=checkout-service endpoints=3\n2024-03-14T10:04:10.226Z [frontend] INFO  service_discovery_lookup OK service=payment-service endpoints=2\n2024-03-14T10:04:10.227Z [frontend] INFO  service_discovery_lookup OK service=currency-service endpoints=2\n2024-03-14T10:04:10.230Z [checkout-service] INFO  service_discovery_lookup OK service=payment-service endpoints=2\n2024-03-14T10:04:10.235Z [frontend] INFO  503 error rate dropped from 98.2% -> 0.4% -- recovery confirmed\n2024-03-14T10:04:15.001Z [service-discovery] INFO  Registry stable, all 14 clients healthy (internal-metrics-collector excluded from health gate)\n2024-03-14T10:04:20.440Z [ops-oncall] INFO  Incident mitigated -- monitoring for recurrence",
+  "recent_deploys": [
+    {
+      "sha": "a3d19fc",
+      "timestamp": "2024-03-13T08:15:00Z",
+      "author": "priya.nair",
+      "message": "frontend: upgrade grpc client to v1.58.2",
+      "changed_files": [
+        "frontend/go.mod",
+        "frontend/go.sum",
+        "frontend/pkg/grpc/client.go"
+      ]
+    },
+    {
+      "sha": "b82fc01",
+      "timestamp": "2024-03-13T13:40:00Z",
+      "author": "leon.watkins",
+      "message": "checkout-service: add order retry logic on transient failures",
+      "changed_files": [
+        "checkout-service/handlers/order.go",
+        "checkout-service/handlers/retry.go",
+        "checkout-service/config/retry.yaml"
+      ]
+    },
+    {
+      "sha": "e51ab77",
+      "timestamp": "2024-03-13T17:55:00Z",
+      "author": "yuna.kim",
+      "message": "service-discovery: add internal-metrics-collector as registered client",
+      "changed_files": [
+        "service-discovery/config/registry.yaml",
+        "service-discovery/clients/metrics_collector.go",
+        "service-discovery/docs/clients.md"
+      ]
+    },
+    {
+      "sha": "c7f3a91",
+      "timestamp": "2024-03-14T09:48:00Z",
+      "author": "yuna.kim",
+      "message": "service-discovery: set require_healthy=true for internal-metrics-collector client",
+      "changed_files": [
+        "service-discovery/config/registry.yaml"
+      ]
+    },
+    {
+      "sha": "f20cd53",
+      "timestamp": "2024-03-14T09:52:00Z",
+      "author": "ops-bot",
+      "message": "internal-metrics-collector: scale down to 0 replicas for scheduled maintenance window",
+      "changed_files": [
+        "k8s/internal-metrics-collector/deployment.yaml"
+      ]
+    },
+    {
+      "sha": "d9b2e44",
+      "timestamp": "2024-03-14T10:04:08Z",
+      "author": "marcus.hall",
+      "message": "service-discovery: hotfix set require_healthy=false for internal-metrics-collector",
+      "changed_files": [
+        "service-discovery/config/registry.yaml"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy SHA c7f3a91 introduced a misconfiguration in service-discovery/config/registry.yaml that set require_healthy=true for the internal-metrics-collector client. This client was subsequently scaled to 0 replicas for a maintenance window (SHA f20cd53). When the service-discovery refresh cycle failed to reach internal-metrics-collector and the require_healthy gate triggered, the registry aborted its refresh and cleared all cached upstream endpoint data, dropping all 14 registered services from the registry simultaneously. Every dependent service (frontend, checkout-service, payment-service, etc.) then received empty upstream lists and began returning HTTP 503 errors globally.",
+  "ground_truth_remediation": "Immediately apply a config hotfix to set require_healthy=false for internal-metrics-collector in service-discovery/config/registry.yaml (as done in SHA d9b2e44) and trigger a forced registry refresh. Long-term: enforce policy that only genuinely critical data-plane services can have require_healthy=true, and add a CI/CD validation step that rejects require_healthy=true on auxiliary/monitoring clients. Additionally, decouple registry refresh failure modes so that an unhealthy optional client never clears the existing healthy upstream cache.",
+  "red_herring": null
+}

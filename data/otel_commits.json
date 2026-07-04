@@ -1,0 +1,362 @@
+[
+  {
+    "sha": "49a7631b1ddb",
+    "timestamp": "2026-05-16T12:04:07Z",
+    "author": "D\u00f3nal O'Sullivan",
+    "message": "Profiling with firepit (#3333)"
+  },
+  {
+    "sha": "cf3ba5c857d1",
+    "timestamp": "2026-05-13T15:04:07Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the gradle-production-dependencies group across 2 directories "
+  },
+  {
+    "sha": "2b8ccac18a70",
+    "timestamp": "2026-05-13T12:00:40Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump swoosh (#3365)"
+  },
+  {
+    "sha": "94f8a915b080",
+    "timestamp": "2026-05-13T11:48:42Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory "
+  },
+  {
+    "sha": "47b7d39a4628",
+    "timestamp": "2026-05-13T10:59:26Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit"
+  },
+  {
+    "sha": "5c20010b3f8a",
+    "timestamp": "2026-05-13T10:51:05Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the pip-production-dependencies group across 3 directories wit"
+  },
+  {
+    "sha": "449ee7cc0d6e",
+    "timestamp": "2026-05-13T10:41:00Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump github.com/IBM/sarama (#3360)"
+  },
+  {
+    "sha": "e01faa1367fa",
+    "timestamp": "2026-05-12T14:13:20Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump github/codeql-action (#3359)"
+  },
+  {
+    "sha": "52a8a76cf862",
+    "timestamp": "2026-05-07T07:06:44Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with "
+  },
+  {
+    "sha": "05fab63b804f",
+    "timestamp": "2026-05-06T14:43:41Z",
+    "author": "Shenoy Pratik",
+    "message": "fix: collector otelcol.signal scope attribute conflict in logs pipeline (#3321)"
+  },
+  {
+    "sha": "28ed8395ff76",
+    "timestamp": "2026-05-06T14:37:03Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit"
+  },
+  {
+    "sha": "313728caeedd",
+    "timestamp": "2026-05-06T00:11:01Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory "
+  },
+  {
+    "sha": "23dc47f86f5b",
+    "timestamp": "2026-05-06T00:04:45Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit"
+  },
+  {
+    "sha": "6302e2c10e48",
+    "timestamp": "2026-05-05T10:28:04Z",
+    "author": "Piotr Kie\u0142kowicz",
+    "message": "fix(deps): resolve Ruby security advisories (#3349)"
+  },
+  {
+    "sha": "a65d890990f0",
+    "timestamp": "2026-05-05T10:00:49Z",
+    "author": "Piotr Kie\u0142kowicz",
+    "message": "chore(deps): resolve Rust security advisories (#3348)"
+  },
+  {
+    "sha": "83dce9a815b2",
+    "timestamp": "2026-05-05T09:51:41Z",
+    "author": "Juliano Costa",
+    "message": "[chore] Promote D\u00f3nal to approver (#3336)"
+  },
+  {
+    "sha": "9c4ca95ea6e8",
+    "timestamp": "2026-05-05T09:51:18Z",
+    "author": "Piotr Kie\u0142kowicz",
+    "message": "fix(deps): resolve npm security advisories (#3347)"
+  },
+  {
+    "sha": "997d9970c437",
+    "timestamp": "2026-05-05T08:45:37Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the go-production-dependencies group across 2 directories with"
+  },
+  {
+    "sha": "5acdff618e47",
+    "timestamp": "2026-05-05T08:11:45Z",
+    "author": "D\u00f3nal O'Sullivan",
+    "message": "Add Podman support (#3307)"
+  },
+  {
+    "sha": "bb0e91424e8a",
+    "timestamp": "2026-05-05T07:38:47Z",
+    "author": "dependabot[bot]",
+    "message": "Bump the nuget-production-dependencies group with 4 updates (#3341)"
+  },
+  {
+    "sha": "30ba52fd9566",
+    "timestamp": "2026-05-05T06:33:05Z",
+    "author": "Jonathan Munz",
+    "message": "Update React Native example app dependencies (#3296)"
+  },
+  {
+    "sha": "5b738e5f6b1b",
+    "timestamp": "2026-05-05T05:40:48Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump github/codeql-action (#3337)"
+  },
+  {
+    "sha": "974792d4cdda",
+    "timestamp": "2026-05-05T05:40:26Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with "
+  },
+  {
+    "sha": "781c571cc008",
+    "timestamp": "2026-05-05T05:40:16Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump bytestring (#3345)"
+  },
+  {
+    "sha": "2b9113d98e20",
+    "timestamp": "2026-04-30T06:51:57Z",
+    "author": "Piotr Kie\u0142kowicz",
+    "message": "[chore] execute dependabot every Tuesday 3:00am+ (#3330)"
+  },
+  {
+    "sha": "0e6ca5152176",
+    "timestamp": "2026-04-30T03:12:04Z",
+    "author": "Roman Dmytrenko",
+    "message": "fix(frontend): handle corrupted session data in localStorage (#3313)"
+  },
+  {
+    "sha": "f266a31c651b",
+    "timestamp": "2026-04-30T02:38:44Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the pip-production-dependencies group across 4 directories wit"
+  },
+  {
+    "sha": "a4553ea12420",
+    "timestamp": "2026-04-30T02:38:18Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the bundler-production-dependencies group across 1 directory w"
+  },
+  {
+    "sha": "9487d3f5eb14",
+    "timestamp": "2026-04-30T02:23:48Z",
+    "author": "dependabot[bot]",
+    "message": "Bump the nuget-production-dependencies group with 1 update (#3326)"
+  },
+  {
+    "sha": "dc4785b348ba",
+    "timestamp": "2026-04-30T02:23:16Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump swoosh (#3323)"
+  },
+  {
+    "sha": "6bb672061d65",
+    "timestamp": "2026-04-30T02:22:28Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump @tanstack/react-query (#3322)"
+  },
+  {
+    "sha": "bade4db5c2e0",
+    "timestamp": "2026-04-28T14:14:11Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit"
+  },
+  {
+    "sha": "81528af3e3be",
+    "timestamp": "2026-04-28T14:09:01Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump idna_adapter (#3320)"
+  },
+  {
+    "sha": "3e626da455a9",
+    "timestamp": "2026-04-28T14:08:34Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory "
+  },
+  {
+    "sha": "53d7934653a4",
+    "timestamp": "2026-04-28T13:16:01Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): update open-telemetry/detector-container requirement (#3299)"
+  },
+  {
+    "sha": "3c2af106dae8",
+    "timestamp": "2026-04-28T13:09:38Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the bundler-production-dependencies group across 1 directory w"
+  },
+  {
+    "sha": "310357e9b0b4",
+    "timestamp": "2026-04-28T02:25:29Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the cargo-production-dependencies group across 1 directory wit"
+  },
+  {
+    "sha": "7cdf4e6a5bb4",
+    "timestamp": "2026-04-27T06:41:57Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump github.com/IBM/sarama (#3310)"
+  },
+  {
+    "sha": "396eaec92110",
+    "timestamp": "2026-04-25T09:36:57Z",
+    "author": "Patrice Chalin",
+    "message": "Enable lychee cache for local checks too (#3315)"
+  },
+  {
+    "sha": "1c521d91f664",
+    "timestamp": "2026-04-25T09:36:06Z",
+    "author": "Patrice Chalin",
+    "message": "ci: enable persisted lychee caching in checks workflow (#3314)"
+  },
+  {
+    "sha": "3caa0e226a7f",
+    "timestamp": "2026-04-24T11:49:05Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit"
+  },
+  {
+    "sha": "1d475a67d631",
+    "timestamp": "2026-04-24T06:49:14Z",
+    "author": "Juliano Costa",
+    "message": "chore: add retry configuration parameters to lychee (#3306)"
+  },
+  {
+    "sha": "51f1a6bba4e8",
+    "timestamp": "2026-04-24T06:02:13Z",
+    "author": "D\u00f3nal O'Sullivan",
+    "message": "Remove tag from the docker logging used via docker compose (#3304)"
+  },
+  {
+    "sha": "41b0e7b2e876",
+    "timestamp": "2026-04-24T03:35:36Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory "
+  },
+  {
+    "sha": "c92f3bc755e8",
+    "timestamp": "2026-04-24T03:26:57Z",
+    "author": "Timur Olzhabayev",
+    "message": "chore(grafana): bump image to 13.0.1 and provision default-email receiver (#3288"
+  },
+  {
+    "sha": "75dc5aa9b428",
+    "timestamp": "2026-04-23T15:05:28Z",
+    "author": "Ayooluwa Isaiah",
+    "message": "Fix charge span leak in the payment service (#3276)"
+  },
+  {
+    "sha": "60d18e40e88c",
+    "timestamp": "2026-04-23T08:23:08Z",
+    "author": "Juliano Costa",
+    "message": "[frontend] fix: handle undefined product images across multiple components (#329"
+  },
+  {
+    "sha": "d8fd7bba8052",
+    "timestamp": "2026-04-23T08:11:22Z",
+    "author": "dependabot[bot]",
+    "message": "Bump the nuget-production-dependencies group with 1 update (#3300)"
+  },
+  {
+    "sha": "7b1231238df3",
+    "timestamp": "2026-04-23T08:01:17Z",
+    "author": "Piotr Kie\u0142kowicz",
+    "message": "[chore] Fix dependabot configuration (#3298)"
+  },
+  {
+    "sha": "7d7e533c001a",
+    "timestamp": "2026-04-23T07:59:20Z",
+    "author": "Timur Olzhabayev",
+    "message": "[chore] exclude platform.openai.com and gnu.org from link check (#3289)"
+  },
+  {
+    "sha": "53f46ae9eb45",
+    "timestamp": "2026-04-22T13:56:23Z",
+    "author": "dependabot[bot]",
+    "message": "Bump the nuget-production-dependencies group with 6 updates (#3295)"
+  },
+  {
+    "sha": "de201e875db5",
+    "timestamp": "2026-04-21T19:45:44Z",
+    "author": "dependabot[bot]",
+    "message": "Bump the nuget-production-dependencies group with 2 updates (#3284)"
+  },
+  {
+    "sha": "b6de548594c2",
+    "timestamp": "2026-04-21T15:46:42Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the cargo-production-dependencies group across 1 directory wit"
+  },
+  {
+    "sha": "38a9074919f6",
+    "timestamp": "2026-04-21T15:32:48Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit"
+  },
+  {
+    "sha": "89d202df6a03",
+    "timestamp": "2026-04-21T14:00:27Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit"
+  },
+  {
+    "sha": "0410576889f7",
+    "timestamp": "2026-04-21T12:05:34Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit"
+  },
+  {
+    "sha": "d7df5ef51d88",
+    "timestamp": "2026-04-21T12:05:02Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump the bundler-production-dependencies group across 1 directory w"
+  },
+  {
+    "sha": "c789fc89a688",
+    "timestamp": "2026-04-21T11:57:50Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory "
+  },
+  {
+    "sha": "0982a0268aec",
+    "timestamp": "2026-04-16T14:12:23Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps-dev): bump eslint-config-next (#3270)"
+  },
+  {
+    "sha": "0c5e175889c2",
+    "timestamp": "2026-04-16T13:20:06Z",
+    "author": "dependabot[bot]",
+    "message": "chore(deps): bump next (#3269)"
+  }
+]

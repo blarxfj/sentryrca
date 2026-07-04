@@ -1,0 +1,75 @@
+{
+  "id": "real-007",
+  "subset": "real_derived",
+  "category": "config_error",
+  "affected_service": "frontend",
+  "severity": "critical",
+  "alert_text": "CRITICAL: Global availability check FAILED - frontend error rate 98.7%, all datacenters unreachable. Network team paged. Possible layer-2 storm detected on core switches.",
+  "log_window": "2024-03-14T02:11:05Z [network-monitor] INFO  Scheduled network topology push to core-switch-rack-A01 initiated\n2024-03-14T02:11:06Z [network-monitor] INFO  Pushing VLAN config to core-switch-rack-A01: multicast_snooping=disabled, igmp_querier=disabled\n2024-03-14T02:11:07Z [network-monitor] INFO  Config push to core-switch-rack-A02 complete\n2024-03-14T02:11:08Z [network-monitor] INFO  Config push to core-switch-rack-A03 complete\n2024-03-14T02:11:09Z [network-monitor] WARN  core-switch-rack-A01 did not acknowledge IGMP snooping disable within 2s, retrying\n2024-03-14T02:11:11Z [network-monitor] INFO  Multicast group 239.255.0.1 registered on VLAN 100 without IGMP snooping guard\n2024-03-14T02:11:12Z [frontend] INFO  Serving request GET /home user_id=48821 latency=34ms\n2024-03-14T02:11:12Z [frontend] INFO  Serving request GET /search?q=handmade latency=38ms\n2024-03-14T02:11:13Z [frontend] INFO  Serving request POST /cart/add item_id=99123 latency=41ms\n2024-03-14T02:11:14Z [network-monitor] WARN  Broadcast traffic spike detected on VLAN 100: 820 Mbps (threshold: 200 Mbps)\n2024-03-14T02:11:15Z [network-monitor] ERROR Multicast flood detected on VLAN 100 - uncontrolled traffic propagation to all ports\n2024-03-14T02:11:15Z [network-monitor] ERROR core-switch-rack-A01 CPU utilization at 97% - CAM table overflow imminent\n2024-03-14T02:11:16Z [network-monitor] ERROR core-switch-rack-A02 CPU utilization at 94%\n2024-03-14T02:11:16Z [network-monitor] ERROR core-switch-rack-A03 CPU utilization at 95%\n2024-03-14T02:11:17Z [frontend] ERROR connection refused to cart-service:7070 - dial tcp 10.0.4.22:7070: connect: connection refused\n2024-03-14T02:11:17Z [frontend] ERROR connection refused to recommendation-service:8081 - dial tcp 10.0.4.30:8081: connect: connection refused\n2024-03-14T02:11:17Z [frontend] ERROR upstream connect error or disconnect/reset before headers. retried and the latest reset reason: connection failure\n2024-03-14T02:11:18Z [frontend] ERROR HTTP 503 returned for GET /home user_id=48822\n2024-03-14T02:11:18Z [frontend] ERROR HTTP 503 returned for GET /search?q=vintage\n2024-03-14T02:11:18Z [cart-service] ERROR redis: connection pool exhausted - all 200 connections timed out\n2024-03-14T02:11:18Z [checkout-service] ERROR payment-service health check failed: dial tcp 10.0.5.11:9000: i/o timeout\n2024-03-14T02:11:19Z [network-monitor] CRITICAL Layer-2 broadcast storm confirmed on VLAN 100 and VLAN 200 - packet loss 89%\n2024-03-14T02:11:19Z [frontend] ERROR panic: runtime error: dial tcp 10.0.1.5:6379 (redis): i/o timeout after 5000ms\n2024-03-14T02:11:19Z [frontend] ERROR goroutine 1 [running]: net/http.(*conn).serve(0xc0003a4000, 0x12ef3c0, 0xc000384340) /usr/local/go/src/net/http/server.go:1801 +0x71e\n2024-03-14T02:11:20Z [frontend] ERROR 5000 requests queued, dropping oldest - queue depth exceeded max=5000\n2024-03-14T02:11:20Z [ad-service] ERROR gRPC call to backend failed: rpc error: code = Unavailable desc = connection refused\n2024-03-14T02:11:20Z [email-service] ERROR SMTP relay 10.0.9.2:25 unreachable: dial tcp: lookup smtp-relay.internal: no such host\n2024-03-14T02:11:21Z [network-monitor] CRITICAL All inter-rack traffic dropped - spanning tree topology change storm in progress\n2024-03-14T02:11:21Z [network-monitor] CRITICAL STP BPDU flood: 14200 topology change notifications in last 5 seconds\n2024-03-14T02:11:21Z [postgres] ERROR could not connect to server: Connection refused - Is the server running on host 10.0.2.11 and accepting TCP/IP connections on port 5432?\n2024-03-14T02:11:22Z [checkout-service] ERROR database connection failed after 3 retries: pq: connection to server at 10.0.2.11 port 5432 failed: Connection refused\n2024-03-14T02:11:22Z [frontend] ERROR HTTP 503 rate: 98.7% over last 30s - all upstream services unreachable\n2024-03-14T02:11:22Z [loadbalancer] ERROR health check FAILED for frontend-01.internal (10.0.1.101): no response\n2024-03-14T02:11:22Z [loadbalancer] ERROR health check FAILED for frontend-02.internal (10.0.1.102): no response\n2024-03-14T02:11:23Z [loadbalancer] ERROR health check FAILED for frontend-03.internal (10.0.1.103): no response\n2024-03-14T02:11:23Z [loadbalancer] CRITICAL All frontend instances marked unhealthy - serving 503 to all external traffic\n2024-03-14T02:11:24Z [network-monitor] CRITICAL VLAN 300 now also affected - multicast flood propagating to all VLANs\n2024-03-14T02:11:25Z [kafka] ERROR NetworkException: Disconnected from node 2 (broker-02.internal/10.0.6.22:9092)\n2024-03-14T02:11:25Z [kafka] ERROR org.apache.kafka.clients.NetworkClient: Connection to node 1 could not be established. Broker may not be available.\n2024-03-14T02:11:26Z [recommendation-service] ERROR failed to fetch recommendations: context deadline exceeded (Client.Timeout exceeded while awaiting headers)\n2024-03-14T02:11:27Z [currency-service] ERROR grpc: addrConn.createTransport failed to connect to {10.0.7.5:7001 0 nil}. Err: connection refused. Reconnecting...\n2024-03-14T02:11:28Z [network-monitor] ERROR Switch core-switch-rack-A01 has become unreachable - management plane down\n2024-03-14T02:11:28Z [network-monitor] ERROR Switch core-switch-rack-A02 has become unreachable - management plane down\n2024-03-14T02:11:29Z [alert-manager] FIRING: GlobalOutage - error_rate=98.7% duration=74s all_services=down\n2024-03-14T02:11:30Z [network-monitor] CRITICAL Datacenter network partitioned - east/west traffic isolation complete\n2024-03-14T02:15:44Z [network-monitor] INFO  Emergency: manual IGMP snooping re-enable pushed to core-switch-rack-A01 via out-of-band management\n2024-03-14T02:16:01Z [network-monitor] INFO  Multicast flood subsiding on VLAN 100 - traffic 210 Mbps\n2024-03-14T02:16:15Z [network-monitor] INFO  STP topology stabilizing - BPDU storm rate dropping\n2024-03-14T02:16:30Z [frontend] INFO  Upstream connections recovering - cart-service responding\n2024-03-14T02:16:45Z [frontend] INFO  Error rate declining: 67% (was 98.7%)\n2024-03-14T02:17:10Z [loadbalancer] INFO  frontend-01.internal health check PASSED\n2024-03-14T02:17:12Z [loadbalancer] INFO  frontend-02.internal health check PASSED\n2024-03-14T02:17:30Z [frontend] INFO  Error rate: 12% - services recovering\n2024-03-14T02:18:05Z [frontend] INFO  Error rate: 0.4% - normal operations resumed\n2024-03-14T02:18:10Z [network-monitor] INFO  All VLANs stable - multicast flood resolved. IGMP snooping now enabled datacenter-wide\n2024-03-14T02:18:15Z [alert-manager] RESOLVED: GlobalOutage - error_rate=0.4% all_services=healthy",
+  "recent_deploys": [
+    {
+      "sha": "a3f92c1",
+      "timestamp": "2024-03-13T18:05:00Z",
+      "author": "james.okafor",
+      "message": "frontend: upgrade gRPC client library to v1.62.0",
+      "changed_files": [
+        "go.mod",
+        "go.sum",
+        "frontend/rpc/client.go"
+      ]
+    },
+    {
+      "sha": "b71de44",
+      "timestamp": "2024-03-13T20:30:00Z",
+      "author": "priya.sharma",
+      "message": "cart-service: increase redis connection pool size to 200",
+      "changed_files": [
+        "cart-service/config/redis.yaml",
+        "cart-service/internal/store/redis_pool.go"
+      ]
+    },
+    {
+      "sha": "c88a021",
+      "timestamp": "2024-03-13T22:00:00Z",
+      "author": "mike.leblanc",
+      "message": "network-infra: automate VLAN config push via network-monitor agent",
+      "changed_files": [
+        "infra/network-monitor/config_push.py",
+        "infra/network-monitor/vlan_config.yaml",
+        "infra/network-monitor/igmp_settings.yaml"
+      ]
+    },
+    {
+      "sha": "d94bc37",
+      "timestamp": "2024-03-14T00:45:00Z",
+      "author": "mike.leblanc",
+      "message": "network-infra: disable IGMP snooping on VLAN 100-300 for multicast rollout prep",
+      "changed_files": [
+        "infra/network-monitor/igmp_settings.yaml",
+        "infra/network-monitor/vlan_config.yaml"
+      ]
+    },
+    {
+      "sha": "e02f118",
+      "timestamp": "2024-03-14T01:55:00Z",
+      "author": "automated-deploy-bot",
+      "message": "network-infra: scheduled apply of igmp_settings.yaml to all production switches",
+      "changed_files": [
+        "infra/network-monitor/apply_config.sh",
+        "infra/network-monitor/igmp_settings.yaml"
+      ]
+    },
+    {
+      "sha": "f13d759",
+      "timestamp": "2024-03-14T02:00:00Z",
+      "author": "sarah.chen",
+      "message": "recommendation-service: enable A/B test flag for new ranking model",
+      "changed_files": [
+        "recommendation-service/config/feature_flags.yaml"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy d94bc37 by mike.leblanc, applied to production switches at 02:11Z via automated deploy e02f118, disabled IGMP snooping on VLANs 100-300 across all core switches as part of a multicast rollout preparation. Without IGMP snooping, switches could not constrain multicast traffic to registered ports and instead flooded it to all ports on each VLAN. This triggered a layer-2 broadcast storm that saturated switch CPUs, caused CAM table overflows, and induced a spanning tree topology change storm. The resulting network partition made all datacenter services including frontend, cart-service, checkout-service, postgres, redis, kafka completely unreachable, causing a global outage with 98.7% error rate.",
+  "ground_truth_remediation": "1. Immediately re-enable IGMP snooping on all affected VLANs via out-of-band switch management (emergency CLI access to core switches). 2. Revert igmp_settings.yaml from commit d94bc37 to restore snooping-enabled configuration and re-push to all switches. 3. Allow STP to reconverge and validate multicast flood has subsided (traffic below 200 Mbps threshold). 4. Confirm all service health checks pass before declaring all-clear. 5. Post-incident: require a staged rollout with canary switch testing and a network traffic impact assessment before any IGMP configuration changes are applied datacenter-wide.",
+  "red_herring": null
+}

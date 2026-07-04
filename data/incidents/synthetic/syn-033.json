@@ -1,0 +1,89 @@
+{
+  "id": "syn-033",
+  "subset": "synthetic",
+  "category": "config_error",
+  "affected_service": "kafka",
+  "severity": "high",
+  "alert_text": "ALERT: Kafka under-replicated partitions count > 0 for 10+ minutes. Topic 'otel-traces' has replication factor 1, ISR degraded. Broker count=3 but min.insync.replicas=2 unmet — producers failing with NOT_ENOUGH_REPLICAS.",
+  "log_window": "2026-05-05T08:52:11.034Z [kafka-broker-1] INFO  KafkaServer - Starting broker id=1 with config loaded from /etc/kafka/server.properties\n2026-05-05T08:52:11.219Z [kafka-broker-1] INFO  KafkaConfig - broker.id=1, listeners=PLAINTEXT://kafka-broker-1:9092\n2026-05-05T08:52:11.341Z [kafka-broker-1] INFO  KafkaConfig - log.dirs=/var/kafka/data, num.partitions=12\n2026-05-05T08:52:11.402Z [kafka-broker-1] INFO  KafkaConfig - default.replication.factor=1 (WARNING: value changed from previous 3)\n2026-05-05T08:52:11.558Z [kafka-broker-1] WARN  KafkaConfig - min.insync.replicas=2 but default.replication.factor=1; producers using acks=all will fail\n2026-05-05T08:52:12.003Z [kafka-broker-1] INFO  LogManager - Loading logs from /var/kafka/data\n2026-05-05T08:52:12.441Z [kafka-broker-1] INFO  LogManager - Completed loading logs; 47 partitions loaded\n2026-05-05T08:52:13.102Z [kafka-broker-2] INFO  KafkaServer - Starting broker id=2 with config loaded from /etc/kafka/server.properties\n2026-05-05T08:52:13.289Z [kafka-broker-2] INFO  KafkaConfig - default.replication.factor=1 (WARNING: value changed from previous 3)\n2026-05-05T08:52:13.312Z [kafka-broker-2] WARN  KafkaConfig - min.insync.replicas=2 but default.replication.factor=1; producers using acks=all will fail\n2026-05-05T08:52:14.774Z [kafka-broker-3] INFO  KafkaServer - Starting broker id=3 with config loaded from /etc/kafka/server.properties\n2026-05-05T08:52:14.891Z [kafka-broker-3] INFO  KafkaConfig - default.replication.factor=1 (WARNING: value changed from previous 3)\n2026-05-05T08:52:15.003Z [zookeeper] INFO  QuorumPeer - Follower quorum established, ensemble size=3\n2026-05-05T08:52:15.781Z [kafka-broker-1] INFO  ReplicaManager - Elected as leader for 47 partitions\n2026-05-05T08:52:16.003Z [kafka-broker-1] INFO  KafkaController - Cluster controller elected on broker-1\n2026-05-05T08:52:16.220Z [kafka-broker-1] INFO  TopicAdmin - Creating topic 'otel-traces' partitions=12 replication_factor=1\n2026-05-05T08:52:16.338Z [kafka-broker-1] WARN  TopicAdmin - Topic 'otel-traces' created with replication_factor=1; cluster has 3 brokers — suboptimal durability\n2026-05-05T08:52:16.512Z [kafka-broker-1] INFO  TopicAdmin - Creating topic 'otel-metrics' partitions=12 replication_factor=1\n2026-05-05T08:52:16.601Z [kafka-broker-1] WARN  TopicAdmin - Topic 'otel-metrics' created with replication_factor=1; cluster has 3 brokers — suboptimal durability\n2026-05-05T08:52:16.788Z [kafka-broker-1] INFO  TopicAdmin - Creating topic 'otel-logs' partitions=12 replication_factor=1\n2026-05-05T08:52:16.845Z [kafka-broker-1] WARN  TopicAdmin - Topic 'otel-logs' created with replication_factor=1; cluster has 3 brokers — suboptimal durability\n2026-05-05T08:53:01.002Z [otel-collector] INFO  kafkaexporter - Connecting to Kafka brokers=[kafka-broker-1:9092,kafka-broker-2:9092,kafka-broker-3:9092]\n2026-05-05T08:53:01.334Z [otel-collector] INFO  kafkaexporter - Producer initialized, acks=all, compression=snappy\n2026-05-05T08:53:02.007Z [otel-collector] INFO  kafkaexporter - Successfully sent 512 span records to topic=otel-traces\n2026-05-05T08:53:02.441Z [otel-collector] INFO  kafkaexporter - Successfully sent 320 metric records to topic=otel-metrics\n2026-05-05T08:54:15.003Z [kafka-broker-2] INFO  ReplicaFetcherManager - Fetcher thread started for leader=broker-1\n2026-05-05T08:54:22.341Z [kafka-broker-1] WARN  ReplicaManager - Under-replicated partitions detected: otel-traces[0,1,2,3,4,5,6,7,8,9,10,11]\n2026-05-05T08:54:22.509Z [kafka-broker-1] WARN  ReplicaManager - Under-replicated partitions detected: otel-metrics[0,1,2,3,4,5,6,7,8,9,10,11]\n2026-05-05T08:54:22.677Z [kafka-broker-1] WARN  ReplicaManager - Under-replicated partitions detected: otel-logs[0,1,2,3,4,5,6,7,8,9,10,11]\n2026-05-05T08:54:30.001Z [otel-collector] WARN  kafkaexporter - Producer send failed: NOT_ENOUGH_REPLICAS (topic=otel-traces, partition=3)\n2026-05-05T08:54:30.118Z [otel-collector] WARN  kafkaexporter - Retrying batch (attempt 1/3) after 200ms\n2026-05-05T08:54:30.441Z [otel-collector] WARN  kafkaexporter - Producer send failed: NOT_ENOUGH_REPLICAS (topic=otel-traces, partition=3)\n2026-05-05T08:54:30.559Z [otel-collector] WARN  kafkaexporter - Retrying batch (attempt 2/3) after 400ms\n2026-05-05T08:54:31.002Z [otel-collector] ERROR kafkaexporter - Producer send permanently failed after 3 retries: NOT_ENOUGH_REPLICAS\n  at github.com/IBM/sarama.(*asyncProducer).finishRetries(producer.go:721)\n  at github.com/IBM/sarama.(*asyncProducer).retryHandler(producer.go:689)\n2026-05-05T08:54:31.221Z [otel-collector] ERROR kafkaexporter - Dropping 512 spans — will NOT retry. topic=otel-traces\n2026-05-05T08:54:35.003Z [otel-collector] WARN  kafkaexporter - Producer send failed: NOT_ENOUGH_REPLICAS (topic=otel-metrics, partition=7)\n2026-05-05T08:54:35.441Z [otel-collector] ERROR kafkaexporter - Producer send permanently failed after 3 retries: NOT_ENOUGH_REPLICAS\n  at github.com/IBM/sarama.(*asyncProducer).finishRetries(producer.go:721)\n2026-05-05T08:54:35.607Z [otel-collector] ERROR kafkaexporter - Dropping 320 metrics — will NOT retry. topic=otel-metrics\n2026-05-05T08:55:00.003Z [kafka-broker-1] ERROR ReplicaManager - ISR shrink: otel-traces[3] ISR=[broker-1] expected size=2 (min.insync.replicas=2)\n2026-05-05T08:55:00.178Z [kafka-broker-1] ERROR ReplicaManager - ISR shrink: otel-metrics[7] ISR=[broker-1] expected size=2 (min.insync.replicas=2)\n2026-05-05T08:55:01.002Z [kafka-broker-1] ERROR KafkaController - UnderReplicatedPartitions metric: 36 partitions below ISR threshold\n2026-05-05T08:55:01.334Z [kafka-topic-monitor] {\"level\":\"error\",\"ts\":\"2026-05-05T08:55:01.334Z\",\"topic\":\"otel-traces\",\"replication_factor\":1,\"expected\":3,\"msg\":\"topic replication factor mismatch\"}\n2026-05-05T08:55:01.512Z [kafka-topic-monitor] {\"level\":\"error\",\"ts\":\"2026-05-05T08:55:01.512Z\",\"topic\":\"otel-metrics\",\"replication_factor\":1,\"expected\":3,\"msg\":\"topic replication factor mismatch\"}\n2026-05-05T08:55:01.688Z [kafka-topic-monitor] {\"level\":\"error\",\"ts\":\"2026-05-05T08:55:01.688Z\",\"topic\":\"otel-logs\",\"replication_factor\":1,\"expected\":3,\"msg\":\"topic replication factor mismatch\"}\n2026-05-05T08:55:10.001Z [otel-collector] ERROR kafkaexporter - Consecutive failures=5; circuit breaker OPEN for topic=otel-traces\n2026-05-05T08:55:10.221Z [otel-collector] ERROR kafkaexporter - Consecutive failures=5; circuit breaker OPEN for topic=otel-metrics\n2026-05-05T08:55:10.334Z [otel-collector] ERROR kafkaexporter - Consecutive failures=5; circuit breaker OPEN for topic=otel-logs\n2026-05-05T08:56:00.003Z [kafka-broker-1] FATAL KafkaController - NOT_ENOUGH_REPLICAS errors escalating: 142 produce requests rejected in last 60s\n2026-05-05T08:56:00.221Z [kafka-broker-1] ERROR KafkaController - config key 'default.replication.factor'=1 conflicts with 'min.insync.replicas'=2 in /etc/kafka/server.properties\n2026-05-05T08:56:00.441Z [kafka-broker-1] ERROR KafkaController - Recommend: set default.replication.factor=3 to match cluster size and satisfy min.insync.replicas constraint\n2026-05-05T08:57:01.002Z [trace-pipeline] {\"level\":\"warn\",\"ts\":\"2026-05-05T08:57:01.002Z\",\"service\":\"trace-pipeline\",\"msg\":\"No spans received in last 120s — upstream Kafka export failure suspected\"}\n2026-05-05T08:57:01.334Z [trace-pipeline] {\"level\":\"error\",\"ts\":\"2026-05-05T08:57:01.334Z\",\"service\":\"trace-pipeline\",\"topic\":\"otel-traces\",\"consumer_lag\":0,\"msg\":\"Consumer lag=0 but no new messages; producer-side failure confirmed\"}\n2026-05-05T08:58:00.003Z [kafka-topic-monitor] {\"level\":\"fatal\",\"ts\":\"2026-05-05T08:58:00.003Z\",\"under_replicated_partitions\":36,\"min_isr_violations\":36,\"msg\":\"Cluster health CRITICAL: all OTel topics under-replicated\"}\n2026-05-05T08:58:01.221Z [alertmanager] ALERT firing: KafkaUnderReplicatedPartitions value=36 threshold=0 for=10m labels={cluster=prod-kafka, env=production}\n2026-05-05T08:58:01.334Z [alertmanager] ALERT firing: KafkaProducerNotEnoughReplicas rate=2.4/s threshold=0.1/s labels={cluster=prod-kafka, topic=otel-traces}\n2026-05-05T09:00:15.003Z [kafka-broker-1] ERROR ReplicaManager - UnderReplicatedPartitions count has not decreased in 5 min; config-driven — broker restart will not resolve\n2026-05-05T09:00:15.441Z [kafka-broker-1] WARN  AdminClient - kafka-topics.sh --alter cannot increase replication factor directly; use kafka-reassign-partitions.sh\n2026-05-05T09:01:00.001Z [otel-collector] ERROR kafkaexporter - circuit breaker OPEN — not attempting sends. Telemetry data loss ongoing.\n2026-05-05T09:01:00.334Z [otel-collector] ERROR kafkaexporter - Span drop counter total=12480 since circuit breaker opened\n2026-05-05T09:02:00.003Z [kafka-broker-2] WARN  LogManager - idle; no replication traffic; replication_factor=1 means no follower fetch activity\n2026-05-05T09:02:01.221Z [kafka-broker-3] WARN  LogManager - idle; no replication traffic; replication_factor=1 means no follower fetch activity\n2026-05-05T09:03:00.001Z [kafka-topic-monitor] {\"level\":\"error\",\"ts\":\"2026-05-05T09:03:00.001Z\",\"msg\":\"Alerting on-call: default.replication.factor mismatch detected in /etc/kafka/server.properties\",\"config_file_sha256\":\"c3ab8ff13720522e3b4e9b8c4ae3b2f1d9\"}\n2026-05-05T09:04:00.003Z [kafka-broker-1] ERROR KafkaController - Partition reassignment required for 36 partitions to restore replication_factor=3\n2026-05-05T09:05:00.001Z [trace-pipeline] {\"level\":\"error\",\"ts\":\"2026-05-05T09:05:00.001Z\",\"service\":\"trace-pipeline\",\"msg\":\"SLO breach: trace ingest availability < 99.9% — missing data for last 12 minutes\"}",
+  "recent_deploys": [
+    {
+      "sha": "7cdf4e6a5bb4",
+      "timestamp": "2026-04-27T06:41:57Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github.com/IBM/sarama (#3310)",
+      "changed_files": [
+        "go.mod",
+        "go.sum",
+        "exporter/kafkaexporter/go.mod",
+        "exporter/kafkaexporter/go.sum"
+      ]
+    },
+    {
+      "sha": "3e626da455a9",
+      "timestamp": "2026-04-28T14:08:34Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "package.json",
+        "package-lock.json"
+      ]
+    },
+    {
+      "sha": "a4553ea12420",
+      "timestamp": "2026-04-30T02:38:18Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the bundler-production-dependencies group across 1 directory w",
+      "changed_files": [
+        "Gemfile",
+        "Gemfile.lock"
+      ]
+    },
+    {
+      "sha": "5b738e5f6b1b",
+      "timestamp": "2026-05-05T05:40:48Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github/codeql-action (#3337)",
+      "changed_files": [
+        ".github/workflows/codeql.yml"
+      ]
+    },
+    {
+      "sha": "bb0e91424e8a",
+      "timestamp": "2026-05-05T07:38:47Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 4 updates (#3341)",
+      "changed_files": [
+        "src/cartservice/src/cartservice.csproj",
+        "Directory.Packages.props"
+      ]
+    },
+    {
+      "sha": "5acdff618e47",
+      "timestamp": "2026-05-05T08:11:45Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Add Podman support (#3307)",
+      "changed_files": [
+        "docker/kafka/server.properties",
+        "docker/kafka/docker-compose.yml",
+        "scripts/kafka-cluster-resize.sh",
+        "docs/kafka-deployment.md"
+      ]
+    },
+    {
+      "sha": "997d9970c437",
+      "timestamp": "2026-05-05T08:45:37Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the go-production-dependencies group across 2 directories with",
+      "changed_files": [
+        "go.mod",
+        "go.sum",
+        "receiver/kafkareceiver/go.mod",
+        "receiver/kafkareceiver/go.sum"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Commit 5acdff618e47 (\"Add Podman support\") modified docker/kafka/server.properties and set default.replication.factor=1 — down from the production value of 3 — as part of a cluster resize automation script (scripts/kafka-cluster-resize.sh). When the Kafka cluster restarted after the resize, all three OTel topics (otel-traces, otel-metrics, otel-logs) were created with replication_factor=1. Because min.insync.replicas=2 remained at its original value, every producer request using acks=all was immediately rejected with NOT_ENOUGH_REPLICAS, causing the otel-collector to drop telemetry and open its circuit breaker.",
+  "ground_truth_remediation": "1. Update docker/kafka/server.properties: set default.replication.factor=3 (reverting the change from commit 5acdff618e47). 2. Use kafka-reassign-partitions.sh to increase the replication factor of existing topics to 3: generate a reassignment JSON for all 36 partitions across otel-traces, otel-metrics, and otel-logs, then execute with `kafka-reassign-partitions.sh --execute`. 3. Verify ISR counts reach 3 for all partitions using `kafka-topics.sh --describe`. 4. Close the otel-collector circuit breaker by restarting the exporter or issuing an admin reset so telemetry flow resumes. 5. Confirm UnderReplicatedPartitions metric returns to 0 and producer NOT_ENOUGH_REPLICAS errors cease.",
+  "red_herring": null
+}

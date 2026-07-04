@@ -1,0 +1,90 @@
+{
+  "id": "syn-002",
+  "subset": "synthetic",
+  "category": "db_saturation",
+  "affected_service": "payment-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: payment-service HTTP 5xx error rate exceeded 25% for 5 consecutive minutes. P99 latency at 12,400ms. PagerDuty alert #PD-88421 triggered.",
+  "log_window": "2026-05-13T11:48:55.012Z INFO  [payment-service] Starting payment-service v3.7.1 (sha=94f8a915b080)\n2026-05-13T11:48:55.210Z INFO  [payment-service] Database pool initialized: min=2 max=5 idle_timeout=30s\n2026-05-13T11:48:55.301Z INFO  [payment-service] Listening on :8080\n2026-05-13T11:49:01.114Z INFO  [payment-service] {\"level\":\"info\",\"msg\":\"health check ok\",\"db_pool_open\":2,\"db_pool_idle\":2}\n2026-05-13T11:49:10.222Z INFO  [payment-service] {\"level\":\"info\",\"msg\":\"POST /v1/payments processed\",\"duration_ms\":48,\"status\":200}\n2026-05-13T11:49:11.340Z INFO  [payment-service] {\"level\":\"info\",\"msg\":\"POST /v1/payments processed\",\"duration_ms\":51,\"status\":200}\n2026-05-13T11:49:22.881Z INFO  [payment-service] {\"level\":\"info\",\"msg\":\"POST /v1/payments processed\",\"duration_ms\":53,\"status\":200}\n2026-05-13T11:50:00.001Z INFO  [payment-service] {\"level\":\"info\",\"msg\":\"health check ok\",\"db_pool_open\":2,\"db_pool_idle\":2}\n2026-05-13T11:50:15.443Z INFO  [payment-service] {\"level\":\"info\",\"msg\":\"POST /v1/payments processed\",\"duration_ms\":61,\"status\":200}\n2026-05-13T11:50:33.991Z INFO  [payment-service] {\"level\":\"info\",\"msg\":\"POST /v1/payments processed\",\"duration_ms\":58,\"status\":200}\n2026-05-13T11:51:00.003Z INFO  [payment-service] {\"level\":\"info\",\"msg\":\"health check ok\",\"db_pool_open\":3,\"db_pool_idle\":1}\n2026-05-13T11:51:12.774Z WARN  [payment-service] {\"level\":\"warn\",\"msg\":\"query latency elevated\",\"query\":\"SELECT * FROM payment_ledger WHERE account_id=?\",\"duration_ms\":340}\n2026-05-13T11:51:18.002Z WARN  [payment-service] {\"level\":\"warn\",\"msg\":\"query latency elevated\",\"query\":\"SELECT * FROM payment_ledger WHERE account_id=?\",\"duration_ms\":512}\n2026-05-13T11:51:24.333Z INFO  [payment-service] {\"level\":\"info\",\"msg\":\"POST /v1/payments processed\",\"duration_ms\":620,\"status\":200}\n2026-05-13T11:51:30.001Z INFO  [postgres-proxy] client=payment-service connections_active=4 connections_idle=1 connections_max=5\n2026-05-13T11:51:45.882Z WARN  [payment-service] {\"level\":\"warn\",\"msg\":\"db pool pressure detected\",\"db_pool_open\":5,\"db_pool_idle\":0,\"db_pool_max\":5}\n2026-05-13T11:51:50.119Z WARN  [payment-service] {\"level\":\"warn\",\"msg\":\"query latency elevated\",\"query\":\"SELECT * FROM payment_ledger WHERE account_id=?\",\"duration_ms\":1102}\n2026-05-13T11:51:55.441Z WARN  [payment-service] {\"level\":\"warn\",\"msg\":\"POST /v1/payments slow\",\"duration_ms\":1340,\"status\":200}\n2026-05-13T11:52:00.004Z WARN  [payment-service] {\"level\":\"warn\",\"msg\":\"health check degraded\",\"db_pool_open\":5,\"db_pool_idle\":0,\"wait_queue_depth\":3}\n2026-05-13T11:52:01.881Z INFO  [postgres-proxy] client=payment-service connections_active=5 connections_idle=0 connections_max=5 wait_queue=3\n2026-05-13T11:52:05.002Z WARN  [payment-service] {\"level\":\"warn\",\"msg\":\"connection pool wait queue non-zero\",\"wait_queue_depth\":5,\"db_pool_max\":5}\n2026-05-13T11:52:10.773Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"connection pool acquisition timeout\",\"wait_ms\":5000,\"db_pool_max\":5,\"error\":\"context deadline exceeded\"}\n2026-05-13T11:52:10.774Z ERROR [payment-service] goroutine 441 [running]:\ngithub.com/payment-service/db.(*Pool).Acquire(0xc0003a8200, 0x1400...)\n    /app/db/pool.go:87 +0x1f3\n2026-05-13T11:52:10.775Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"POST /v1/payments failed\",\"status\":503,\"error\":\"db pool exhausted\"}\n2026-05-13T11:52:11.002Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"connection pool acquisition timeout\",\"wait_ms\":5000,\"db_pool_max\":5,\"error\":\"context deadline exceeded\"}\n2026-05-13T11:52:11.003Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"POST /v1/payments failed\",\"status\":503,\"error\":\"db pool exhausted\"}\n2026-05-13T11:52:13.445Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"connection pool acquisition timeout\",\"wait_ms\":5000,\"db_pool_max\":5,\"error\":\"context deadline exceeded\"}\n2026-05-13T11:52:13.446Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"POST /v1/payments failed\",\"status\":503,\"error\":\"db pool exhausted\"}\n2026-05-13T11:52:15.001Z INFO  [postgres-proxy] client=payment-service connections_active=5 connections_idle=0 connections_max=5 wait_queue=8 rejected=3\n2026-05-13T11:52:16.774Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"sequential failures escalating\",\"failure_count\":3,\"window_seconds\":10}\n2026-05-13T11:52:20.002Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"POST /v1/payments failed\",\"status\":503,\"error\":\"db pool exhausted\"}\n2026-05-13T11:52:21.119Z WARN  [api-gateway] upstream=payment-service status=503 path=/v1/payments retrying=true attempt=1\n2026-05-13T11:52:23.445Z WARN  [api-gateway] upstream=payment-service status=503 path=/v1/payments retrying=true attempt=2\n2026-05-13T11:52:25.002Z ERROR [api-gateway] upstream=payment-service status=503 path=/v1/payments retrying=false attempt=3 giving_up=true\n2026-05-13T11:52:25.003Z ERROR [api-gateway] returning 502 to client path=/v1/payments\n2026-05-13T11:52:28.334Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"POST /v1/payments failed\",\"status\":503,\"error\":\"db pool exhausted\"}\n2026-05-13T11:52:30.001Z INFO  [postgres-proxy] client=payment-service connections_active=5 connections_idle=0 connections_max=5 wait_queue=12 rejected=7\n2026-05-13T11:52:30.112Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"db query seq-scan detected on payment_ledger, no index on account_id\",\"rows_examined\":2400000,\"duration_ms\":4820}\n2026-05-13T11:52:31.005Z FATAL [payment-service] {\"level\":\"fatal\",\"msg\":\"circuit breaker OPEN — all DB requests failing fast\",\"error_rate\":0.87}\n2026-05-13T11:52:31.112Z ERROR [api-gateway] upstream=payment-service status=503 path=/v1/payments retrying=false\n2026-05-13T11:52:33.001Z ERROR [api-gateway] upstream=payment-service status=503 path=/v1/refunds retrying=false\n2026-05-13T11:52:35.441Z ERROR [api-gateway] upstream=payment-service status=503 path=/v1/payments retrying=false\n2026-05-13T11:52:40.003Z WARN  [postgres-proxy] client=payment-service long_query detected duration_ms=5100 query=\"SELECT * FROM payment_ledger WHERE account_id=?\"\n2026-05-13T11:52:40.004Z WARN  [postgres-proxy] sequential_scan on payment_ledger table_rows=2400000 missing_index=account_id\n2026-05-13T11:52:41.882Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"POST /v1/payments failed\",\"status\":503,\"error\":\"circuit breaker open\"}\n2026-05-13T11:52:43.003Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"POST /v1/refunds failed\",\"status\":503,\"error\":\"circuit breaker open\"}\n2026-05-13T11:52:45.119Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"POST /v1/payments failed\",\"status\":503,\"error\":\"circuit breaker open\"}\n2026-05-13T11:53:00.001Z FATAL [payment-service] {\"level\":\"fatal\",\"msg\":\"health check FAILED\",\"db_pool_open\":5,\"db_pool_idle\":0,\"circuit_breaker\":\"OPEN\",\"http_5xx_rate\":0.91}\n2026-05-13T11:53:00.112Z ERROR [postgres-proxy] client=payment-service all_slots_exhausted=true connections_max=5 rejected_total=18\n2026-05-13T11:53:01.003Z ERROR [api-gateway] upstream=payment-service health=FAILING alerting=true\n2026-05-13T11:53:05.774Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"POST /v1/payments failed\",\"status\":503,\"error\":\"circuit breaker open\"}\n2026-05-13T11:53:10.002Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"POST /v1/payments failed\",\"status\":503,\"error\":\"circuit breaker open\"}\n2026-05-13T11:53:12.331Z ERROR [postgres-proxy] client=payment-service long_query_killed duration_ms=8200 reason=statement_timeout query=\"SELECT * FROM payment_ledger WHERE account_id=?\"\n2026-05-13T11:53:15.882Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"POST /v1/refunds failed\",\"status\":503,\"error\":\"circuit breaker open\"}\n2026-05-13T11:53:20.004Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"POST /v1/payments failed\",\"status\":503,\"error\":\"circuit breaker open\"}\n2026-05-13T11:53:30.001Z FATAL [payment-service] {\"level\":\"fatal\",\"msg\":\"health check FAILED\",\"db_pool_open\":5,\"db_pool_idle\":0,\"circuit_breaker\":\"OPEN\",\"http_5xx_rate\":0.97}\n2026-05-13T11:53:35.112Z ERROR [api-gateway] upstream=payment-service status=503 path=/v1/payments returning_502_to_client=true\n2026-05-13T11:53:40.003Z ERROR [api-gateway] upstream=payment-service status=503 path=/v1/refunds returning_502_to_client=true\n2026-05-13T11:53:45.774Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"all workers blocked on db pool acquisition\",\"blocked_goroutines\":47,\"db_pool_max\":5}\n2026-05-13T11:54:00.001Z FATAL [payment-service] {\"level\":\"fatal\",\"msg\":\"health check FAILED\",\"db_pool_open\":5,\"db_pool_idle\":0,\"circuit_breaker\":\"OPEN\",\"http_5xx_rate\":1.0}\n2026-05-13T11:54:01.003Z ERROR [postgres-proxy] client=payment-service rejected_total=54 connections_max=5 wait_queue_peak=22\n2026-05-13T11:54:05.112Z ERROR [api-gateway] upstream=payment-service health=CRITICAL pagerduty_alert=PD-88421 triggered=true\n2026-05-13T11:54:10.002Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"POST /v1/payments failed\",\"status\":503,\"error\":\"circuit breaker open\"}\n2026-05-13T11:54:15.441Z ERROR [payment-service] {\"level\":\"error\",\"msg\":\"POST /v1/refunds failed\",\"status\":503,\"error\":\"circuit breaker open\"}\n2026-05-13T11:54:20.003Z WARN  [postgres-proxy] server_total_connections=97 server_max_connections=100 note=\"other clients not yet impacted\"\n2026-05-13T11:54:30.001Z FATAL [payment-service] {\"level\":\"fatal\",\"msg\":\"health check FAILED\",\"db_pool_open\":5,\"db_pool_idle\":0,\"circuit_breaker\":\"OPEN\",\"http_5xx_rate\":1.0,\"uptime_seconds\":331}",
+  "recent_deploys": [
+    {
+      "sha": "0982a0268aec",
+      "timestamp": "2026-04-16T14:12:23Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump eslint-config-next (#3270)",
+      "changed_files": [
+        "package.json",
+        "package-lock.json",
+        ".eslintrc.json"
+      ]
+    },
+    {
+      "sha": "0410576889f7",
+      "timestamp": "2026-04-21T12:05:34Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "requirements.txt",
+        "services/payment-service/requirements.txt"
+      ]
+    },
+    {
+      "sha": "51f1a6bba4e8",
+      "timestamp": "2026-04-24T06:02:13Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Remove tag from the docker logging used via docker compose (#3304)",
+      "changed_files": [
+        "docker-compose.yml",
+        "docker-compose.override.yml",
+        "services/payment-service/docker-compose.yml"
+      ]
+    },
+    {
+      "sha": "bade4db5c2e0",
+      "timestamp": "2026-04-28T14:14:11Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "package.json",
+        "package-lock.json",
+        "services/frontend/package.json"
+      ]
+    },
+    {
+      "sha": "6bb672061d65",
+      "timestamp": "2026-04-30T02:22:28Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump @tanstack/react-query (#3322)",
+      "changed_files": [
+        "services/frontend/package.json",
+        "services/frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "449ee7cc0d6e",
+      "timestamp": "2026-05-13T10:41:00Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github.com/IBM/sarama (#3360)",
+      "changed_files": [
+        "services/payment-service/go.mod",
+        "services/payment-service/go.sum",
+        "services/payment-service/infra/db_pool_config.go",
+        "services/payment-service/infra/db_pool_config_test.go"
+      ]
+    },
+    {
+      "sha": "94f8a915b080",
+      "timestamp": "2026-05-13T11:48:42Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "services/frontend/package.json",
+        "services/frontend/package-lock.json",
+        "services/frontend/.npmrc"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=449ee7cc0d6e (2026-05-13T10:41:00Z) modified services/payment-service/infra/db_pool_config.go as part of an infra ticket bundled into the sarama bump PR. The change reduced the database connection pool maximum from 25 to 5 (DB_POOL_MAX=5), matching a misconfigured infrastructure template intended for a staging environment. Under normal production traffic, the payment_ledger table is queried by account_id without a covering index, causing full sequential scans (2.4M rows) that hold connections for 4-8 seconds each. With only 5 connections available the pool is immediately exhausted at moderate concurrency, causing acquisition timeouts, circuit breaker activation, and 100% HTTP 503 error rate on all payment endpoints.",
+  "ground_truth_remediation": "1. Immediately hotfix db_pool_config.go to restore DB_POOL_MAX to 25 (or the previous production value) and redeploy payment-service to restore connection headroom within ~15 minutes. 2. Alternatively, roll back to the last known-good deploy (sha=6bb672061d65) via: `kubectl rollout undo deployment/payment-service`. 3. Once service is restored, add a missing index to eliminate sequential scans: `CREATE INDEX CONCURRENTLY idx_payment_ledger_account_id ON payment_ledger(account_id);` — this prevents recurrence even under pool pressure. 4. Add a CI guard that validates DB_POOL_MAX is within an acceptable range (e.g., >= 20) before any deploy to production.",
+  "red_herring": null
+}

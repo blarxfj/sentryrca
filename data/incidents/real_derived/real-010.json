@@ -1,0 +1,83 @@
+{
+  "id": "real-010",
+  "subset": "real_derived",
+  "category": "config_error",
+  "affected_service": "frontend",
+  "severity": "critical",
+  "alert_text": "CRITICAL: frontend service DNS resolution failures >80% for internal hostnames; checkout-service, recommendation-service, ad-service returning NXDOMAIN; p99 latency >30s; error rate 94% on GET /",
+  "log_window": "2024-03-14T02:11:03Z [puppet-agent] INFO  Starting Puppet agent run (trigger: scheduled, interval=30m)\n2024-03-14T02:11:04Z [puppet-agent] INFO  Applying catalog version 7f3a92c\n2024-03-14T02:11:05Z [puppet-agent] INFO  /Stage[main]/Dns::Nameserver/Service[named-auth]: Triggered refresh from 1 event\n2024-03-14T02:11:05Z [puppet-agent] INFO  Service[named-auth]: restarted successfully\n2024-03-14T02:11:05Z [puppet-agent] NOTICE Catalog applied in 1.82s\n2024-03-14T02:11:06Z [named-auth] INFO  zone internal.svc/IN: loaded serial 2024031401\n2024-03-14T02:11:06Z [named-cache] WARNING server still running with old forwarder 10.0.1.53 (not restarted)\n2024-03-14T02:11:08Z [named-cache] ERROR  connection to forwarder 10.0.1.53 timed out (new authoritative IP: 10.0.2.53)\n2024-03-14T02:11:08Z [named-cache] ERROR  SERVFAIL for checkout-service.internal.svc\n2024-03-14T02:11:09Z [named-cache] ERROR  SERVFAIL for recommendation-service.internal.svc\n2024-03-14T02:11:10Z [named-cache] ERROR  SERVFAIL for ad-service.internal.svc\n2024-03-14T02:11:10Z [named-cache] ERROR  SERVFAIL for cart-service.internal.svc\n2024-03-14T02:11:11Z [frontend] ERROR  dial tcp: lookup checkout-service.internal.svc: no such host\n2024-03-14T02:11:11Z [frontend] ERROR  dial tcp: lookup recommendation-service.internal.svc: no such host\n2024-03-14T02:11:12Z [frontend] ERROR  http: handler GET / returned 503 (DNS resolution failure)\n2024-03-14T02:11:13Z [frontend] ERROR  http: handler GET /cart returned 503 (DNS resolution failure)\n2024-03-14T02:11:14Z [alertmanager] FIRING: frontend_error_rate{job=frontend} = 0.94 > threshold 0.10\n2024-03-14T02:11:14Z [alertmanager] FIRING: dns_resolution_failures{resolver=named-cache} = 847/min\n2024-03-14T02:12:01Z [oncall-bot] PagerDuty incident P-9AF33 created, notified sre-primary\n2024-03-14T02:14:22Z [sre-ops] INFO  Investigating DNS failures; checking named-cache and named-auth status\n2024-03-14T02:14:35Z [sre-ops] INFO  named-cache still pointing forwarder=10.0.1.53, authoritative moved to 10.0.2.53\n2024-03-14T02:14:40Z [sre-ops] INFO  Identified Puppet manifest did not restart named-cache after IP change\n2024-03-14T02:15:10Z [sre-ops] INFO  Initiating emergency Puppet run to restart named-cache and rebuild zone\n2024-03-14T02:15:11Z [puppet-agent] INFO  Starting emergency Puppet agent run (trigger: manual)\n2024-03-14T02:15:12Z [puppet-agent] INFO  Applying catalog version 7f3a92c\n2024-03-14T02:15:13Z [puppet-agent] INFO  Exec[rebuild-zone-file]: Running /usr/local/bin/build-zone.py --api http://provisioning-api.internal.svc/zones/internal\n2024-03-14T02:15:13Z [build-zone.py] INFO  Fetching zone data from provisioning-api.internal.svc\n2024-03-14T02:15:13Z [build-zone.py] ERROR  urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host=provisioning-api.internal.svc, port=443): Max retries exceeded (caused by NewConnectionError: DNS resolution failed: SERVFAIL)\n2024-03-14T02:15:13Z [build-zone.py] WARNING DNS lookup for provisioning-api.internal.svc failed; writing partial zone file\n2024-03-14T02:15:14Z [build-zone.py] WARNING Zone file written with 0 A records (empty record set from failed API call)\n2024-03-14T02:15:15Z [puppet-agent] INFO  /Stage[main]/Dns::Zone/File[/etc/named/zones/internal.svc.zone]: content changed (checksum mismatch)\n2024-03-14T02:15:16Z [puppet-agent] INFO  Service[named-auth]: triggered reload\n2024-03-14T02:15:16Z [named-auth] INFO  zone internal.svc/IN: loaded serial 2024031402\n2024-03-14T02:15:16Z [named-auth] WARNING zone internal.svc/IN: loaded with 0 resource records (zone appears empty)\n2024-03-14T02:15:17Z [named-cache] ERROR  NXDOMAIN for checkout-service.internal.svc\n2024-03-14T02:15:17Z [named-cache] ERROR  NXDOMAIN for recommendation-service.internal.svc\n2024-03-14T02:15:17Z [named-cache] ERROR  NXDOMAIN for ad-service.internal.svc\n2024-03-14T02:15:18Z [named-cache] ERROR  NXDOMAIN for payment-service.internal.svc\n2024-03-14T02:15:18Z [named-cache] ERROR  NXDOMAIN for cart-service.internal.svc\n2024-03-14T02:15:18Z [named-cache] ERROR  NXDOMAIN for email-service.internal.svc\n2024-03-14T02:15:20Z [frontend] ERROR  dial tcp: lookup checkout-service.internal.svc: NXDOMAIN\n2024-03-14T02:15:21Z [frontend] ERROR  dial tcp: lookup payment-service.internal.svc: NXDOMAIN\n2024-03-14T02:15:22Z [frontend] ERROR  error rate now 100% - all internal DNS resolution returning NXDOMAIN\n2024-03-14T02:16:05Z [fileserver-01] WARNING kernel: Out of memory: Kill process 28841 (build-zone.py) score 812\n2024-03-14T02:16:07Z [fileserver-01] ERROR  process table: 247 zombie build-zone.py processes (not reaped)\n2024-03-14T02:16:09Z [fileserver-01] ERROR  MemAvailable: 48 kB (threshold: 512000 kB) - memory critically low\n2024-03-14T02:16:10Z [fileserver-01] ERROR  Cannot fork new processes: Resource temporarily unavailable\n2024-03-14T02:16:11Z [fileserver-02] WARNING kernel: Out of memory: Kill process 29103 (build-zone.py) score 791\n2024-03-14T02:16:12Z [fileserver-02] ERROR  process table: 193 zombie build-zone.py processes (not reaped)\n2024-03-14T02:16:15Z [sre-ops] ERROR  SSH to fileserver-01 failing: cannot fork new processes\n2024-03-14T02:16:20Z [sre-ops] ERROR  SSH to fileserver-02 failing: cannot fork new processes\n2024-03-14T02:18:00Z [sre-ops] INFO  Attempting to manually restart named-cache via out-of-band console\n2024-03-14T02:22:10Z [sre-ops] INFO  Console access established to fileserver-01; killing zombie processes\n2024-03-14T02:22:45Z [fileserver-01] INFO  Process table cleared; 247 stale build-zone.py PIDs reaped\n2024-03-14T02:23:10Z [fileserver-02] INFO  Process table cleared; 193 stale build-zone.py PIDs reaped\n2024-03-14T02:24:00Z [sre-ops] INFO  Manually restarting named-cache with corrected forwarder 10.0.2.53\n2024-03-14T02:24:05Z [named-cache] INFO  Restarted with forwarder=10.0.2.53\n2024-03-14T02:24:06Z [named-cache] INFO  Resolution test checkout-service.internal.svc -> NXDOMAIN (corrupt zone still loaded)\n2024-03-14T02:25:00Z [sre-ops] INFO  Restoring zone file from last known-good backup (serial 2024031401-backup)\n2024-03-14T02:25:10Z [named-auth] INFO  zone internal.svc/IN: loaded serial 2024031401-restore with 312 resource records\n2024-03-14T02:25:11Z [named-cache] INFO  Resolution test checkout-service.internal.svc -> 10.0.2.44 OK\n2024-03-14T02:25:12Z [named-cache] INFO  Resolution test payment-service.internal.svc -> 10.0.2.61 OK\n2024-03-14T02:25:15Z [frontend] INFO  DNS resolution restored; reconnecting to upstream services\n2024-03-14T02:25:18Z [frontend] INFO  http: handler GET / returned 200 OK\n2024-03-14T02:25:20Z [frontend] INFO  error rate dropping: 0.12 (recovery in progress)\n2024-03-14T02:26:45Z [frontend] INFO  error rate: 0.01 - service recovered\n2024-03-14T02:26:50Z [alertmanager] RESOLVED: frontend_error_rate cleared\n2024-03-14T02:26:51Z [alertmanager] RESOLVED: dns_resolution_failures cleared\n2024-03-14T03:46:55Z [sre-ops] INFO  Post-incident: total downtime 1h35m52s; root cause confirmed puppet manifest + zone rebuild circular DNS dependency",
+  "recent_deploys": [
+    {
+      "sha": "a1c4e8f",
+      "timestamp": "2024-03-13T18:05:00Z",
+      "author": "platform-eng",
+      "message": "Update frontend service resource limits and readiness probe timeouts",
+      "changed_files": [
+        "manifests/frontend/deployment.pp",
+        "manifests/frontend/service.pp"
+      ]
+    },
+    {
+      "sha": "b3d72a1",
+      "timestamp": "2024-03-13T20:30:00Z",
+      "author": "netops-bot",
+      "message": "Rotate authoritative nameserver IP block: 10.0.1.53 -> 10.0.2.53",
+      "changed_files": [
+        "manifests/dns/nameserver.pp",
+        "data/network/ip_assignments.yaml"
+      ]
+    },
+    {
+      "sha": "c9f1b34",
+      "timestamp": "2024-03-13T21:00:00Z",
+      "author": "dns-infra",
+      "message": "Update named-auth forwarder config to new IP range; bump zone serial",
+      "changed_files": [
+        "templates/named/named-auth.conf.erb",
+        "files/dns/zones/internal.svc.zone"
+      ]
+    },
+    {
+      "sha": "d5a8c02",
+      "timestamp": "2024-03-13T22:15:00Z",
+      "author": "sre-tooling",
+      "message": "Add build-zone.py helper script for zone file regeneration from provisioning API",
+      "changed_files": [
+        "files/usr/local/bin/build-zone.py",
+        "manifests/dns/zone_rebuild.pp"
+      ]
+    },
+    {
+      "sha": "e2b3f17",
+      "timestamp": "2024-03-13T23:45:00Z",
+      "author": "puppet-admin",
+      "message": "Wire Exec[rebuild-zone-file] into dns::nameserver class on catalog apply",
+      "changed_files": [
+        "manifests/dns/nameserver.pp",
+        "manifests/dns/zone_rebuild.pp"
+      ]
+    },
+    {
+      "sha": "f7c90d5",
+      "timestamp": "2024-03-14T01:00:00Z",
+      "author": "platform-eng",
+      "message": "Scheduled Puppet catalog bump: pin named-auth to 9.18.4-1, no named-cache change",
+      "changed_files": [
+        "manifests/dns/nameserver.pp",
+        "data/common.yaml"
+      ]
+    },
+    {
+      "sha": "7f3a92c",
+      "timestamp": "2024-03-14T01:50:00Z",
+      "author": "netops-bot",
+      "message": "Apply IP change catalog: restart named-auth service only (named-cache notify missing)",
+      "changed_files": [
+        "manifests/dns/nameserver.pp"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy SHA 7f3a92c introduced a Puppet manifest change to manifests/dns/nameserver.pp that updated the authoritative nameserver (named-auth) IP from 10.0.1.53 to 10.0.2.53 and correctly triggered a Service[named-auth] restart, but omitted the corresponding notify/subscribe relationship for Service[named-cache]. As a result, named-cache continued forwarding queries to the old IP 10.0.1.53, causing SERVFAIL for all internal hostnames. The emergency remediation Puppet run then executed Exec[rebuild-zone-file] via build-zone.py, which itself attempted to resolve provisioning-api.internal.svc through the still-broken named-cache, received SERVFAIL, wrote an empty zone file, and reloaded named-auth with 0 records, escalating SERVFAILs to NXDOMAINs for all internal services. Concurrently, repeated Puppet runs spawned hundreds of unreaped build-zone.py child processes that exhausted memory on fileservers, preventing SSH access and extending the incident to 1h35m.",
+  "ground_truth_remediation": "1. Immediately restore the last known-good zone file backup (serial 2024031401) to /etc/named/zones/internal.svc.zone and reload named-auth to fix NXDOMAIN. 2. Restart named-cache with forwarder explicitly set to 10.0.2.53 bypassing Puppet. 3. Kill zombie build-zone.py processes on fileservers via out-of-band console to recover memory and restore SSH. 4. Patch manifests/dns/nameserver.pp to add a notify => Service[named-cache] relationship alongside Service[named-auth] in the IP-change resource block. 5. Fix build-zone.py to use direct IP for the provisioning API rather than DNS lookup, preventing circular dependency during DNS outages. 6. Add Puppet exec timeout and process reaping to zone_rebuild.pp to prevent zombie accumulation.",
+  "red_herring": null
+}

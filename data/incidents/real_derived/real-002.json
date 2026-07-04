@@ -1,0 +1,75 @@
+{
+  "id": "real-002",
+  "subset": "real_derived",
+  "category": "config_error",
+  "affected_service": "frontend",
+  "severity": "critical",
+  "alert_text": "CRITICAL: DNS resolution failure rate >80% on frontend service pods in ap-northeast-2 region. Upstream service connections timing out. Health check endpoint /healthz returning 503 for >5 minutes.",
+  "log_window": "2024-03-14T08:01:02Z [dns-resolver-fleet] INFO  host_count=142 healthy_hosts=142 min_healthy_threshold=100 status=OK\n2024-03-14T08:02:11Z [config-manager] INFO  Applying config patch: region=ap-northeast-2 fleet=dns-resolver changeset=cs-20240314-0441\n2024-03-14T08:02:11Z [config-manager] INFO  Changeset cs-20240314-0441 diff: removed key min_healthy_host_count from fleet config\n2024-03-14T08:02:12Z [config-manager] WARN  Key min_healthy_host_count not found in new config; falling back to system default=2\n2024-03-14T08:02:12Z [dns-resolver-fleet] INFO  Config reloaded: min_healthy_threshold updated 100 -> 2\n2024-03-14T08:02:15Z [dns-resolver-fleet] INFO  host_count=142 healthy_hosts=142 min_healthy_threshold=2 status=OK\n2024-03-14T08:03:00Z [autoscaler] INFO  Fleet dns-resolver utilization below target; initiating scale-down evaluation\n2024-03-14T08:03:45Z [autoscaler] INFO  Removing host dns-r-ap2-node-0091 from fleet (utilization threshold)\n2024-03-14T08:04:10Z [autoscaler] INFO  Removing host dns-r-ap2-node-0088 from fleet\n2024-03-14T08:05:00Z [autoscaler] INFO  Removing host dns-r-ap2-node-0079 from fleet\n2024-03-14T08:06:30Z [autoscaler] INFO  Fleet healthy_hosts=108; min_healthy_threshold=2; continuing scale-down\n2024-03-14T08:08:00Z [autoscaler] INFO  Removing host dns-r-ap2-node-0055 from fleet\n2024-03-14T08:09:15Z [autoscaler] INFO  Removing host dns-r-ap2-node-0044 from fleet\n2024-03-14T08:10:00Z [dns-resolver-fleet] WARN  host_count=97 healthy_hosts=97 min_healthy_threshold=2 status=OK\n2024-03-14T08:11:45Z [autoscaler] INFO  Removing host dns-r-ap2-node-0031 from fleet\n2024-03-14T08:13:20Z [autoscaler] INFO  Removing host dns-r-ap2-node-0018 from fleet\n2024-03-14T08:14:05Z [dns-resolver-fleet] WARN  host_count=61 healthy_hosts=61 status=DEGRADED capacity_warning=true\n2024-03-14T08:15:00Z [frontend] WARN  DNS lookup failed: checkout-service.svc.cluster.local: i/o timeout (attempt 1/3)\n2024-03-14T08:15:01Z [frontend] WARN  DNS lookup failed: payment-service.svc.cluster.local: i/o timeout (attempt 1/3)\n2024-03-14T08:15:02Z [frontend] ERROR DNS resolution error: no answer from resolver pool for host cart-service.svc.cluster.local\n2024-03-14T08:15:03Z [frontend] ERROR HTTP GET /api/products -> upstream connect error (DNS): recommendation-service unreachable\n2024-03-14T08:15:05Z [frontend] ERROR 503 Service Unavailable: failed to resolve downstream dependency checkout-service\n2024-03-14T08:15:07Z [autoscaler] INFO  Removing host dns-r-ap2-node-0009 from fleet\n2024-03-14T08:15:10Z [dns-resolver-fleet] WARN  host_count=28 healthy_hosts=28 min_healthy_threshold=2 status=DEGRADED\n2024-03-14T08:15:15Z [frontend] ERROR DNS lookup failed: currency-service.svc.cluster.local: connection refused\n2024-03-14T08:15:17Z [frontend] ERROR DNS lookup failed: ad-service.svc.cluster.local: connection refused\n2024-03-14T08:15:18Z [frontend] ERROR 503 Service Unavailable: /checkout -> DNS resolution failure\n2024-03-14T08:15:20Z [alertmanager] CRITICAL DNS resolution failure rate=83.4% on frontend pods in ap-northeast-2 - paging on-call\n2024-03-14T08:15:22Z [frontend] ERROR goroutine 4821: net.Resolver.lookupHost: dial udp 10.0.0.2:53: i/o timeout\n2024-03-14T08:15:23Z [frontend] ERROR goroutine 4822: net.Resolver.lookupHost: dial udp 10.0.0.2:53: i/o timeout\n2024-03-14T08:15:25Z [autoscaler] INFO  Removing host dns-r-ap2-node-0003 from fleet\n2024-03-14T08:15:28Z [dns-resolver-fleet] ERROR host_count=8 healthy_hosts=8 min_healthy_threshold=2 status=CRITICAL\n2024-03-14T08:15:30Z [frontend] ERROR DNS resolution failure rate=91.2% - multiple upstreams unreachable\n2024-03-14T08:15:32Z [frontend] ERROR healthz check FAILED: unable to resolve internal service endpoints\n2024-03-14T08:16:00Z [frontend] ERROR 10 consecutive DNS timeouts on resolver 10.0.0.2; blacklisting for 30s\n2024-03-14T08:16:05Z [frontend] ERROR 10 consecutive DNS timeouts on resolver 10.0.0.3; blacklisting for 30s\n2024-03-14T08:16:10Z [frontend] ERROR All DNS resolvers in pool exhausted or blacklisted; queries failing\n2024-03-14T08:16:15Z [checkout-service] ERROR Unable to connect to postgres: DNS lookup failed for postgres.svc.cluster.local\n2024-03-14T08:16:17Z [checkout-service] ERROR Unable to connect to redis: DNS lookup failed for redis.svc.cluster.local\n2024-03-14T08:16:20Z [cart-service] ERROR redis connection pool exhausted: DNS resolution of redis.svc.cluster.local failing\n2024-03-14T08:17:00Z [on-call-engineer] INFO  Incident declared. Investigating DNS resolver fleet in ap-northeast-2\n2024-03-14T08:18:45Z [on-call-engineer] INFO  dns-resolver fleet healthy_hosts=8; expected ~140; min_healthy_threshold shows 2 (should be 100)\n2024-03-14T08:19:10Z [on-call-engineer] INFO  Found config changeset cs-20240314-0441 removed min_healthy_host_count key at 08:02:11Z\n2024-03-14T08:20:00Z [on-call-engineer] INFO  Halting autoscaler for dns-resolver fleet in ap-northeast-2\n2024-03-14T08:20:05Z [autoscaler] INFO  Scale-down halted by operator override for fleet dns-resolver region=ap-northeast-2\n2024-03-14T08:21:00Z [on-call-engineer] INFO  Initiating emergency capacity restore: target=150 hosts fleet=dns-resolver\n2024-03-14T08:22:30Z [dns-resolver-fleet] INFO  Provisioning 50 replacement hosts\n2024-03-14T08:25:00Z [dns-resolver-fleet] INFO  host_count=22 healthy_hosts=18 status=CRITICAL recovery_in_progress=true\n2024-03-14T08:30:00Z [dns-resolver-fleet] INFO  host_count=58 healthy_hosts=52 status=DEGRADED recovery_in_progress=true\n2024-03-14T08:35:00Z [dns-resolver-fleet] INFO  host_count=89 healthy_hosts=84 status=DEGRADED recovery_in_progress=true\n2024-03-14T08:40:00Z [dns-resolver-fleet] INFO  host_count=121 healthy_hosts=118 status=OK recovery_in_progress=true\n2024-03-14T08:41:00Z [frontend] INFO  DNS resolution failure rate dropping: current=42.1%\n2024-03-14T08:45:00Z [dns-resolver-fleet] INFO  host_count=148 healthy_hosts=146 min_healthy_threshold=2 status=OK\n2024-03-14T08:46:00Z [frontend] INFO  DNS lookups succeeding: checkout-service.svc.cluster.local resolved OK\n2024-03-14T08:46:05Z [frontend] INFO  DNS lookups succeeding: payment-service.svc.cluster.local resolved OK\n2024-03-14T08:46:10Z [frontend] INFO  DNS lookups succeeding: cart-service.svc.cluster.local resolved OK\n2024-03-14T08:46:30Z [frontend] INFO  DNS resolution failure rate=2.1% (residual)\n2024-03-14T08:47:00Z [on-call-engineer] INFO  Pushing corrected config: restoring min_healthy_host_count=100 to fleet config\n2024-03-14T08:47:05Z [config-manager] INFO  Applying config patch: region=ap-northeast-2 fleet=dns-resolver changeset=cs-20240314-0512\n2024-03-14T08:47:06Z [config-manager] INFO  Key min_healthy_host_count set to 100\n2024-03-14T08:47:07Z [dns-resolver-fleet] INFO  Config reloaded: min_healthy_threshold updated 2 -> 100\n2024-03-14T08:47:30Z [frontend] INFO  DNS resolution failure rate=0.0% - service nominal\n2024-03-14T08:48:00Z [alertmanager] INFO  RESOLVED: DNS resolution failure rate on frontend ap-northeast-2 back to normal\n2024-03-14T09:19:00Z [dns-resolver-fleet] INFO  host_count=150 healthy_hosts=150 min_healthy_threshold=100 status=OK - fleet fully restored\n2024-03-14T09:19:05Z [on-call-engineer] INFO  Incident resolved after 84 minutes. Post-mortem scheduled.",
+  "recent_deploys": [
+    {
+      "sha": "a1f3c8e2b4d9071",
+      "timestamp": "2024-03-13T14:22:00Z",
+      "author": "ji-yeon.park",
+      "message": "Upgrade dns-resolver fleet base AMI to amzn2-ami-2024.03.1",
+      "changed_files": [
+        "infra/fleet/dns-resolver/ami-config.json",
+        "infra/fleet/dns-resolver/bootstrap.sh"
+      ]
+    },
+    {
+      "sha": "b2e4d7f1a3c5e8b",
+      "timestamp": "2024-03-13T18:45:00Z",
+      "author": "soo-jin.lee",
+      "message": "Add latency-based routing weights for ap-northeast-2 resolver pool",
+      "changed_files": [
+        "infra/fleet/dns-resolver/routing-policy.yaml",
+        "infra/fleet/dns-resolver/lb-config.json"
+      ]
+    },
+    {
+      "sha": "c3f5a8d1b4e7f2a",
+      "timestamp": "2024-03-13T22:10:00Z",
+      "author": "hyun-woo.kim",
+      "message": "Refactor fleet config schema: normalize capacity keys to new naming convention",
+      "changed_files": [
+        "infra/fleet/dns-resolver/fleet-config.json",
+        "infra/fleet/config-schema/capacity-keys.json",
+        "infra/fleet/config-manager/apply_changeset.py"
+      ]
+    },
+    {
+      "sha": "d4a6c9f2b5e8a1d",
+      "timestamp": "2024-03-14T04:30:00Z",
+      "author": "min-seok.choi",
+      "message": "Autoscaler tuning: lower scale-down cooldown period for dns-resolver in ap-northeast-2",
+      "changed_files": [
+        "infra/autoscaler/policies/dns-resolver-ap-northeast-2.yaml",
+        "infra/autoscaler/configs/global-defaults.json"
+      ]
+    },
+    {
+      "sha": "e5b7d0a3c6f9b2e",
+      "timestamp": "2024-03-14T07:55:00Z",
+      "author": "ji-yeon.park",
+      "message": "Deploy config changeset cs-20240314-0441: cleanup stale capacity overrides in ap-northeast-2",
+      "changed_files": [
+        "infra/fleet/dns-resolver/fleet-config.json",
+        "infra/fleet/dns-resolver/capacity-overrides.json"
+      ]
+    },
+    {
+      "sha": "f6c8e1b4d7a0c3f",
+      "timestamp": "2024-03-14T08:01:50Z",
+      "author": "soo-jin.lee",
+      "message": "Config validation: add schema lint step to changeset pipeline (post-deploy)",
+      "changed_files": [
+        "infra/fleet/config-manager/validate_schema.py",
+        "infra/fleet/config-manager/Makefile"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy commit e5b7d0a3c6f9b2e applied config changeset cs-20240314-0441 at 2024-03-14T08:02:11Z, which inadvertently removed the min_healthy_host_count key from the ap-northeast-2 dns-resolver fleet configuration. The config manager did not validate the semantic meaning of removed keys and silently fell back to a system default of 2 (from the intended value of 100). With the minimum healthy threshold effectively disabled, the autoscaler (whose cooldown period had been shortened in commit d4a6c9f2b5e8a1d) aggressively drained the fleet from 142 hosts down to 8 within ~13 minutes, causing >90% of in-VPC DNS queries from EC2 instances including all OTel demo services to fail.",
+  "ground_truth_remediation": "1. Immediately halt the autoscaler for the dns-resolver fleet in ap-northeast-2 to stop further host removal. 2. Provision replacement hosts to restore fleet capacity to >=100 healthy hosts. 3. Push corrected config changeset restoring min_healthy_host_count=100 to fleet-config.json. 4. Once DNS resolution rates return to normal and fleet shows >=100 healthy hosts with correct threshold, close the incident. Long-term: add semantic config validation that rejects changesets removing required safety keys without explicit acknowledgment, and add per-hour throttling on host removal.",
+  "red_herring": null
+}

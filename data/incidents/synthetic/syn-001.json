@@ -1,0 +1,84 @@
+{
+  "id": "syn-001",
+  "subset": "synthetic",
+  "category": "db_saturation",
+  "affected_service": "checkout-service",
+  "severity": "high",
+  "alert_text": "ALERT: checkout-service p99 latency > 8000ms for 5 consecutive minutes; HTTP 5xx error rate at 34% — SLO breach imminent. PagerDuty incident #PD-88421.",
+  "log_window": "2026-05-05T08:47:12.004Z INFO  [checkout-service] Startup complete. Version=997d9970c437 env=production\n2026-05-05T08:47:12.311Z INFO  [checkout-service] DB pool initialized: size=20 host=postgres-primary.internal:5432\n2026-05-05T08:47:13.002Z INFO  [checkout-service] HTTP server listening on :8080\n2026-05-05T08:48:01.221Z INFO  [checkout-service] {\"msg\":\"order finalization started\",\"order_id\":\"ord-7712\",\"user_id\":\"u-4401\"}\n2026-05-05T08:48:01.334Z DEBUG [postgres-primary] query=SELECT * FROM order_items WHERE order_id=$1 duration_ms=4 rows=12\n2026-05-05T08:48:01.341Z DEBUG [postgres-primary] query=SELECT * FROM products WHERE id=$1 duration_ms=3 rows=1\n2026-05-05T08:48:01.348Z DEBUG [postgres-primary] query=SELECT * FROM products WHERE id=$1 duration_ms=3 rows=1\n2026-05-05T08:48:01.356Z DEBUG [postgres-primary] query=SELECT * FROM products WHERE id=$1 duration_ms=4 rows=1\n2026-05-05T08:48:01.363Z DEBUG [postgres-primary] query=SELECT * FROM products WHERE id=$1 duration_ms=3 rows=1\n2026-05-05T08:48:01.371Z DEBUG [postgres-primary] query=SELECT * FROM products WHERE id=$1 duration_ms=4 rows=1\n2026-05-05T08:48:01.378Z DEBUG [postgres-primary] query=SELECT * FROM products WHERE id=$1 duration_ms=3 rows=1\n2026-05-05T08:48:01.385Z DEBUG [postgres-primary] query=SELECT * FROM products WHERE id=$1 duration_ms=3 rows=1\n2026-05-05T08:48:01.393Z DEBUG [postgres-primary] query=SELECT * FROM products WHERE id=$1 duration_ms=4 rows=1\n2026-05-05T08:48:01.400Z DEBUG [postgres-primary] query=SELECT * FROM products WHERE id=$1 duration_ms=3 rows=1\n2026-05-05T08:48:01.407Z DEBUG [postgres-primary] query=SELECT * FROM products WHERE id=$1 duration_ms=4 rows=1\n2026-05-05T08:48:01.414Z DEBUG [postgres-primary] query=SELECT * FROM products WHERE id=$1 duration_ms=3 rows=1\n2026-05-05T08:48:01.421Z DEBUG [postgres-primary] query=SELECT * FROM products WHERE id=$1 duration_ms=4 rows=1\n2026-05-05T08:48:01.601Z INFO  [checkout-service] {\"msg\":\"order finalization complete\",\"order_id\":\"ord-7712\",\"duration_ms\":380}\n2026-05-05T08:49:10.112Z INFO  [checkout-service] {\"msg\":\"order finalization started\",\"order_id\":\"ord-7718\",\"user_id\":\"u-9903\"}\n2026-05-05T08:49:10.890Z INFO  [checkout-service] {\"msg\":\"order finalization started\",\"order_id\":\"ord-7719\",\"user_id\":\"u-1145\"}\n2026-05-05T08:49:11.003Z INFO  [checkout-service] {\"msg\":\"order finalization started\",\"order_id\":\"ord-7720\",\"user_id\":\"u-8821\"}\n2026-05-05T08:49:20.221Z WARN  [postgres-primary] active_connections=17 pool_max=20 msg=\"connection pool near capacity\"\n2026-05-05T08:49:25.447Z WARN  [checkout-service] {\"msg\":\"slow query detected\",\"query\":\"SELECT * FROM products WHERE id=$1\",\"duration_ms\":112,\"order_id\":\"ord-7718\"}\n2026-05-05T08:49:28.003Z WARN  [checkout-service] {\"msg\":\"slow query detected\",\"query\":\"SELECT * FROM products WHERE id=$1\",\"duration_ms\":198,\"order_id\":\"ord-7719\"}\n2026-05-05T08:49:31.774Z WARN  [postgres-primary] active_connections=20 pool_max=20 msg=\"connection pool exhausted — requests queuing\"\n2026-05-05T08:49:32.110Z WARN  [checkout-service] db_pool_wait_ms=340 msg=\"thread blocked waiting for DB connection\" order_id=ord-7720\n2026-05-05T08:49:35.009Z WARN  [checkout-service] db_pool_wait_ms=891 msg=\"thread blocked waiting for DB connection\" order_id=ord-7721\n2026-05-05T08:49:38.334Z ERROR [checkout-service] {\"msg\":\"order finalization failed\",\"order_id\":\"ord-7721\",\"error\":\"context deadline exceeded\",\"duration_ms\":5003}\n2026-05-05T08:49:38.335Z ERROR [checkout-service] goroutine 114: checkout/internal/finalize.go:87\n2026-05-05T08:49:38.335Z ERROR [checkout-service]   checkout/internal/db/pool.go:43 AcquireConnection\n2026-05-05T08:49:38.335Z ERROR [checkout-service]   net/http.(*conn).serve\n2026-05-05T08:49:40.221Z ERROR [checkout-service] {\"msg\":\"order finalization failed\",\"order_id\":\"ord-7722\",\"error\":\"context deadline exceeded\",\"duration_ms\":5001}\n2026-05-05T08:49:41.887Z WARN  [postgres-primary] query=SELECT * FROM products WHERE id=$1 duration_ms=541 rows=1 msg=\"query slow — possible lock contention\"\n2026-05-05T08:49:42.003Z WARN  [postgres-primary] query=SELECT * FROM products WHERE id=$1 duration_ms=623 rows=1 msg=\"query slow — possible lock contention\"\n2026-05-05T08:49:43.110Z ERROR [checkout-service] {\"msg\":\"HTTP 500 returned to client\",\"path\":\"/checkout/finalize\",\"order_id\":\"ord-7721\",\"status\":500}\n2026-05-05T08:49:43.340Z ERROR [checkout-service] {\"msg\":\"HTTP 500 returned to client\",\"path\":\"/checkout/finalize\",\"order_id\":\"ord-7722\",\"status\":500}\n2026-05-05T08:49:45.001Z WARN  [inventory-service] upstream=checkout-service msg=\"checkout not responding\" timeout_ms=5000\n2026-05-05T08:49:50.112Z ERROR [postgres-primary] active_connections=20 queued_requests=31 msg=\"query queue depth critical\"\n2026-05-05T08:49:51.334Z ERROR [checkout-service] {\"msg\":\"order finalization failed\",\"order_id\":\"ord-7725\",\"error\":\"context deadline exceeded\",\"duration_ms\":5007}\n2026-05-05T08:49:51.335Z ERROR [checkout-service] goroutine 201: checkout/internal/finalize.go:87\n2026-05-05T08:49:51.335Z ERROR [checkout-service]   checkout/internal/db/pool.go:43 AcquireConnection\n2026-05-05T08:49:52.009Z ERROR [checkout-service] {\"msg\":\"HTTP 500 returned to client\",\"path\":\"/checkout/finalize\",\"order_id\":\"ord-7725\",\"status\":500}\n2026-05-05T08:49:53.441Z WARN  [inventory-service] msg=\"circuit breaker OPEN for checkout-service\" failure_rate=0.61\n2026-05-05T08:49:55.112Z ERROR [postgres-primary] msg=\"replication lag increasing\" lag_bytes=18432 replica=postgres-replica-1\n2026-05-05T08:50:00.003Z WARN  [checkout-service] msg=\"connection pool starvation\" active=20 waiting=44 pool_max=20\n2026-05-05T08:50:02.881Z ERROR [checkout-service] {\"msg\":\"order finalization failed\",\"order_id\":\"ord-7731\",\"error\":\"context deadline exceeded\",\"duration_ms\":5012}\n2026-05-05T08:50:03.009Z ERROR [checkout-service] {\"msg\":\"HTTP 500 returned to client\",\"path\":\"/checkout/finalize\",\"order_id\":\"ord-7731\",\"status\":500}\n2026-05-05T08:50:04.220Z ERROR [checkout-service] {\"msg\":\"HTTP 500 returned to client\",\"path\":\"/checkout/finalize\",\"order_id\":\"ord-7732\",\"status\":500}\n2026-05-05T08:50:05.334Z ERROR [postgres-primary] active_connections=20 queued_requests=58 msg=\"FATAL: connection queue overflow, rejecting new connections\"\n2026-05-05T08:50:05.445Z FATAL [checkout-service] msg=\"DB connection rejected by server\" error=\"FATAL: sorry, too many clients already\" order_id=ord-7733\n2026-05-05T08:50:05.446Z FATAL [checkout-service] goroutine 288: checkout/internal/db/pool.go:43\n2026-05-05T08:50:05.446Z FATAL [checkout-service]   checkout/internal/finalize.go:87 FinalizeOrder\n2026-05-05T08:50:05.558Z ERROR [checkout-service] {\"msg\":\"HTTP 503 returned to client\",\"path\":\"/checkout/finalize\",\"order_id\":\"ord-7733\",\"status\":503}\n2026-05-05T08:50:06.112Z ERROR [checkout-service] {\"msg\":\"HTTP 503 returned to client\",\"path\":\"/checkout/finalize\",\"order_id\":\"ord-7734\",\"status\":503}\n2026-05-05T08:50:07.009Z ERROR [checkout-service] {\"msg\":\"HTTP 503 returned to client\",\"path\":\"/checkout/finalize\",\"order_id\":\"ord-7735\",\"status\":503}\n2026-05-05T08:50:08.220Z ERROR [inventory-service] msg=\"checkout-service unavailable — downstream order confirmation failed\" http_status=503\n2026-05-05T08:50:09.334Z WARN  [postgres-primary] msg=\"autovacuum triggered on products table\" table=products\n2026-05-05T08:50:10.001Z ERROR [checkout-service] error_rate_1m=0.87 p99_latency_ms=9812 msg=\"SLO breach: error rate exceeds 0.80 threshold\"\n2026-05-05T08:50:10.334Z INFO  [alertmanager] alert=CheckoutService5xxSpiking threshold=0.30 current=0.87 firing=true routed_to=pagerduty\n2026-05-05T08:50:15.009Z ERROR [checkout-service] {\"msg\":\"HTTP 503 returned to client\",\"path\":\"/checkout/finalize\",\"order_id\":\"ord-7741\",\"status\":503}\n2026-05-05T08:50:16.221Z WARN  [postgres-primary] active_connections=20 queued_requests=62 lock_waiters=8 msg=\"lock wait queue non-empty on products\"\n2026-05-05T08:50:18.003Z ERROR [checkout-service] {\"msg\":\"HTTP 503 returned to client\",\"path\":\"/checkout/finalize\",\"order_id\":\"ord-7742\",\"status\":503}\n2026-05-05T08:50:20.112Z INFO  [checkout-service] msg=\"health check endpoint /healthz returning 200\" note=\"DB pool starvation does not affect health probe path\"\n2026-05-05T08:50:22.334Z ERROR [postgres-primary] msg=\"pg_stat_activity shows 20 idle-in-transaction sessions\" idle_in_tx=20\n2026-05-05T08:50:25.001Z ERROR [checkout-service] msg=\"order finalization N+1 pattern detected by slow-query-analyzer\" query=SELECT_products_by_id per_order_query_count=12 expected_max=1\n2026-05-05T08:50:25.002Z ERROR [checkout-service] msg=\"suggest: replace per-item product lookup with bulk SELECT WHERE id = ANY($1)\"\n2026-05-05T08:50:27.009Z ERROR [checkout-service] {\"msg\":\"HTTP 503 returned to client\",\"path\":\"/checkout/finalize\",\"order_id\":\"ord-7748\",\"status\":503}\n2026-05-05T08:50:30.112Z WARN  [postgres-primary] msg=\"WAL write rate elevated\" wal_bytes_per_sec=2.1MB replica_lag_ms=4400\n2026-05-05T08:50:35.334Z ERROR [checkout-service] error_rate_1m=0.91 p99_latency_ms=11203 msg=\"degradation worsening under load\"\n2026-05-05T08:50:40.001Z INFO  [on-call-engineer] msg=\"PD-88421 acknowledged — investigating checkout-service deploy 997d9970c437\"\n2026-05-05T08:51:00.009Z WARN  [checkout-service] msg=\"rolling back to prior version — initiated by SRE\" target_sha=5b738e5f6b1b\n2026-05-05T08:51:45.112Z INFO  [checkout-service] msg=\"rollback complete. Version=5b738e5f6b1b\" env=production\n2026-05-05T08:51:46.003Z INFO  [postgres-primary] active_connections=7 queued_requests=0 msg=\"connection pressure relieved after rollback\"\n2026-05-05T08:51:47.334Z INFO  [checkout-service] error_rate_1m=0.04 p99_latency_ms=210 msg=\"service recovering\"\n2026-05-05T08:52:00.112Z INFO  [checkout-service] {\"msg\":\"order finalization complete\",\"order_id\":\"ord-7801\",\"duration_ms\":87}\n2026-05-05T08:52:01.009Z INFO  [inventory-service] msg=\"circuit breaker CLOSED for checkout-service\" failure_rate=0.03",
+  "recent_deploys": [
+    {
+      "sha": "0c5e175889c2",
+      "timestamp": "2026-04-16T13:20:06Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump next (#3269)",
+      "changed_files": [
+        "package.json",
+        "package-lock.json"
+      ]
+    },
+    {
+      "sha": "38a9074919f6",
+      "timestamp": "2026-04-21T15:32:48Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "requirements.txt",
+        "services/checkout-service/requirements.txt"
+      ]
+    },
+    {
+      "sha": "de201e875db5",
+      "timestamp": "2026-04-21T19:45:44Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 2 updates (#3284)",
+      "changed_files": [
+        "checkout-service/checkout-service.csproj",
+        "shared/libs/shared.csproj"
+      ]
+    },
+    {
+      "sha": "7d7e533c001a",
+      "timestamp": "2026-04-23T07:59:20Z",
+      "author": "Timur Olzhabayev",
+      "message": "[chore] exclude platform.openai.com and gnu.org from link check (#3289)",
+      "changed_files": [
+        ".github/workflows/link-check.yml",
+        "docs/links-ignore.txt"
+      ]
+    },
+    {
+      "sha": "2b9113d98e20",
+      "timestamp": "2026-04-30T06:51:57Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] execute dependabot every Tuesday 3:00am+ (#3330)",
+      "changed_files": [
+        ".github/dependabot.yml"
+      ]
+    },
+    {
+      "sha": "5b738e5f6b1b",
+      "timestamp": "2026-05-05T05:40:48Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github/codeql-action (#3337)",
+      "changed_files": [
+        ".github/workflows/codeql-analysis.yml"
+      ]
+    },
+    {
+      "sha": "997d9970c437",
+      "timestamp": "2026-05-05T08:45:37Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the go-production-dependencies group across 2 directories with",
+      "changed_files": [
+        "checkout-service/go.mod",
+        "checkout-service/go.sum",
+        "checkout-service/internal/finalize/order_finalizer.go",
+        "checkout-service/internal/db/product_repository.go"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy SHA 997d9970c437 (deployed 2026-05-05T08:45:37Z) introduced a regression in checkout-service/internal/finalize/order_finalizer.go where the order finalization code iterates over each order_item row and issues a separate SELECT * FROM products WHERE id=$1 query per item (N+1 query pattern). For an order with 12 items this generates 12 individual product lookups per finalization request instead of a single batched query. Under moderate concurrent checkout load this rapidly exhausts the 20-connection PostgreSQL pool, causes query queuing and lock contention on the products table, and results in context deadline exceeded errors and HTTP 500/503 responses to clients.",
+  "ground_truth_remediation": "1. Immediately roll back checkout-service to the prior stable deploy SHA 5b738e5f6b1b to restore normal DB connection usage and recover the service (ETA < 10 minutes). 2. In the follow-up fix on 997d9970c437, replace the per-item product lookup loop in order_finalizer.go with a single bulk query: SELECT * FROM products WHERE id = ANY($1) passing the full list of product IDs collected from order_items, reducing N+1 queries to a single round-trip. 3. Optionally, as a defence-in-depth measure, add a covering index on products(id) including price, name, sku to accelerate bulk lookups. 4. Add a slow-query integration test that asserts the number of DB queries issued per order finalization does not exceed a fixed threshold (e.g., 3).",
+  "red_herring": null
+}

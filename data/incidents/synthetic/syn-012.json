@@ -1,0 +1,84 @@
+{
+  "id": "syn-012",
+  "subset": "synthetic",
+  "category": "deploy_regression",
+  "affected_service": "payment-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: payment-service error rate 94% over last 5 minutes. Payment processor TLS handshake failures spiking. SLO breach imminent. PagerDuty incident #INC-8841.",
+  "log_window": "2026-05-13T10:42:01.112Z [payment-service] INFO  Starting payment-service v2.9.4 (sha=449ee7cc0d6e)\n2026-05-13T10:42:01.334Z [payment-service] INFO  Loaded TLS config: minVersion=TLS1.2 provider=system\n2026-05-13T10:42:01.445Z [payment-service] INFO  Dependency versions: github.com/IBM/sarama=v1.43.3, crypto/tls=stdlib\n2026-05-13T10:42:02.001Z [payment-service] INFO  HTTP server listening on :8080\n2026-05-13T10:42:02.118Z [payment-service] INFO  Connected to postgres://db-payments:5432 pool_size=10\n2026-05-13T10:42:02.230Z [payment-service] INFO  Reached payment processor endpoint health check: status=ok latency=42ms\n2026-05-13T10:42:10.004Z [api-gateway] INFO  route=POST /checkout/pay forwarded to payment-service\n2026-05-13T10:42:10.217Z [payment-service] INFO  msg=\"processing charge\" order_id=ord-9921 amount=59.99 currency=USD\n2026-05-13T10:42:10.802Z [payment-service] INFO  msg=\"charge complete\" order_id=ord-9921 status=success latency_ms=581\n2026-05-13T10:43:05.001Z [payment-service] DEBUG msg=\"dialing payment processor\" host=payments.stripe-like.internal:443 tls=true\n2026-05-13T10:43:05.319Z [payment-service] INFO  msg=\"processing charge\" order_id=ord-9930 amount=120.00 currency=USD\n2026-05-13T10:43:05.891Z [payment-service] INFO  msg=\"charge complete\" order_id=ord-9930 status=success latency_ms=572\n2026-05-13T10:44:00.001Z [payment-service] DEBUG msg=\"dialing payment processor\" host=payments.stripe-like.internal:443 tls=true\n2026-05-13T10:44:00.412Z [payment-service] INFO  msg=\"processing charge\" order_id=ord-9941 amount=34.50 currency=USD\n2026-05-13T10:44:01.003Z [payment-service] INFO  msg=\"charge complete\" order_id=ord-9941 status=success latency_ms=591\n2026-05-13T10:44:15.231Z [checkout-service] INFO  order_id=ord-9950 state=payment_pending\n2026-05-13T10:44:15.450Z [payment-service] INFO  msg=\"processing charge\" order_id=ord-9950 amount=89.99 currency=USD\n2026-05-13T10:44:15.998Z [payment-service] WARN  msg=\"TLS negotiation slow\" host=payments.stripe-like.internal:443 elapsed_ms=541\n2026-05-13T10:44:16.112Z [payment-service] INFO  msg=\"charge complete\" order_id=ord-9950 status=success latency_ms=662\n2026-05-13T10:44:31.002Z [payment-service] DEBUG msg=\"sarama producer initialized\" brokers=[kafka:9092] version=2.8.0\n2026-05-13T10:45:00.001Z [payment-service] INFO  msg=\"processing charge\" order_id=ord-9961 amount=210.00 currency=USD\n2026-05-13T10:45:00.889Z [payment-service] ERROR msg=\"TLS handshake failed\" host=payments.stripe-like.internal:443 error=\"tls: no supported versions satisfy minVersion and maxVersion\" attempt=1\n2026-05-13T10:45:01.892Z [payment-service] ERROR msg=\"TLS handshake failed\" host=payments.stripe-like.internal:443 error=\"tls: no supported versions satisfy minVersion and maxVersion\" attempt=2\n2026-05-13T10:45:02.900Z [payment-service] ERROR msg=\"TLS handshake failed\" host=payments.stripe-like.internal:443 error=\"tls: no supported versions satisfy minVersion and maxVersion\" attempt=3\n2026-05-13T10:45:03.001Z [payment-service] ERROR msg=\"charge failed after retries\" order_id=ord-9961 error=\"payment processor unreachable: TLS handshake error\" status=500\n2026-05-13T10:45:03.002Z [checkout-service] ERROR order_id=ord-9961 msg=\"payment failed\" http_status=500\n2026-05-13T10:45:03.112Z [api-gateway] WARN  route=POST /checkout/pay upstream_status=500 latency_ms=3101\n2026-05-13T10:45:10.004Z [payment-service] INFO  msg=\"processing charge\" order_id=ord-9962 amount=45.00 currency=USD\n2026-05-13T10:45:10.905Z [payment-service] ERROR msg=\"TLS handshake failed\" host=payments.stripe-like.internal:443 error=\"tls: no supported versions satisfy minVersion and maxVersion\" attempt=1\n2026-05-13T10:45:11.907Z [payment-service] ERROR msg=\"TLS handshake failed\" host=payments.stripe-like.internal:443 error=\"tls: no supported versions satisfy minVersion and maxVersion\" attempt=2\n2026-05-13T10:45:12.909Z [payment-service] ERROR msg=\"charge failed after retries\" order_id=ord-9962 error=\"payment processor unreachable: TLS handshake error\" status=500\n2026-05-13T10:45:13.001Z [checkout-service] ERROR order_id=ord-9962 msg=\"payment failed\" http_status=500\n2026-05-13T10:45:15.334Z [payment-service] INFO  msg=\"processing charge\" order_id=ord-9963 amount=300.00 currency=USD\n2026-05-13T10:45:18.337Z [payment-service] ERROR msg=\"charge failed after retries\" order_id=ord-9963 error=\"payment processor unreachable: TLS handshake error\" status=500\n2026-05-13T10:45:18.400Z [payment-service] WARN  msg=\"circuit breaker threshold approaching\" failures=3 threshold=5 host=payments.stripe-like.internal:443\n2026-05-13T10:45:21.001Z [payment-service] ERROR msg=\"TLS handshake failed\" host=payments.stripe-like.internal:443 error=\"tls: no supported versions satisfy minVersion and maxVersion\"\n  at net/http.(*Transport).dialConnFor (transport.go:1568)\n  at net/http.(*Transport).getConn (transport.go:1335)\n2026-05-13T10:45:22.003Z [payment-service] ERROR msg=\"charge failed after retries\" order_id=ord-9964 error=\"payment processor unreachable: TLS handshake error\" status=500\n2026-05-13T10:45:25.001Z [payment-service] ERROR msg=\"TLS handshake failed\" host=payments.stripe-like.internal:443 error=\"tls: no supported versions satisfy minVersion and maxVersion\"\n  at net/http.(*Transport).dialConnFor (transport.go:1568)\n  at net/http.(*Transport).getConn (transport.go:1335)\n2026-05-13T10:45:26.440Z [payment-service] FATAL msg=\"circuit breaker OPEN\" host=payments.stripe-like.internal:443 failures=5 msg=\"halting further payment processor requests\"\n2026-05-13T10:45:27.001Z [checkout-service] ERROR order_id=ord-9965 msg=\"payment failed\" http_status=503\n2026-05-13T10:45:27.115Z [api-gateway] ERROR route=POST /checkout/pay upstream_status=503 latency_ms=112 msg=\"circuit breaker open\"\n2026-05-13T10:45:30.001Z {\"level\":\"error\",\"service\":\"payment-service\",\"msg\":\"all payment requests failing\",\"error_rate\":1.0,\"window_sec\":30}\n2026-05-13T10:45:30.450Z [checkout-service] WARN  msg=\"elevated payment failure rate\" failed_last_60s=12 total_last_60s=13\n2026-05-13T10:45:31.001Z [api-gateway] WARN  route=POST /checkout/pay error_rate_5m=0.94 threshold=0.05 msg=\"SLO breach\"\n2026-05-13T10:46:00.001Z {\"level\":\"info\",\"service\":\"payment-service\",\"msg\":\"health probe\",\"postgres\":\"ok\",\"kafka\":\"ok\",\"payment_processor\":\"circuit_open\"}\n2026-05-13T10:46:05.001Z [payment-service] ERROR msg=\"probe attempt to payment processor failed\" host=payments.stripe-like.internal:443 error=\"tls: no supported versions satisfy minVersion and maxVersion\"\n2026-05-13T10:46:10.200Z [payment-service] DEBUG msg=\"TLS config dump\" minVersion=TLS1.3 maxVersion=TLS1.3 provider=sarama-tls-helper source=github.com/IBM/sarama@v1.43.3\n2026-05-13T10:46:10.201Z [payment-service] WARN  msg=\"TLS version override detected\" previous_min=TLS1.2 new_min=TLS1.3 new_max=TLS1.3 set_by=sarama_tls_config_init\n2026-05-13T10:46:12.001Z [payment-service] ERROR msg=\"charge failed\" order_id=ord-9970 error=\"circuit breaker open\" status=503\n2026-05-13T10:46:12.002Z [checkout-service] ERROR order_id=ord-9970 msg=\"payment failed\" http_status=503\n2026-05-13T10:46:15.003Z [payment-service] ERROR msg=\"charge failed\" order_id=ord-9971 error=\"circuit breaker open\" status=503\n2026-05-13T10:46:20.001Z [payment-service] ERROR msg=\"charge failed\" order_id=ord-9972 error=\"circuit breaker open\" status=503\n2026-05-13T10:46:25.001Z [payment-service] ERROR msg=\"charge failed\" order_id=ord-9973 error=\"circuit breaker open\" status=503\n2026-05-13T10:46:30.001Z {\"level\":\"error\",\"service\":\"payment-service\",\"msg\":\"payment processor circuit open\",\"open_duration_sec\":64,\"failed_orders_last_60s\":18}\n2026-05-13T10:46:45.001Z [payment-service] WARN  msg=\"half-open probe to payment processor\" host=payments.stripe-like.internal:443\n2026-05-13T10:46:45.889Z [payment-service] ERROR msg=\"half-open probe failed\" host=payments.stripe-like.internal:443 error=\"tls: no supported versions satisfy minVersion and maxVersion\"\n2026-05-13T10:46:45.890Z [payment-service] ERROR msg=\"circuit breaker returned to OPEN\" host=payments.stripe-like.internal:443\n2026-05-13T10:47:00.001Z [api-gateway] ERROR route=POST /checkout/pay error_rate_5m=0.97 msg=\"SLO critically breached\"\n2026-05-13T10:47:01.002Z [checkout-service] WARN  msg=\"dropping payment requests, circuit open\" queue_depth=47\n2026-05-13T10:47:10.112Z [payment-service] INFO  msg=\"on-call engineer attached\" action=investigating sha=449ee7cc0d6e\n2026-05-13T10:47:15.004Z [payment-service] DEBUG msg=\"comparing TLS config pre/post deploy\" sha_prev=a65d890990f0 sha_curr=449ee7cc0d6e\n2026-05-13T10:47:15.445Z [payment-service] WARN  msg=\"sarama v1.43.3 tls_helper now forces global TLS min/max to TLS1.3 when Kafka TLS enabled\" mitigation=pending\n2026-05-13T10:47:20.001Z [payment-service] DEBUG msg=\"payment processor advertises TLS1.2 only\" host=payments.stripe-like.internal:443 supported=[TLS1.2]\n2026-05-13T10:47:20.002Z [payment-service] ERROR msg=\"TLS version mismatch confirmed\" client_min=TLS1.3 client_max=TLS1.3 server_supports=TLS1.2 conclusion=handshake_impossible\n2026-05-13T10:47:30.001Z {\"level\":\"warn\",\"service\":\"payment-service\",\"msg\":\"initiating rollback evaluation\",\"current_sha\":\"449ee7cc0d6e\",\"target_sha\":\"a65d890990f0\"}\n2026-05-13T10:48:00.001Z [payment-service] INFO  msg=\"rollback deployment started\" from=449ee7cc0d6e to=a65d890990f0\n2026-05-13T10:50:12.003Z [payment-service] INFO  msg=\"rollback complete\" sha=a65d890990f0 tls_minVersion=TLS1.2\n2026-05-13T10:50:13.440Z [payment-service] INFO  msg=\"TLS handshake success\" host=payments.stripe-like.internal:443 version=TLS1.2\n2026-05-13T10:50:14.002Z [payment-service] INFO  msg=\"circuit breaker CLOSED\" host=payments.stripe-like.internal:443\n2026-05-13T10:50:15.001Z [payment-service] INFO  msg=\"processing charge\" order_id=ord-9990 amount=75.00 currency=USD\n2026-05-13T10:50:15.812Z [payment-service] INFO  msg=\"charge complete\" order_id=ord-9990 status=success latency_ms=598\n2026-05-13T10:50:20.001Z [api-gateway] INFO  route=POST /checkout/pay error_rate_5m=0.12 msg=\"recovery in progress\"\n2026-05-13T10:52:00.001Z [api-gateway] INFO  route=POST /checkout/pay error_rate_5m=0.01 msg=\"SLO restored\"",
+  "recent_deploys": [
+    {
+      "sha": "7b1231238df3",
+      "timestamp": "2026-04-23T08:01:17Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] Fix dependabot configuration (#3298)",
+      "changed_files": [
+        ".github/dependabot.yml"
+      ]
+    },
+    {
+      "sha": "d8fd7bba8052",
+      "timestamp": "2026-04-23T08:11:22Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 1 update (#3300)",
+      "changed_files": [
+        "payment-service/go.mod",
+        "payment-service/go.sum"
+      ]
+    },
+    {
+      "sha": "396eaec92110",
+      "timestamp": "2026-04-25T09:36:57Z",
+      "author": "Patrice Chalin",
+      "message": "Enable lychee cache for local checks too (#3315)",
+      "changed_files": [
+        ".github/workflows/links.yml",
+        ".lychee.toml"
+      ]
+    },
+    {
+      "sha": "2b9113d98e20",
+      "timestamp": "2026-04-30T06:51:57Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] execute dependabot every Tuesday 3:00am+ (#3330)",
+      "changed_files": [
+        ".github/dependabot.yml"
+      ]
+    },
+    {
+      "sha": "30ba52fd9566",
+      "timestamp": "2026-05-05T06:33:05Z",
+      "author": "Jonathan Munz",
+      "message": "Update React Native example app dependencies (#3296)",
+      "changed_files": [
+        "examples/react-native/package.json",
+        "examples/react-native/yarn.lock"
+      ]
+    },
+    {
+      "sha": "a65d890990f0",
+      "timestamp": "2026-05-05T10:00:49Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "chore(deps): resolve Rust security advisories (#3348)",
+      "changed_files": [
+        "payment-service/Cargo.lock",
+        "payment-service/Cargo.toml"
+      ]
+    },
+    {
+      "sha": "449ee7cc0d6e",
+      "timestamp": "2026-05-13T10:41:00Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github.com/IBM/sarama (#3360)",
+      "changed_files": [
+        "payment-service/go.mod",
+        "payment-service/go.sum",
+        "payment-service/internal/kafka/producer.go",
+        "payment-service/internal/tls/config.go"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=449ee7cc0d6e bumped github.com/IBM/sarama to v1.43.3. This version of sarama introduced a change in its TLS helper that, when Kafka TLS is enabled, globally overrides the process-wide TLS minimum and maximum version to TLS 1.3. The payment processor endpoint (payments.stripe-like.internal:443) only supports TLS 1.2. After the deploy, all outbound TLS connections to the payment processor failed with 'tls: no supported versions satisfy minVersion and maxVersion', causing 94%+ charge failures and triggering circuit breaker OPEN state.",
+  "ground_truth_remediation": "Roll back payment-service to sha=a65d890990f0 (the previous deploy) using the standard deployment pipeline. This restores the prior sarama version and removes the TLS 1.3-only override, allowing TLS 1.2 handshakes with the payment processor to succeed. As a follow-up, pin github.com/IBM/sarama to a version that does not override global TLS settings, or add an explicit TLS config in payment-service/internal/tls/config.go that sets minVersion=TLS1.2 independently of sarama's initialization order.",
+  "red_herring": null
+}

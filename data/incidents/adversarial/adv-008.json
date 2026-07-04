@@ -1,0 +1,86 @@
+{
+  "id": "adv-008",
+  "subset": "adversarial",
+  "category": "dependency_outage",
+  "affected_service": "checkout-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: checkout-service payment success rate dropped to 0% for 8 minutes (14:03 UTC - 14:11 UTC). ErrorBudget exhausted. PagerDuty incident #INC-20481 triggered.",
+  "log_window": "2024-03-14T13:38:02Z INFO  [frontend-hpa-controller] HPA config update applied: scale-up threshold changed from 60% to 80% CPU for frontend-service\n2024-03-14T13:38:03Z INFO  [frontend-hpa-controller] HPA frontend-service now targeting minReplicas=3 maxReplicas=20 cpuThreshold=80\n2024-03-14T13:38:05Z INFO  [checkout-service] Startup health check passed. Payment processor endpoint reachable: payments.example-processor.com:443\n2024-03-14T13:45:11Z INFO  [checkout-service] Order #ORD-884421 payment authorized in 212ms\n2024-03-14T13:47:33Z INFO  [checkout-service] Order #ORD-884422 payment authorized in 198ms\n2024-03-14T13:50:09Z INFO  [checkout-service] Order #ORD-884423 payment authorized in 225ms\n2024-03-14T13:52:44Z INFO  [checkout-service] Order #ORD-884424 payment authorized in 201ms\n2024-03-14T13:55:18Z INFO  [checkout-service] Order #ORD-884425 payment authorized in 189ms\n2024-03-14T13:57:55Z INFO  [checkout-service] Order #ORD-884426 payment authorized in 210ms\n2024-03-14T14:00:02Z INFO  [checkout-service] Order #ORD-884427 payment authorized in 207ms\n2024-03-14T14:01:44Z INFO  [checkout-service] Order #ORD-884428 payment authorized in 215ms\n2024-03-14T14:02:59Z INFO  [checkout-service] Order #ORD-884429 payment authorized in 203ms\n2024-03-14T14:03:07Z WARN  [checkout-service] Payment processor TCP connect timeout to 203.0.113.45:443 (attempt 1/3) order=#ORD-884430\n2024-03-14T14:03:22Z WARN  [checkout-service] Payment processor TCP connect timeout to 203.0.113.45:443 (attempt 2/3) order=#ORD-884430\n2024-03-14T14:03:37Z ERROR [checkout-service] Payment processor TCP connect timeout to 203.0.113.45:443 (attempt 3/3) order=#ORD-884430 giving up\n2024-03-14T14:03:37Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884430 customer=cust-19823\n2024-03-14T14:03:38Z WARN  [checkout-service] Payment processor TCP connect timeout to 203.0.113.45:443 (attempt 1/3) order=#ORD-884431\n2024-03-14T14:03:40Z INFO  [network-probe] Traceroute to 203.0.113.45: hop 8 = 198.51.100.12 (transit-AS64501-peer) RTT=0.8ms, hop 9 = NO RESPONSE (black hole detected)\n2024-03-14T14:03:41Z WARN  [network-probe] BGP route table anomaly: prefix 203.0.113.32/27 learned via AS64501 (transit) with path length 2, overrides expected AS64502 path length 4 more-specific prefix injection suspected\n2024-03-14T14:03:53Z WARN  [checkout-service] Payment processor TCP connect timeout to 203.0.113.45:443 (attempt 2/3) order=#ORD-884431\n2024-03-14T14:04:08Z ERROR [checkout-service] Payment processor TCP connect timeout to 203.0.113.45:443 (attempt 3/3) order=#ORD-884431 giving up\n2024-03-14T14:04:08Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884431 customer=cust-29041\n2024-03-14T14:04:10Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884432 customer=cust-30112\n2024-03-14T14:04:12Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884433 customer=cust-30998\n2024-03-14T14:04:15Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884434 customer=cust-31204\n2024-03-14T14:04:18Z INFO  [network-probe] DNS resolution for payments.example-processor.com resolved to 203.0.113.45 OK (no NXDOMAIN, DNS is healthy)\n2024-03-14T14:04:19Z INFO  [network-probe] TLS certificate for payments.example-processor.com valid until 2025-06-01, chain intact (no cert error)\n2024-03-14T14:04:20Z WARN  [network-probe] Packet loss to 203.0.113.45: 100% beyond AS64501 boundary traffic is being black-holed at upstream transit hop\n2024-03-14T14:04:22Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884435 customer=cust-32017\n2024-03-14T14:04:25Z WARN  [bgp-monitor] ALERT: Upstream transit AS64501 advertising 203.0.113.32/27 (more-specific than canonical 203.0.113.0/24 via AS64502). Route leak in progress. Affected IPs include payment processor 203.0.113.45.\n2024-03-14T14:04:27Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884436 customer=cust-33410\n2024-03-14T14:04:30Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884437 customer=cust-33891\n2024-03-14T14:05:01Z INFO  [frontend-hpa-controller] HPA evaluation: frontend-service CPU=43% below new 80% threshold, no scale-up triggered (expected behavior with updated config)\n2024-03-14T14:05:03Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884438 customer=cust-34102\n2024-03-14T14:05:06Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884439 customer=cust-34567\n2024-03-14T14:05:44Z WARN  [bgp-monitor] Upstream AS64501 route 203.0.113.32/27 still active in routing table. NOC notified. Attempting to contact transit provider.\n2024-03-14T14:06:02Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884440 customer=cust-35001\n2024-03-14T14:06:05Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884441 customer=cust-35442\n2024-03-14T14:06:10Z INFO  [checkout-service] HPA has no effect on payment processor connectivity checkout pod count stable at 5, all pods reporting identical ETIMEDOUT errors to same destination IP\n2024-03-14T14:07:03Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884442 customer=cust-36021\n2024-03-14T14:07:41Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884443 customer=cust-36480\n2024-03-14T14:08:12Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884444 customer=cust-36990\n2024-03-14T14:08:55Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884445 customer=cust-37201\n2024-03-14T14:09:30Z WARN  [bgp-monitor] Coordinating with AS64501 NOC to withdraw leaked prefix 203.0.113.32/27. Estimated withdrawal in ~2 minutes.\n2024-03-14T14:09:55Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884446 customer=cust-37800\n2024-03-14T14:10:22Z ERROR [checkout-service] Payment failed: ETIMEDOUT connecting to 203.0.113.45:443 order=#ORD-884447 customer=cust-38201\n2024-03-14T14:11:03Z INFO  [bgp-monitor] AS64501 has withdrawn route 203.0.113.32/27. Traffic reverting to canonical path via AS64502.\n2024-03-14T14:11:09Z INFO  [network-probe] Traceroute to 203.0.113.45 now following expected path via AS64502. No black hole detected.\n2024-03-14T14:11:14Z INFO  [checkout-service] Payment processor TCP connect successful to 203.0.113.45:443 in 88ms order=#ORD-884448\n2024-03-14T14:11:15Z INFO  [checkout-service] Order #ORD-884448 payment authorized in 195ms\n2024-03-14T14:11:18Z INFO  [checkout-service] Order #ORD-884449 payment authorized in 201ms\n2024-03-14T14:11:22Z INFO  [checkout-service] Order #ORD-884450 payment authorized in 188ms\n2024-03-14T14:12:05Z INFO  [checkout-service] Payment success rate recovering: 100% over last 60 seconds (8 of 8 orders succeeded)\n2024-03-14T14:12:10Z INFO  [frontend-hpa-controller] HPA evaluation: frontend-service CPU=51% below 80% threshold, no scale-up triggered\n2024-03-14T14:13:00Z INFO  [checkout-service] Full payment processing recovery confirmed. Incident window: 14:03:07 UTC to 14:11:14 UTC (8m 7s)",
+  "recent_deploys": [
+    {
+      "sha": "a1f3c7e",
+      "timestamp": "2024-03-14T06:12:00Z",
+      "author": "priya.sharma",
+      "message": "chore: bump grpc-go dependency to v1.62.1 for security patch",
+      "changed_files": [
+        "go.mod",
+        "go.sum"
+      ]
+    },
+    {
+      "sha": "b82d4a91c3e56f2",
+      "timestamp": "2024-03-14T08:30:00Z",
+      "author": "tomasz.wierzbicki",
+      "message": "feat(cart-service): add item quantity validation on add-to-cart endpoint",
+      "changed_files": [
+        "src/cart/handler.go",
+        "src/cart/validator.go",
+        "tests/cart/handler_test.go"
+      ]
+    },
+    {
+      "sha": "c94e1b3d7a08f55",
+      "timestamp": "2024-03-14T09:55:00Z",
+      "author": "mei.tanaka",
+      "message": "fix(product-service): correct currency conversion rounding for JPY",
+      "changed_files": [
+        "src/product/currency.go",
+        "tests/product/currency_test.go"
+      ]
+    },
+    {
+      "sha": "d371f09ab2c64e8",
+      "timestamp": "2024-03-14T11:20:00Z",
+      "author": "carlos.mendez",
+      "message": "refactor(recommendation-service): extract feature flag logic into separate module",
+      "changed_files": [
+        "src/recommendation/flags.go",
+        "src/recommendation/engine.go",
+        "src/recommendation/engine_test.go"
+      ]
+    },
+    {
+      "sha": "e50c2d84b1a73f9",
+      "timestamp": "2024-03-14T12:45:00Z",
+      "author": "aisha.okonkwo",
+      "message": "ci: add canary deployment gate for checkout-service with 5% traffic split",
+      "changed_files": [
+        ".github/workflows/deploy-checkout.yml",
+        "k8s/checkout/canary-virtualservice.yaml"
+      ]
+    },
+    {
+      "sha": "f62a8e15d3b90c1",
+      "timestamp": "2024-03-14T13:37:00Z",
+      "author": "sven.lindqvist",
+      "message": "ops(frontend): update HPA scale-up CPU threshold from 60% to 80% to reduce thrashing",
+      "changed_files": [
+        "k8s/frontend/hpa.yaml",
+        "docs/runbooks/frontend-scaling.md"
+      ]
+    },
+    {
+      "sha": "071b5f3ac9d24e6",
+      "timestamp": "2024-03-14T13:50:00Z",
+      "author": "priya.sharma",
+      "message": "docs: update API changelog for v2.4.1 release notes",
+      "changed_files": [
+        "CHANGELOG.md",
+        "docs/api/v2.4.1.md"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "A BGP route leak from upstream transit provider AS64501 injected a more-specific prefix (203.0.113.32/27) for the payment processor IP range (canonical route: 203.0.113.0/24 via AS64502). Because BGP prefers longer prefixes, all outbound traffic to payment processor IP 203.0.113.45 was redirected to AS64501, which black-holed the traffic rather than forwarding it. This caused 100% packet loss to the payment endpoint for 8 minutes (14:03-14:11 UTC). The leak is evidenced in the logs by: the bgp-monitor alert at 14:04:25Z identifying the AS64501 more-specific prefix advertisement, the network-probe traceroute at 14:03:40Z showing traffic dying at the AS64501 boundary, and the recovery confirmation at 14:11:03Z after AS64501 withdrew the leaked route.",
+  "ground_truth_remediation": "1. Contact AS64501 NOC immediately to request withdrawal of leaked prefix 203.0.113.32/27 (NOC was already engaged by 14:09:30Z). 2. Apply BGP prefix filters on the peering session with AS64501 to reject prefixes more-specific than /24 for IP ranges not owned by AS64501, preventing future leaks from this peer. 3. As short-term mitigation during future incidents: configure a static route or policy-based routing to force payment processor traffic via the secondary ISP link, bypassing the affected transit peer. 4. Escalate BGP route anomaly alerts to PagerDuty with auto-page to NOC to reduce time-to-engage. 5. Coordinate with the payment processor to retry or reprocess all failed orders from the 14:03-14:11 UTC window and notify affected customers.",
+  "red_herring": "The Kubernetes HPA config update (SHA f62a8e15d3b90c1, deployed at 13:37 UTC, 25 minutes before the incident) looks suspicious because: (a) it raises the frontend scale-up CPU threshold from 60% to 80%, and an engineer might hypothesize that this caused the frontend to under-scale under load, creating backpressure that cascaded into checkout payment timeouts; the temporal proximity and infrastructure-level scope make it a plausible first suspect. However, the logs contain clear exculpatory evidence: (1) at 14:05:01Z the HPA controller logs show frontend CPU at only 43%, well below even the old 60% threshold, meaning no scale-up was suppressed and no frontend saturation occurred; (2) at 14:06:10Z checkout-service logs explicitly note that all 5 checkout pods report identical ETIMEDOUT errors to the same destination IP, ruling out any pod-count or frontend issue; (3) the errors are TCP connect timeouts to a specific IP (203.0.113.45:443), not HTTP 5xx or application-layer errors consistent with compute saturation; (4) DNS and TLS are confirmed healthy at 14:04:18Z and 14:04:19Z respectively; (5) full recovery at 14:11:14Z occurs with no HPA or deployment change, solely after BGP route withdrawal by AS64501, definitively excluding the HPA deploy as a contributing cause."
+}

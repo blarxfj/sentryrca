@@ -32,7 +32,7 @@ TARGET_COUNT = 10
 
 _README_URL = "https://raw.githubusercontent.com/danluu/post-mortems/master/README.md"
 _BULLET_RE = re.compile(
-    r"^\*\s+\[([^\]]+)\]\([^)]+\)\s*[-–—]\s*(.+)$",  # noqa: RUF001
+    r"^\[([^\]]+)\]\([^)]+\)\.\s*(.+)$",
     re.MULTILINE,
 )
 

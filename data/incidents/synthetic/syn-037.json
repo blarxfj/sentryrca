@@ -1,0 +1,84 @@
+{
+  "id": "syn-037",
+  "subset": "synthetic",
+  "category": "config_error",
+  "affected_service": "kafka",
+  "severity": "high",
+  "alert_text": "ALERT: Kafka consumer group 'otel-pipeline-cg' lag exceeding 500,000 messages on topic 'otel-spans'. Multiple consumers reporting offset out-of-range errors. Data pipeline throughput dropped 94% in the last 15 minutes.",
+  "log_window": "2026-05-06T14:38:02.113Z [kafka-broker-1] INFO  KafkaServer - Broker 1 startup complete, listeners: PLAINTEXT://kafka-broker-1:9092\n2026-05-06T14:38:02.891Z [kafka-broker-1] INFO  GroupCoordinator - Loaded group metadata for 14 consumer groups\n2026-05-06T14:38:03.204Z [kafka-broker-1] INFO  OffsetManager - Loading offsets from __consumer_offsets topic\n2026-05-06T14:38:03.512Z [kafka-broker-1] WARN  OffsetManager - auto.offset.reset=earliest detected; this overrides stored offsets for all consumer groups\n2026-05-06T14:38:03.819Z [kafka-broker-1] INFO  OffsetManager - offset.retention.minutes=1 — stored consumer offsets will expire in 60 seconds\n2026-05-06T14:38:04.101Z [kafka-broker-1] WARN  GroupCoordinator - Consumer group 'otel-pipeline-cg' offsets will be reset due to retention policy (offset.retention.minutes=1)\n2026-05-06T14:38:04.307Z [kafka-broker-1] INFO  KafkaConfig - Loaded broker config from /etc/kafka/server.properties\n2026-05-06T14:38:05.002Z [otel-collector] INFO  kafkareceiver - Kafka receiver starting, brokers=[kafka-broker-1:9092] topic=otel-spans group=otel-pipeline-cg\n2026-05-06T14:38:05.441Z [otel-collector] INFO  kafkareceiver - Connected to Kafka broker kafka-broker-1:9092\n2026-05-06T14:38:05.889Z [otel-collector] INFO  kafkareceiver - Joining consumer group otel-pipeline-cg\n2026-05-06T14:38:06.112Z [kafka-broker-1] INFO  GroupCoordinator - Member otel-collector-0 joined group otel-pipeline-cg generation=1\n2026-05-06T14:38:06.445Z [kafka-broker-1] INFO  GroupCoordinator - Rebalance complete for group otel-pipeline-cg, assignment: otel-spans[0-7] -> otel-collector-0\n2026-05-06T14:38:06.778Z [otel-collector] INFO  kafkareceiver - Partition assignment received: [otel-spans:0, otel-spans:1, otel-spans:2, otel-spans:3, otel-spans:4, otel-spans:5, otel-spans:6, otel-spans:7]\n2026-05-06T14:38:07.001Z [kafka-broker-1] WARN  OffsetManager - No committed offset found for group=otel-pipeline-cg topic=otel-spans partition=0; resetting to earliest offset=0\n2026-05-06T14:38:07.112Z [kafka-broker-1] WARN  OffsetManager - No committed offset found for group=otel-pipeline-cg topic=otel-spans partition=1; resetting to earliest offset=0\n2026-05-06T14:38:07.224Z [kafka-broker-1] WARN  OffsetManager - No committed offset found for group=otel-pipeline-cg topic=otel-spans partition=2; resetting to earliest offset=0\n2026-05-06T14:38:07.336Z [kafka-broker-1] WARN  OffsetManager - No committed offset found for group=otel-pipeline-cg topic=otel-spans partition=3; resetting to earliest offset=0\n2026-05-06T14:38:07.448Z [kafka-broker-1] WARN  OffsetManager - No committed offset found for group=otel-pipeline-cg topic=otel-spans partition=4; resetting to earliest offset=0\n2026-05-06T14:38:07.560Z [kafka-broker-1] WARN  OffsetManager - No committed offset found for group=otel-pipeline-cg topic=otel-spans partition=5; resetting to earliest offset=0\n2026-05-06T14:38:07.672Z [kafka-broker-1] WARN  OffsetManager - No committed offset found for group=otel-pipeline-cg topic=otel-spans partition=6; resetting to earliest offset=0\n2026-05-06T14:38:07.784Z [kafka-broker-1] WARN  OffsetManager - No committed offset found for group=otel-pipeline-cg topic=otel-spans partition=7; resetting to earliest offset=0\n2026-05-06T14:38:08.001Z [otel-collector] WARN  kafkareceiver - Offset reset triggered for all partitions; consuming from beginning of topic otel-spans\n2026-05-06T14:38:08.331Z [otel-collector] INFO  kafkareceiver - Starting consumption from offset=0 on 8 partitions\n2026-05-06T14:38:09.002Z [otel-collector] INFO  kafkareceiver - msg_count=12500 lag=487200 partition=0\n2026-05-06T14:38:09.234Z [otel-collector] INFO  kafkareceiver - msg_count=12100 lag=491300 partition=1\n2026-05-06T14:38:10.001Z [jaeger-backend] INFO  span_ingester - Received 0 spans in last 10s (expected ~8000/s); downstream Kafka consumer appears stalled\n2026-05-06T14:38:10.445Z [otel-collector] WARN  kafkareceiver - Consumer lag growing rapidly, current_total_lag=978500 high_watermark_delta=+22000/s\n2026-05-06T14:38:11.003Z [kafka-broker-1] INFO  ReplicaManager - Fetching from offset 0 for 8 partitions; fetch_bytes=52428800\n2026-05-06T14:38:11.501Z [kafka-broker-1] WARN  ReplicaManager - High fetch rate from offset 0; consumer group otel-pipeline-cg may be replaying entire topic history\n2026-05-06T14:38:12.002Z {\"ts\":\"2026-05-06T14:38:12.002Z\",\"level\":\"error\",\"service\":\"otel-collector\",\"component\":\"kafkareceiver\",\"msg\":\"Consumer processing falling behind\",\"lag\":1143200,\"partitions\":8,\"throughput_msgs_per_sec\":4200,\"target_msgs_per_sec\":45000}\n2026-05-06T14:38:13.114Z [kafka-broker-1] INFO  GroupCoordinator - Heartbeat received from otel-collector-0 in group otel-pipeline-cg\n2026-05-06T14:38:14.002Z {\"ts\":\"2026-05-06T14:38:14.002Z\",\"level\":\"warn\",\"service\":\"otel-collector\",\"component\":\"kafkareceiver\",\"msg\":\"Memory pressure from backlog processing\",\"heap_used_mb\":1842,\"heap_max_mb\":2048,\"gc_pause_ms\":312}\n2026-05-06T14:38:15.221Z [otel-collector] ERROR kafkareceiver - Failed to commit offset for partition=3: coordinator not available, retrying in 5s\n2026-05-06T14:38:15.554Z [jaeger-backend] WARN  span_ingester - Span ingestion rate critically low: 0.3 spans/sec (SLA: 5000 spans/sec)\n2026-05-06T14:38:16.002Z [kafka-broker-1] WARN  OffsetManager - offset.retention.minutes=1: expiring offsets for group otel-pipeline-cg (age=72s)\n2026-05-06T14:38:16.334Z [kafka-broker-1] INFO  OffsetManager - Deleted 8 offset entries for group otel-pipeline-cg\n2026-05-06T14:38:17.001Z [otel-collector] ERROR kafkareceiver - Offset commit failed: OFFSET_METADATA_TOO_LARGE, partition=0\n  at org.apache.kafka.clients.consumer.KafkaConsumer.commitSync(KafkaConsumer.java:1384)\n  at io.opentelemetry.collector.receiver.kafka.KafkaReceiver.commitOffsets(KafkaReceiver.go:247)\n2026-05-06T14:38:18.002Z {\"ts\":\"2026-05-06T14:38:18.002Z\",\"level\":\"error\",\"service\":\"kafka-broker-1\",\"component\":\"OffsetManager\",\"msg\":\"Offset expiry loop triggered again; offset.retention.minutes=1 is dangerously low\",\"group\":\"otel-pipeline-cg\",\"expired_count\":8}\n2026-05-06T14:38:19.445Z [otel-collector] WARN  kafkareceiver - Rebalance triggered: broker expelled consumer otel-collector-1 from group otel-pipeline-cg\n2026-05-06T14:38:20.001Z [kafka-broker-1] INFO  GroupCoordinator - Group otel-pipeline-cg rebalancing: reason=MemberLeft member=otel-collector-1\n2026-05-06T14:38:20.334Z [kafka-broker-1] WARN  GroupCoordinator - Consumer group rebalance #3 in 120 seconds; possible instability\n2026-05-06T14:38:21.002Z [otel-collector] ERROR kafkareceiver - Partition revoked during rebalance, uncommitted offset lost partition=4 last_offset=38821\n2026-05-06T14:38:22.112Z {\"ts\":\"2026-05-06T14:38:22.112Z\",\"level\":\"error\",\"service\":\"otel-collector\",\"component\":\"kafkareceiver\",\"msg\":\"Total consumer lag exceeded threshold\",\"lag\":1502800,\"threshold\":500000,\"alert\":true}\n2026-05-06T14:38:23.001Z [jaeger-backend] ERROR span_ingester - Pipeline SLA breach: 0 spans processed in last 60s; alerting on-call\n2026-05-06T14:38:24.221Z [kafka-broker-1] INFO  LogManager - Retention check: topic=otel-spans, segments=142, total_bytes=21474836480\n2026-05-06T14:38:25.001Z {\"ts\":\"2026-05-06T14:38:25.001Z\",\"level\":\"warn\",\"service\":\"kafka-broker-1\",\"component\":\"BrokerConfig\",\"msg\":\"Suspicious config value detected\",\"key\":\"offset.retention.minutes\",\"value\":\"1\",\"recommended_minimum\":\"1440\"}\n2026-05-06T14:38:26.334Z [otel-collector] WARN  kafkareceiver - auto.offset.reset=earliest causing full topic replay on every restart\n2026-05-06T14:38:27.002Z [kafka-broker-1] ERROR GroupCoordinator - Consumer group otel-pipeline-cg: committed offsets expired 4 times in last 5 minutes due to offset.retention.minutes=1\n2026-05-06T14:38:28.441Z [otel-collector] INFO  kafkareceiver - Processing metrics: consumed=52400 lag=1618400 rate=4380/s\n2026-05-06T14:38:30.002Z {\"ts\":\"2026-05-06T14:38:30.002Z\",\"level\":\"fatal\",\"service\":\"otel-collector\",\"component\":\"kafkareceiver\",\"msg\":\"Consumer group lag unrecoverable; shutting down receiver to prevent OOM\",\"lag\":1820000,\"heap_pct\":0.98}\n2026-05-06T14:38:30.334Z [otel-collector] FATAL kafkareceiver - Receiver shutdown initiated: lag=1820000, heap=98%\n2026-05-06T14:38:30.667Z [otel-collector] INFO  kafkareceiver - Closing Kafka consumer connections\n2026-05-06T14:38:31.001Z [kafka-broker-1] INFO  GroupCoordinator - Member otel-collector-0 left group otel-pipeline-cg\n2026-05-06T14:38:31.334Z [kafka-broker-1] INFO  GroupCoordinator - Group otel-pipeline-cg is now empty\n2026-05-06T14:38:32.001Z [otel-collector] ERROR kafkareceiver - Restart attempt 1: reconnecting to Kafka\n2026-05-06T14:38:32.445Z [kafka-broker-1] WARN  OffsetManager - No offsets for group otel-pipeline-cg; next join will reset to earliest (auto.offset.reset=earliest)\n2026-05-06T14:38:33.002Z [otel-collector] INFO  kafkareceiver - Rejoining consumer group otel-pipeline-cg\n2026-05-06T14:38:33.334Z [kafka-broker-1] WARN  OffsetManager - No committed offset found for group=otel-pipeline-cg topic=otel-spans partition=0; resetting to earliest offset=0\n2026-05-06T14:38:33.556Z [kafka-broker-1] WARN  OffsetManager - No committed offset found for group=otel-pipeline-cg topic=otel-spans partition=1; resetting to earliest offset=0\n2026-05-06T14:38:34.001Z [otel-collector] ERROR kafkareceiver - Offset reset loop detected: consumer restarted but offsets immediately expired again; offset.retention.minutes=1 is the cause\n  at kafka.consumer.GroupCoordinator.fetchOffsets(GroupCoordinator.go:512)\n  at kafka.receiver.KafkaReceiver.Start(KafkaReceiver.go:189)\n2026-05-06T14:38:35.002Z {\"ts\":\"2026-05-06T14:38:35.002Z\",\"level\":\"error\",\"service\":\"otel-collector\",\"component\":\"kafkareceiver\",\"msg\":\"Persistent offset reset loop; consumer cannot make progress\",\"resets_in_5min\":5,\"root_config_key\":\"offset.retention.minutes\",\"config_value\":\"1\"}\n2026-05-06T14:38:36.112Z [jaeger-backend] FATAL span_ingester - No spans received for 120s; marking pipeline as DOWN\n2026-05-06T14:38:37.001Z [kafka-broker-1] ERROR BrokerHealthCheck - Consumer group otel-pipeline-cg permanently stalled; offset.retention.minutes=1 causes offsets to expire before commits complete\n2026-05-06T14:38:38.002Z [otel-collector] ERROR kafkareceiver - Restart attempt 2 failed: entering backoff sleep 30s\n2026-05-06T14:38:40.001Z [kafka-broker-1] INFO  LogManager - Segment roll for otel-spans partition 0: new segment at offset=1920344\n2026-05-06T14:38:42.334Z [jaeger-backend] ERROR span_ingester - AlertManager notified: KAFKA_CONSUMER_LAG_CRITICAL lag=1820000 group=otel-pipeline-cg\n2026-05-06T14:38:45.001Z [kafka-broker-1] WARN  BrokerConfig - server.properties loaded from /etc/kafka/server.properties (last modified: 2026-05-06T14:36:51Z, matches deploy sha=28ed8395ff76)\n2026-05-06T14:38:47.002Z {\"ts\":\"2026-05-06T14:38:47.002Z\",\"level\":\"error\",\"service\":\"kafka-broker-1\",\"component\":\"BrokerConfig\",\"msg\":\"Config audit: offset.retention.minutes changed from 10080 to 1 in current server.properties\",\"previous_value\":\"10080\",\"current_value\":\"1\",\"config_file\":\"/etc/kafka/server.properties\"}\n2026-05-06T14:38:50.001Z [otel-collector] ERROR kafkareceiver - Consumer group otel-pipeline-cg cannot recover until broker config corrected; offset.retention.minutes must be >= 1440",
+  "recent_deploys": [
+    {
+      "sha": "c789fc89a688",
+      "timestamp": "2026-04-21T11:57:50Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "package-lock.json",
+        "package.json"
+      ]
+    },
+    {
+      "sha": "de201e875db5",
+      "timestamp": "2026-04-21T19:45:44Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 2 updates (#3284)",
+      "changed_files": [
+        "src/dotnet/Directory.Packages.props",
+        "src/dotnet/OpenTelemetry.Demo.csproj"
+      ]
+    },
+    {
+      "sha": "7b1231238df3",
+      "timestamp": "2026-04-23T08:01:17Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] Fix dependabot configuration (#3298)",
+      "changed_files": [
+        ".github/dependabot.yml"
+      ]
+    },
+    {
+      "sha": "310357e9b0b4",
+      "timestamp": "2026-04-28T02:25:29Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the cargo-production-dependencies group across 1 directory wit",
+      "changed_files": [
+        "src/rust/Cargo.toml",
+        "src/rust/Cargo.lock"
+      ]
+    },
+    {
+      "sha": "53d7934653a4",
+      "timestamp": "2026-04-28T13:16:01Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): update open-telemetry/detector-container requirement (#3299)",
+      "changed_files": [
+        "src/python/requirements.txt",
+        "src/python/requirements-dev.txt"
+      ]
+    },
+    {
+      "sha": "2b9113d98e20",
+      "timestamp": "2026-04-30T06:51:57Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] execute dependabot every Tuesday 3:00am+ (#3330)",
+      "changed_files": [
+        ".github/dependabot.yml",
+        "deploy/kafka/server.properties.template"
+      ]
+    },
+    {
+      "sha": "28ed8395ff76",
+      "timestamp": "2026-05-06T14:37:03Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/python/requirements.txt",
+        "deploy/kafka/server.properties",
+        "deploy/kafka/broker-replacement-playbook.md"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=28ed8395ff76 (2026-05-06T14:37:03Z) modified deploy/kafka/server.properties and inadvertently set offset.retention.minutes=1 (down from the correct value of 10080, i.e. 7 days). This change was applied to the replacement broker during a broker replacement procedure. With a 1-minute offset retention, all committed consumer group offsets for 'otel-pipeline-cg' expired within seconds of being written, causing the broker to continuously evict offset metadata. On every reconnect, the consumer found no stored offsets and reset to earliest (auto.offset.reset=earliest), forcing a full topic replay from offset 0. The resulting lag of 1.8M+ messages overwhelmed the otel-collector's heap and triggered a crash-restart loop that perpetuated the offset reset cycle.",
+  "ground_truth_remediation": "1. Immediately correct server.properties on the replacement broker: set offset.retention.minutes=10080 (7 days) to match the previous value documented in the config audit log. 2. Perform a rolling restart of kafka-broker-1 to apply the corrected configuration. 3. Once the broker is back up, manually reset the consumer group offsets for 'otel-pipeline-cg' to the latest committed high-watermark using: `kafka-consumer-groups.sh --bootstrap-server kafka-broker-1:9092 --group otel-pipeline-cg --reset-offsets --to-latest --topic otel-spans --execute`. 4. Restart the otel-collector Kafka receiver to rejoin the consumer group from the correct offsets. 5. Add a config validation step to the broker-replacement-playbook.md and CI pipeline that asserts offset.retention.minutes >= 1440 before any broker is brought into production.",
+  "red_herring": null
+}

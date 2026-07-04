@@ -1,0 +1,91 @@
+{
+  "id": "syn-018",
+  "subset": "synthetic",
+  "category": "deploy_regression",
+  "affected_service": "currency-service",
+  "severity": "high",
+  "alert_text": "ALERT: currency-service exchange rate error rate > 5% for 10m — p99 response errors spiking, incorrect conversion totals reported by checkout-service",
+  "log_window": "2026-05-05T10:31:02.114Z INFO  [currency-service] Server starting on :7001, version=2.4.1 sha=6302e2c10e48\n2026-05-05T10:31:02.341Z INFO  [currency-service] Loaded exchange rate table: 32 currency pairs\n2026-05-05T10:31:02.512Z INFO  [currency-service] Float precision mode: DOUBLE (changed from DECIMAL in sha=6302e2c10e48)\n2026-05-05T10:31:03.001Z INFO  [currency-service] Ready to serve requests\n2026-05-05T10:31:15.220Z INFO  [currency-service] {\"msg\":\"convert request\",\"from\":\"USD\",\"to\":\"EUR\",\"amount\":100.00,\"result\":88.99999999999997}\n2026-05-05T10:31:15.334Z DEBUG [checkout-service] received conversion USD->EUR amount=100.00 result=88.99999999999997\n2026-05-05T10:31:15.445Z WARN  [checkout-service] order_total precision mismatch: expected=89.00 got=88.99999999999997 order_id=ord-44821\n2026-05-05T10:31:22.118Z INFO  [currency-service] {\"msg\":\"convert request\",\"from\":\"GBP\",\"to\":\"JPY\",\"amount\":250.00,\"result\":46249.999999999985}\n2026-05-05T10:31:22.290Z WARN  [checkout-service] order_total precision mismatch: expected=46250.00 got=46249.999999999985 order_id=ord-44822\n2026-05-05T10:31:28.003Z INFO  [currency-service] {\"msg\":\"convert request\",\"from\":\"USD\",\"to\":\"CAD\",\"amount\":75.50,\"result\":102.42749999999999}\n2026-05-05T10:31:28.115Z DEBUG [checkout-service] received conversion USD->CAD amount=75.50 result=102.42749999999999\n2026-05-05T10:31:28.220Z WARN  [checkout-service] order_total precision mismatch: expected=102.43 got=102.42749999999999 order_id=ord-44823\n2026-05-05T10:31:35.441Z INFO  [currency-service] {\"msg\":\"convert request\",\"from\":\"EUR\",\"to\":\"USD\",\"amount\":200.00,\"result\":218.00000000000003}\n2026-05-05T10:31:35.558Z ERROR [checkout-service] order validation failed: total=218.00000000000003 exceeds rounding threshold=0.001 order_id=ord-44824\n2026-05-05T10:31:35.671Z INFO  [payment-service] payment hold placed for order_id=ord-44824 amount=218.00000000000003\n2026-05-05T10:31:35.780Z ERROR [payment-service] amount format invalid: 218.00000000000003 — cannot serialize to payment gateway schema order_id=ord-44824\n2026-05-05T10:31:36.001Z ERROR [checkout-service] payment-service rejected order_id=ord-44824 status=400\n2026-05-05T10:31:36.112Z INFO  [currency-service] {\"msg\":\"convert request\",\"from\":\"USD\",\"to\":\"INR\",\"amount\":500.00,\"result\":41549.999999999985}\n2026-05-05T10:31:36.215Z ERROR [checkout-service] order validation failed: total=41549.999999999985 exceeds rounding threshold=0.001 order_id=ord-44825\n2026-05-05T10:31:36.330Z ERROR [checkout-service] payment-service rejected order_id=ord-44825 status=400\n2026-05-05T10:31:42.774Z WARN  [currency-service] {\"msg\":\"high error rate detected\",\"error_pct\":4.2,\"window_sec\":60}\n2026-05-05T10:31:44.001Z INFO  [currency-service] {\"msg\":\"convert request\",\"from\":\"CHF\",\"to\":\"USD\",\"amount\":1000.00,\"result\":1098.9999999999998}\n2026-05-05T10:31:44.118Z ERROR [checkout-service] order validation failed: total=1098.9999999999998 exceeds rounding threshold=0.001 order_id=ord-44826\n2026-05-05T10:31:44.225Z ERROR [checkout-service] payment-service rejected order_id=ord-44826 status=400\n2026-05-05T10:31:50.882Z ERROR [currency-service] {\"msg\":\"conversion_error\",\"error\":\"result precision violation\",\"from\":\"AUD\",\"to\":\"USD\",\"amount\":300.00,\"result\":195.00000000000003}\n2026-05-05T10:31:51.003Z ERROR [checkout-service] order validation failed: total=195.00000000000003 exceeds rounding threshold=0.001 order_id=ord-44827\n2026-05-05T10:31:51.115Z ERROR [checkout-service] payment-service rejected order_id=ord-44827 status=400\n2026-05-05T10:32:01.441Z WARN  [currency-service] {\"msg\":\"high error rate detected\",\"error_pct\":6.8,\"window_sec\":60}\n2026-05-05T10:32:02.118Z ERROR [currency-service] {\"msg\":\"conversion_error\",\"error\":\"result precision violation\",\"from\":\"USD\",\"to\":\"MXN\",\"amount\":150.00,\"result\":2819.9999999999995}\n2026-05-05T10:32:02.225Z ERROR [checkout-service] order validation failed: total=2819.9999999999995 exceeds rounding threshold=0.001 order_id=ord-44828\n2026-05-05T10:32:02.338Z ERROR [checkout-service] payment-service rejected order_id=ord-44828 status=400\n2026-05-05T10:32:08.551Z INFO  [currency-service] {\"msg\":\"convert request\",\"from\":\"USD\",\"to\":\"EUR\",\"amount\":50.00,\"result\":44.499999999999986}\n2026-05-05T10:32:08.669Z ERROR [checkout-service] order validation failed: total=44.499999999999986 exceeds rounding threshold=0.001 order_id=ord-44829\n2026-05-05T10:32:08.782Z ERROR [checkout-service] payment-service rejected order_id=ord-44829 status=400\n2026-05-05T10:32:09.003Z ERROR [payment-service] consecutive payment failures threshold reached: 5 failures in 90s, alerting on-call\n2026-05-05T10:32:15.334Z WARN  [currency-service] {\"msg\":\"rate_limiter\",\"note\":\"throttling downstream due to error backpressure\",\"rps_cap\":50}\n2026-05-05T10:32:18.771Z ERROR [currency-service] {\"msg\":\"conversion_error\",\"error\":\"result precision violation\",\"from\":\"GBP\",\"to\":\"EUR\",\"amount\":800.00,\"result\":927.9999999999999}\n2026-05-05T10:32:18.882Z ERROR [checkout-service] order validation failed: total=927.9999999999999 exceeds rounding threshold=0.001 order_id=ord-44830\n2026-05-05T10:32:18.995Z ERROR [checkout-service] payment-service rejected order_id=ord-44830 status=400\n2026-05-05T10:32:25.112Z WARN  [currency-service] {\"msg\":\"high error rate detected\",\"error_pct\":9.1,\"window_sec\":60}\n2026-05-05T10:32:30.441Z ERROR [currency-service] {\"msg\":\"conversion_error\",\"error\":\"result precision violation\",\"from\":\"JPY\",\"to\":\"USD\",\"amount\":10000.00,\"result\":66.49999999999999}\n2026-05-05T10:32:30.558Z ERROR [checkout-service] order validation failed: total=66.49999999999999 exceeds rounding threshold=0.001 order_id=ord-44831\n2026-05-05T10:32:30.671Z ERROR [checkout-service] payment-service rejected order_id=ord-44831 status=400\n2026-05-05T10:32:35.002Z FATAL [currency-service] error_rate=11.4% breached critical threshold=10%; entering degraded mode\n2026-05-05T10:32:35.118Z ERROR [checkout-service] currency-service degraded mode detected — blocking new orders\n2026-05-05T10:32:35.225Z ERROR [checkout-service] checkout pipeline halted: dependency currency-service unhealthy\n2026-05-05T10:32:36.001Z ERROR [payment-service] upstream checkout-service stopped sending requests — idle timeout warning\n2026-05-05T10:32:38.441Z WARN  [currency-service] {\"msg\":\"degraded_mode\",\"accepting_requests\":false,\"retry_after_sec\":30}\n2026-05-05T10:32:40.112Z ERROR [currency-service] Stack trace (precision_utils.go:84):\n2026-05-05T10:32:40.113Z ERROR [currency-service]   currency/convert.go:112 in ConvertAmount\n2026-05-05T10:32:40.114Z ERROR [currency-service]   currency/precision_utils.go:84 in applyRate — float64 multiply introduced epsilon drift\n2026-05-05T10:32:40.115Z ERROR [currency-service]   currency/precision_utils.go:91 in roundResult — round(float64) lost decimal context\n2026-05-05T10:32:45.334Z WARN  [currency-service] {\"msg\":\"precision_mode_warning\",\"note\":\"Decimal library replaced with float64 ops in sha=6302e2c10e48\",\"impact\":\"epsilon drift in multiply/divide chains\"}\n2026-05-05T10:32:50.441Z INFO  [currency-service] health check: status=DEGRADED error_rate=11.4% precision_mode=DOUBLE\n2026-05-05T10:33:01.002Z ERROR [checkout-service] SLO breach: order success rate=81.3% below target=99.5% window=5m\n2026-05-05T10:33:05.118Z WARN  [currency-service] {\"msg\":\"high error rate detected\",\"error_pct\":11.4,\"window_sec\":120}\n2026-05-05T10:33:10.334Z INFO  [currency-service] {\"msg\":\"diagnostic\",\"precision_library\":\"float64\",\"previous_library\":\"shopspring/decimal\",\"changed_in_commit\":\"6302e2c10e48\"}\n2026-05-05T10:33:15.441Z ERROR [checkout-service] repeated order failures: 18 of last 20 orders failed validation due to currency precision errors\n2026-05-05T10:33:20.558Z ERROR [payment-service] payment gateway reporting anomalous amounts — escalating to on-call\n2026-05-05T10:33:25.771Z WARN  [currency-service] {\"msg\":\"rollback_suggested\",\"last_known_good_sha\":\"5acdff618e47\",\"current_sha\":\"6302e2c10e48\"}\n2026-05-05T10:33:30.882Z ERROR [currency-service] {\"msg\":\"conversion_error\",\"error\":\"result precision violation\",\"from\":\"USD\",\"to\":\"BRL\",\"amount\":200.00,\"result\":1019.9999999999999}\n2026-05-05T10:33:31.001Z ERROR [checkout-service] order validation failed: total=1019.9999999999999 exceeds rounding threshold=0.001 order_id=ord-44845\n2026-05-05T10:33:31.115Z ERROR [checkout-service] payment-service rejected order_id=ord-44845 status=400\n2026-05-05T10:33:35.334Z FATAL [currency-service] sustained error rate=13.2% — paging on-call engineer\n2026-05-05T10:33:40.441Z INFO  [currency-service] health check: status=DEGRADED error_rate=13.2% uptime=9m38s\n2026-05-05T10:33:45.558Z ERROR [checkout-service] SLO breach: order success rate=79.1% below target=99.5% window=5m\n2026-05-05T10:33:50.771Z WARN  [payment-service] downstream failure rate elevated — circuit breaker trip imminent threshold=15%\n2026-05-05T10:34:01.002Z ERROR [currency-service] {\"msg\":\"conversion_error\",\"error\":\"result precision violation\",\"from\":\"EUR\",\"to\":\"GBP\",\"amount\":600.00,\"result\":517.9999999999999}\n2026-05-05T10:34:01.118Z ERROR [checkout-service] order validation failed: total=517.9999999999999 exceeds rounding threshold=0.001 order_id=ord-44851\n2026-05-05T10:34:05.334Z ERROR [currency-service] {\"msg\":\"conversion_error\",\"error\":\"result precision violation\",\"from\":\"CAD\",\"to\":\"USD\",\"amount\":400.00,\"result\":294.99999999999994}\n2026-05-05T10:34:10.441Z FATAL [checkout-service] circuit breaker OPEN: currency-service failure rate=13.2% — stopping all conversion requests\n2026-05-05T10:34:10.558Z ERROR [currency-service] requests dropped by upstream circuit breaker — no new conversions processing\n2026-05-05T10:34:15.771Z INFO  [currency-service] {\"msg\":\"status_summary\",\"total_requests_last_15m\":412,\"errors\":54,\"precision_failures\":54,\"mode\":\"float64\"}\n2026-05-05T10:34:20.882Z WARN  [currency-service] {\"msg\":\"awaiting_rollback_or_hotfix\",\"current_sha\":\"6302e2c10e48\",\"suggested_rollback\":\"5acdff618e47\"}",
+  "recent_deploys": [
+    {
+      "sha": "0982a0268aec",
+      "timestamp": "2026-04-16T14:12:23Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump eslint-config-next (#3270)",
+      "changed_files": [
+        "package.json",
+        "package-lock.json",
+        ".eslintrc.json"
+      ]
+    },
+    {
+      "sha": "0410576889f7",
+      "timestamp": "2026-04-21T12:05:34Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/currency-service/requirements.txt",
+        "src/payment-service/requirements.txt"
+      ]
+    },
+    {
+      "sha": "7d7e533c001a",
+      "timestamp": "2026-04-23T07:59:20Z",
+      "author": "Timur Olzhabayev",
+      "message": "[chore] exclude platform.openai.com and gnu.org from link check (#3289)",
+      "changed_files": [
+        ".lycheeignore",
+        "docs/links.md"
+      ]
+    },
+    {
+      "sha": "396eaec92110",
+      "timestamp": "2026-04-25T09:36:57Z",
+      "author": "Patrice Chalin",
+      "message": "Enable lychee cache for local checks too (#3315)",
+      "changed_files": [
+        ".github/workflows/links.yml",
+        "Makefile"
+      ]
+    },
+    {
+      "sha": "7cdf4e6a5bb4",
+      "timestamp": "2026-04-27T06:41:57Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github.com/IBM/sarama (#3310)",
+      "changed_files": [
+        "src/kafka-consumer/go.mod",
+        "src/kafka-consumer/go.sum"
+      ]
+    },
+    {
+      "sha": "5acdff618e47",
+      "timestamp": "2026-05-05T08:11:45Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Add Podman support (#3307)",
+      "changed_files": [
+        "docker-compose.yml",
+        "Makefile",
+        "docs/podman.md",
+        "scripts/run-podman.sh"
+      ]
+    },
+    {
+      "sha": "6302e2c10e48",
+      "timestamp": "2026-05-05T10:28:04Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "fix(deps): resolve Ruby security advisories (#3349)",
+      "changed_files": [
+        "src/currency-service/currency/precision_utils.go",
+        "src/currency-service/currency/convert.go",
+        "src/currency-service/go.mod",
+        "src/currency-service/go.sum",
+        "src/currency-service/Gemfile",
+        "src/currency-service/Gemfile.lock"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=6302e2c10e48 (2026-05-05T10:28:04Z) modified currency-service's precision_utils.go and convert.go, replacing the shopspring/decimal arbitrary-precision library with native float64 arithmetic for exchange rate calculations. This introduced IEEE 754 floating-point epsilon drift in multiply/divide chains (e.g., 100.00 USD → 88.99999999999997 EUR instead of 89.00), causing virtually all conversion results to fail the checkout-service's strict rounding threshold validation (±0.001), and payment-service to reject serialization of non-normalized float values to its payment gateway schema.",
+  "ground_truth_remediation": "Immediately roll back currency-service to sha=5acdff618e47 using `kubectl rollout undo deployment/currency-service` or by redeploying the previous image tag. This restores the shopspring/decimal library and correct exchange rate precision. Re-open the circuit breaker on checkout-service once currency-service health checks pass. After service restoration, re-queue any failed orders from ord-44821 through ord-44851 and audit for any payment holds placed during the incident window.",
+  "red_herring": null
+}

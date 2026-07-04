@@ -1,0 +1,87 @@
+{
+  "id": "syn-010",
+  "subset": "synthetic",
+  "category": "db_saturation",
+  "affected_service": "cart-service",
+  "severity": "high",
+  "alert_text": "ALERT: cart-service HTTP 5xx error rate > 15% for 5 minutes. P99 latency 8200ms. Connection pool exhaustion detected on cart-db. PagerDuty incident #PD-88821.",
+  "log_window": "2026-05-13T11:52:03.101Z INFO  [cart-service] Starting cart-service v2.14.1 (sha=94f8a915b080)\n2026-05-13T11:52:03.445Z INFO  [cart-service] Connected to cart-db pool: max=20, idle=5\n2026-05-13T11:52:03.891Z INFO  [cart-service] HTTP server listening on :8080\n2026-05-13T11:52:10.002Z DEBUG [cart-service] GET /cart/user-4421 latency=12ms db_conns_active=1\n2026-05-13T11:52:11.234Z DEBUG [cart-service] POST /cart/user-5532/add item=sku-009 latency=15ms db_conns_active=2\n2026-05-13T11:52:14.876Z DEBUG [cart-service] GET /cart/user-1193 latency=11ms db_conns_active=2\n2026-05-13T11:52:18.001Z INFO  [cart-db] {\"level\":\"info\",\"msg\":\"query ok\",\"duration_ms\":9,\"query\":\"SELECT * FROM cart_items WHERE user_id=$1\",\"connections_active\":3}\n2026-05-13T11:52:22.334Z DEBUG [cart-service] DELETE /cart/user-2201/item/sku-017 latency=14ms db_conns_active=3\n2026-05-13T11:53:00.112Z INFO  [cart-service] GET /cart/user-8812 latency=13ms db_conns_active=3\n2026-05-13T11:53:05.443Z WARN  [cart-service] Exception in DELETE /cart/user-3301/item/sku-042: item not found, continuing\n2026-05-13T11:53:05.449Z DEBUG [cart-service] db connection not released after exception path (item not found), conn_id=conn-07\n2026-05-13T11:53:07.221Z WARN  [cart-service] Exception in DELETE /cart/user-4411/item/sku-099: item not found, continuing\n2026-05-13T11:53:07.227Z DEBUG [cart-service] db connection not released after exception path (item not found), conn_id=conn-08\n2026-05-13T11:53:10.882Z INFO  [cart-db] {\"level\":\"info\",\"msg\":\"query ok\",\"duration_ms\":11,\"query\":\"SELECT * FROM cart_items WHERE user_id=$1\",\"connections_active\":5}\n2026-05-13T11:53:15.334Z WARN  [cart-service] Exception in DELETE /cart/user-5500/item/sku-003: item not found, continuing\n2026-05-13T11:53:15.340Z DEBUG [cart-service] db connection not released after exception path (item not found), conn_id=conn-09\n2026-05-13T11:53:20.001Z INFO  [cart-db] {\"level\":\"info\",\"msg\":\"slow query detected\",\"duration_ms\":45,\"query\":\"UPDATE cart_items SET quantity=$1 WHERE user_id=$2 AND sku=$3\",\"connections_active\":7}\n2026-05-13T11:53:28.774Z WARN  [cart-service] db_conns_active=9 pool_max=20 — connections accumulating\n2026-05-13T11:53:35.002Z WARN  [cart-service] Exception in DELETE /cart/user-6612/item/sku-018: item not found, continuing\n2026-05-13T11:53:35.008Z DEBUG [cart-service] db connection not released after exception path (item not found), conn_id=conn-10\n2026-05-13T11:53:40.441Z INFO  [cart-db] {\"level\":\"warn\",\"msg\":\"connection count rising\",\"connections_active\":11,\"connections_max\":20}\n2026-05-13T11:53:45.993Z DEBUG [cart-service] GET /cart/user-7723 latency=88ms db_conns_active=11\n2026-05-13T11:53:50.112Z WARN  [cart-service] Exception in DELETE /cart/user-9901/item/sku-055: item not found, continuing\n2026-05-13T11:53:50.119Z DEBUG [cart-service] db connection not released after exception path (item not found), conn_id=conn-12\n2026-05-13T11:53:55.334Z WARN  [cart-service] db_conns_active=13 pool_max=20 — WARNING: leak suspected\n2026-05-13T11:54:01.002Z INFO  [cart-db] {\"level\":\"warn\",\"msg\":\"slow query detected\",\"duration_ms\":210,\"query\":\"SELECT * FROM cart_items WHERE user_id=$1\",\"connections_active\":13}\n2026-05-13T11:54:05.882Z DEBUG [cart-service] POST /cart/user-1234/add item=sku-007 latency=320ms db_conns_active=14\n2026-05-13T11:54:08.445Z WARN  [product-catalog] upstream=cart-service response_time=345ms status=200\n2026-05-13T11:54:10.002Z WARN  [cart-service] Exception in DELETE /cart/user-0012/item/sku-021: item not found, continuing\n2026-05-13T11:54:10.009Z DEBUG [cart-service] db connection not released after exception path (item not found), conn_id=conn-15\n2026-05-13T11:54:15.334Z WARN  [cart-db] {\"level\":\"warn\",\"msg\":\"high connection utilization\",\"connections_active\":15,\"connections_max\":20,\"pct_used\":75}\n2026-05-13T11:54:20.001Z WARN  [cart-service] db_conns_active=15 pool_max=20 — approaching pool limit\n2026-05-13T11:54:25.993Z ERROR [cart-service] GET /cart/user-3344 latency=1240ms db_conns_active=16\n2026-05-13T11:54:30.221Z WARN  [product-catalog] upstream=cart-service response_time=1280ms status=200 — degraded\n2026-05-13T11:54:33.441Z ERROR [cart-service] Exception in DELETE /cart/user-8802/item/sku-034: item not found, continuing\n2026-05-13T11:54:33.449Z DEBUG [cart-service] db connection not released after exception path (item not found), conn_id=conn-17\n2026-05-13T11:54:38.002Z ERROR [cart-db] {\"level\":\"error\",\"msg\":\"connection pool near exhaustion\",\"connections_active\":17,\"connections_max\":20}\n2026-05-13T11:54:42.334Z ERROR [cart-service] db_conns_active=18 pool_max=20 — CRITICAL: pool near exhaustion\n2026-05-13T11:54:45.882Z ERROR [cart-service] POST /cart/user-4455/add item=sku-011 latency=3800ms db_conns_active=18\n2026-05-13T11:54:48.001Z ERROR [cart-service] Timeout acquiring db connection: waited 5000ms, pool_size=20 active=18\n  at DBPool.acquire (pool.js:112)\n  at CartRepository.addItem (cart-repository.js:88)\n  at CartHandler.handleAddItem (cart-handler.js:54)\n2026-05-13T11:54:48.110Z ERROR [cart-service] POST /cart/user-6671/add => HTTP 503 (pool timeout)\n2026-05-13T11:54:50.334Z ERROR [cart-db] {\"level\":\"error\",\"msg\":\"query queued — all connections busy\",\"queued_queries\":3,\"connections_active\":18}\n2026-05-13T11:54:52.002Z ERROR [cart-service] Timeout acquiring db connection: waited 5000ms, pool_size=20 active=19\n  at DBPool.acquire (pool.js:112)\n  at CartRepository.deleteItem (cart-repository.js:141)\n  at CartHandler.handleRemoveItem (cart-handler.js:78)\n2026-05-13T11:54:52.115Z ERROR [cart-service] DELETE /cart/user-2299/item/sku-007 => HTTP 503 (pool timeout)\n2026-05-13T11:54:54.441Z WARN  [product-catalog] upstream=cart-service response_time=5100ms status=503 — cart unavailable\n2026-05-13T11:54:55.882Z ERROR [cart-service] db_conns_active=19 pool_max=20 — all connections held by leaked handles\n2026-05-13T11:54:57.334Z FATAL [cart-service] Connection pool exhausted: 20/20 active, 0 idle, 7 requests queued\n2026-05-13T11:55:00.001Z ERROR [cart-db] {\"level\":\"error\",\"msg\":\"refusing new connections — pool full\",\"connections_active\":20,\"connections_max\":20}\n2026-05-13T11:55:00.334Z ERROR [cart-service] GET /cart/user-9900 => HTTP 500 (db unavailable)\n2026-05-13T11:55:01.002Z ERROR [cart-service] POST /cart/user-1120/add => HTTP 500 (db unavailable)\n2026-05-13T11:55:01.441Z ERROR [cart-service] DELETE /cart/user-5543/item/sku-002 => HTTP 500 (db unavailable)\n2026-05-13T11:55:02.115Z ERROR [cart-service] GET /cart/user-4432 => HTTP 500 (db unavailable)\n2026-05-13T11:55:02.882Z FATAL [cart-service] HTTP 5xx error rate=41% over last 60s — SLO breach\n2026-05-13T11:55:03.334Z ERROR [product-catalog] upstream=cart-service consecutive_failures=5 circuit_breaker=OPEN\n2026-05-13T11:55:05.001Z ERROR [checkout-service] cart-service unavailable: GET /cart/user-8823 => connection refused after 3 retries\n  at CheckoutClient.fetchCart (checkout-client.js:67)\n  at CheckoutHandler.processOrder (checkout-handler.js:102)\n2026-05-13T11:55:05.441Z ERROR [checkout-service] order_id=ord-77892 failed: cart fetch error, returning HTTP 500 to user\n2026-05-13T11:55:07.882Z ERROR [cart-service] GET /cart/user-7712 => HTTP 500 (db unavailable)\n2026-05-13T11:55:09.002Z ERROR [cart-service] POST /cart/user-3321/add => HTTP 500 (db unavailable)\n2026-05-13T11:55:10.334Z FATAL [cart-db] {\"level\":\"fatal\",\"msg\":\"max connections reached, new queries rejected\",\"connections_active\":20,\"rejected_queries\":12}\n2026-05-13T11:55:12.001Z ERROR [cart-service] Unhandled error: db pool exhausted\n  at DBPool.acquire (pool.js:118)\n  at CartRepository.getCart (cart-repository.js:61)\n2026-05-13T11:55:12.334Z FATAL [cart-service] FATAL: sustained pool exhaustion, service degraded — paging oncall",
+  "recent_deploys": [
+    {
+      "sha": "c789fc89a688",
+      "timestamp": "2026-04-21T11:57:50Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "package.json",
+        "package-lock.json"
+      ]
+    },
+    {
+      "sha": "bade4db5c2e0",
+      "timestamp": "2026-04-28T14:14:11Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "cart-service/package.json",
+        "cart-service/package-lock.json",
+        "checkout-service/package.json",
+        "checkout-service/package-lock.json"
+      ]
+    },
+    {
+      "sha": "dc4785b348ba",
+      "timestamp": "2026-04-30T02:23:16Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump swoosh (#3323)",
+      "changed_files": [
+        "mix.exs",
+        "mix.lock"
+      ]
+    },
+    {
+      "sha": "0e6ca5152176",
+      "timestamp": "2026-04-30T03:12:04Z",
+      "author": "Roman Dmytrenko",
+      "message": "fix(frontend): handle corrupted session data in localStorage (#3313)",
+      "changed_files": [
+        "frontend/src/utils/session.js",
+        "frontend/src/utils/session.test.js"
+      ]
+    },
+    {
+      "sha": "2b9113d98e20",
+      "timestamp": "2026-04-30T06:51:57Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] execute dependabot every Tuesday 3:00am+ (#3330)",
+      "changed_files": [
+        ".github/dependabot.yml"
+      ]
+    },
+    {
+      "sha": "449ee7cc0d6e",
+      "timestamp": "2026-05-13T10:41:00Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github.com/IBM/sarama (#3360)",
+      "changed_files": [
+        "cart-service/go.mod",
+        "cart-service/go.sum"
+      ]
+    },
+    {
+      "sha": "94f8a915b080",
+      "timestamp": "2026-05-13T11:48:42Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "cart-service/src/repository/cart-repository.js",
+        "cart-service/src/handlers/cart-handler.js",
+        "cart-service/package.json",
+        "cart-service/package-lock.json"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=94f8a915b080 (2026-05-13T11:48:42Z) introduced a regression in cart-service/src/repository/cart-repository.js: the exception handling path for 'item not found' errors in deleteItem() acquires a database connection but fails to release it back to the pool (missing connection.release() in the catch block). Under normal traffic, repeated DELETE requests for non-existent cart items cause the connection pool to accumulate unreleased handles, exhausting all 20 connections within ~3 minutes of deployment and triggering cascading HTTP 503/500 errors across cart-service, product-catalog, and checkout-service.",
+  "ground_truth_remediation": "1. Immediately roll back cart-service to sha=449ee7cc0d6e to restore the previous exception handling behavior and release the pool exhaustion. 2. In cart-repository.js deleteItem(), add connection.release() inside the catch block (use try/finally to guarantee release on all code paths). 3. Verify fix in staging by simulating DELETE requests for non-existent items and confirming db_conns_active returns to baseline. 4. Re-deploy the patched version with a canary rollout, monitoring connection pool utilization before full rollout.",
+  "red_herring": null
+}

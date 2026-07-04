@@ -1,0 +1,87 @@
+{
+  "id": "syn-009",
+  "subset": "synthetic",
+  "category": "db_saturation",
+  "affected_service": "checkout-service",
+  "severity": "high",
+  "alert_text": "ALERT: checkout-service P99 latency exceeded 8000ms for 5 consecutive minutes. HTTP 5xx error rate at 34%. Connection pool utilization at 98%. PagerDuty incident #INC-20847.",
+  "log_window": "2026-05-16T12:08:01.112Z [checkout-service] INFO  Starting checkout-service v3.14.2 (sha=49a7631b1ddb)\n2026-05-16T12:08:01.334Z [checkout-service] INFO  Connected to postgres at checkout-db.internal:5432 pool_size=20\n2026-05-16T12:08:01.445Z [checkout-service] INFO  HTTP server listening on :8080\n2026-05-16T12:08:14.221Z [checkout-service] INFO  method=POST path=/checkout status=200 latency=142ms order_id=ord-88821\n2026-05-16T12:08:15.003Z [checkout-service] INFO  method=POST path=/checkout status=200 latency=138ms order_id=ord-88822\n2026-05-16T12:08:22.881Z [checkout-service] INFO  method=GET path=/cart status=200 latency=55ms\n2026-05-16T12:09:01.004Z [postgres] LOG:  duration: 210.334 ms  statement: SELECT o.*, oi.* FROM orders o JOIN order_items oi ON o.id = oi.order_id WHERE o.user_id = $1 AND o.status = $2 ORDER BY o.created_at DESC LIMIT 50\n2026-05-16T12:09:03.442Z [checkout-service] INFO  method=POST path=/checkout status=200 latency=219ms order_id=ord-88830\n2026-05-16T12:09:18.772Z [checkout-service] WARN  query latency elevated query=fetch_user_orders latency=410ms threshold=300ms\n2026-05-16T12:09:20.011Z [postgres] LOG:  duration: 398.112 ms  statement: SELECT o.*, oi.* FROM orders o JOIN order_items oi ON o.id = oi.order_id WHERE o.user_id = $1 AND o.status = $2 ORDER BY o.created_at DESC LIMIT 50\n2026-05-16T12:09:31.884Z [checkout-service] WARN  query latency elevated query=fetch_user_orders latency=602ms threshold=300ms\n2026-05-16T12:09:33.100Z [postgres] LOG:  duration: 591.774 ms  statement: SELECT o.*, oi.* FROM orders o JOIN order_items oi ON o.id = oi.order_id WHERE o.user_id = $1 AND o.status = $2 ORDER BY o.created_at DESC LIMIT 50\n2026-05-16T12:09:33.105Z [postgres] LOG:  plan: Seq Scan on orders (cost=0.00..98432.11 rows=4421 width=312) (actual time=0.081..588.332 rows=4421 loops=1)\n2026-05-16T12:09:33.106Z [postgres] LOG:  plan detail: Filter: ((status)::text = 'pending'::text), Rows Removed by Filter: 2184019\n2026-05-16T12:09:45.223Z [checkout-service] WARN  pool_available=14 pool_total=20 pool_waiting=3\n2026-05-16T12:10:01.554Z [checkout-service] WARN  query latency elevated query=fetch_user_orders latency=1204ms threshold=300ms\n2026-05-16T12:10:03.771Z [postgres] LOG:  duration: 1198.443 ms  statement: SELECT o.*, oi.* FROM orders o JOIN order_items oi ON o.id = oi.order_id WHERE o.user_id = $1 AND o.status = $2 ORDER BY o.created_at DESC LIMIT 50\n2026-05-16T12:10:03.780Z [postgres] LOG:  plan: Seq Scan on orders  (cost=0.00..98432.11 rows=4421 width=312)\n2026-05-16T12:10:03.781Z [postgres] LOG:  reason: statistics for table 'orders' last updated at 2026-05-16T11:59:22Z (10 minutes ago), planner defaulting to sequential scan\n2026-05-16T12:10:11.002Z [checkout-service] WARN  pool_available=9 pool_total=20 pool_waiting=7\n2026-05-16T12:10:15.443Z [checkout-service] ERROR method=POST path=/checkout status=500 latency=5012ms order_id=ord-88901 error=\"context deadline exceeded\"\n2026-05-16T12:10:16.881Z [checkout-service] ERROR db acquire timeout after 5000ms: no connections available in pool\n2026-05-16T12:10:17.002Z [order-service] INFO  received checkout event order_id=ord-88901 status=failed\n2026-05-16T12:10:17.334Z [order-service] WARN  checkout-service responded with HTTP 500, retrying order_id=ord-88901 attempt=1\n2026-05-16T12:10:19.554Z [checkout-service] ERROR method=POST path=/checkout status=500 latency=5001ms order_id=ord-88902 error=\"context deadline exceeded\"\n2026-05-16T12:10:19.881Z [checkout-service] ERROR db acquire timeout after 5000ms: no connections available in pool\n2026-05-16T12:10:20.003Z [postgres] LOG:  duration: 4987.221 ms  statement: SELECT o.*, oi.* FROM orders o JOIN order_items oi ON o.id = oi.order_id WHERE o.user_id = $1 AND o.status = $2 ORDER BY o.created_at DESC LIMIT 50\n2026-05-16T12:10:20.004Z [postgres] LOG:  plan: Seq Scan on orders  (cost=0.00..98432.11 rows=4421 width=312) (actual time=0.074..4981.002 rows=4421 loops=1)\n2026-05-16T12:10:22.771Z [checkout-service] WARN  pool_available=2 pool_total=20 pool_waiting=14\n2026-05-16T12:10:28.443Z [checkout-service] ERROR method=GET path=/cart status=500 latency=5003ms error=\"context deadline exceeded\"\n2026-05-16T12:10:29.001Z [checkout-service] ERROR method=POST path=/checkout status=500 latency=5002ms order_id=ord-88905 error=\"context deadline exceeded\"\n2026-05-16T12:10:29.332Z [checkout-service] ERROR db acquire timeout after 5000ms: no connections available in pool\n2026-05-16T12:10:30.001Z [checkout-service] WARN  pool_available=0 pool_total=20 pool_waiting=18\n2026-05-16T12:10:30.554Z [checkout-service] ERROR connection pool exhausted: all 20 connections in use, 18 requests waiting\n2026-05-16T12:10:31.112Z [order-service] ERROR checkout-service unavailable after 3 retries, marking order failed order_id=ord-88901\n2026-05-16T12:10:31.221Z [order-service] ERROR checkout-service unavailable after 3 retries, marking order failed order_id=ord-88902\n2026-05-16T12:10:33.002Z [postgres] LOG:  duration: 5102.774 ms  statement: SELECT o.*, oi.* FROM orders o JOIN order_items oi ON o.id = oi.order_id WHERE o.user_id = $1 AND o.status = $2 ORDER BY o.created_at DESC LIMIT 50\n2026-05-16T12:10:33.003Z [postgres] LOG:  plan: Seq Scan on orders  (cost=0.00..98432.11 rows=4421 width=312) (actual time=0.068..5099.112 rows=4421 loops=1)\n2026-05-16T12:10:33.004Z [postgres] LOG:  detail: using sequential scan because pg_statistic row for orders(status, user_id) is missing — ANALYZE has not been run since pg_statistics reset at 2026-05-16T11:57:44Z\n2026-05-16T12:10:35.881Z [checkout-service] FATAL connection pool exhausted: circuit breaker OPEN after 20 consecutive db failures\n2026-05-16T12:10:35.992Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=2ms error=\"circuit breaker open\"\n2026-05-16T12:10:36.113Z [checkout-service] ERROR method=GET path=/cart status=503 latency=1ms error=\"circuit breaker open\"\n2026-05-16T12:10:36.441Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=2ms error=\"circuit breaker open\"\n2026-05-16T12:10:38.003Z [order-service] WARN  high failure rate for checkout dependency failure_rate=0.87 window=60s\n2026-05-16T12:10:40.111Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=1ms error=\"circuit breaker open\"\n2026-05-16T12:10:42.334Z [checkout-service] ERROR method=GET path=/cart status=503 latency=1ms error=\"circuit breaker open\"\n2026-05-16T12:11:01.002Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=2ms error=\"circuit breaker open\"\n2026-05-16T12:11:02.441Z [postgres] LOG:  duration: 5341.002 ms  statement: SELECT o.*, oi.* FROM orders o JOIN order_items oi ON o.id = oi.order_id WHERE o.user_id = $1 AND o.status = $2 ORDER BY o.created_at DESC LIMIT 50\n2026-05-16T12:11:02.443Z [postgres] LOG:  plan: Seq Scan on orders  (cost=0.00..98432.11 rows=4421 width=312) (actual time=0.071..5338.221 rows=4421 loops=1)\n2026-05-16T12:11:05.221Z [checkout-service] INFO  circuit_breaker=OPEN consecutive_failures=20 half_open_retry_in=30s\n2026-05-16T12:11:08.774Z [order-service] ERROR downstream checkout-service circuit open, dropping 100% of checkout traffic\n2026-05-16T12:11:12.001Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=1ms error=\"circuit breaker open\"\n2026-05-16T12:11:15.334Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=2ms error=\"circuit breaker open\"\n2026-05-16T12:11:30.441Z [checkout-service] INFO  circuit_breaker half-open probe: attempting db connection\n2026-05-16T12:11:30.553Z [checkout-service] ERROR half-open probe failed: SELECT probe timed out after 5003ms\n2026-05-16T12:11:30.554Z [checkout-service] ERROR circuit_breaker=OPEN (probe failed), retrying in 60s\n2026-05-16T12:12:01.002Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=1ms error=\"circuit breaker open\"\n2026-05-16T12:12:03.111Z [postgres] LOG:  duration: 5512.334 ms  statement: SELECT o.*, oi.* FROM orders o JOIN order_items oi ON o.id = oi.order_id WHERE o.user_id = $1 AND o.status = $2 ORDER BY o.created_at DESC LIMIT 50\n2026-05-16T12:12:03.112Z [postgres] LOG:  plan: Seq Scan on orders  (cost=0.00..98432.11 rows=4421 width=312) (actual time=0.069..5507.881 rows=4421 loops=1)\n2026-05-16T12:12:10.334Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=2ms error=\"circuit breaker open\"\n2026-05-16T12:12:14.001Z [order-service] ERROR {\"level\":\"error\",\"msg\":\"checkout-service SLA breach\",\"error_rate\":0.97,\"window\":\"5m\",\"threshold\":0.05}\n2026-05-16T12:12:15.221Z [checkout-service] WARN  {\"level\":\"warn\",\"msg\":\"pg_stats missing for table orders\",\"table\":\"orders\",\"columns\":[\"status\",\"user_id\",\"created_at\"],\"last_analyze\":\"2026-05-16T11:57:44Z\",\"elapsed_since_analyze\":\"14m31s\"}\n2026-05-16T12:12:20.443Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=1ms error=\"circuit breaker open\"\n2026-05-16T12:13:01.002Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=2ms error=\"circuit breaker open\"\n2026-05-16T12:13:05.334Z [postgres] LOG:  duration: 5688.112 ms  statement: SELECT o.*, oi.* FROM orders o JOIN order_items oi ON o.id = oi.order_id WHERE o.user_id = $1 AND o.status = $2 ORDER BY o.created_at DESC LIMIT 50\n2026-05-16T12:13:11.001Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=1ms error=\"circuit breaker open\"\n2026-05-16T12:14:01.334Z [checkout-service] INFO  circuit_breaker half-open probe: attempting db connection\n2026-05-16T12:14:01.445Z [checkout-service] ERROR half-open probe failed: SELECT probe timed out after 5001ms, circuit remaining OPEN\n2026-05-16T12:14:10.002Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=1ms error=\"circuit breaker open\"\n2026-05-16T12:14:12.221Z [order-service] ERROR {\"level\":\"error\",\"msg\":\"paging on-call engineer\",\"incident\":\"INC-20847\",\"service\":\"checkout-service\",\"error_rate\":0.99}\n2026-05-16T12:14:20.113Z [checkout-service] ERROR method=GET path=/cart status=503 latency=2ms error=\"circuit breaker open\"\n2026-05-16T12:14:33.441Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=1ms error=\"circuit breaker open\"\n2026-05-16T12:15:01.002Z [postgres] LOG:  duration: 5901.334 ms  statement: SELECT o.*, oi.* FROM orders o JOIN order_items oi ON o.id = oi.order_id WHERE o.user_id = $1 AND o.status = $2 ORDER BY o.created_at DESC LIMIT 50\n2026-05-16T12:15:01.003Z [postgres] LOG:  plan: Seq Scan on orders  (cost=0.00..98432.11 rows=4421 width=312) (actual time=0.072..5897.221 rows=4421 loops=1)\n2026-05-16T12:15:01.004Z [postgres] LOG:  hint: Run ANALYZE on table orders to refresh statistics and allow index scan on idx_orders_user_status\n2026-05-16T12:15:10.334Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=2ms error=\"circuit breaker open\"\n2026-05-16T12:16:01.001Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=1ms error=\"circuit breaker open\"\n2026-05-16T12:17:01.113Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=2ms error=\"circuit breaker open\"\n2026-05-16T12:18:01.002Z [checkout-service] ERROR method=POST path=/checkout status=503 latency=1ms error=\"circuit breaker open\"",
+  "recent_deploys": [
+    {
+      "sha": "de201e875db5",
+      "timestamp": "2026-04-21T19:45:44Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 2 updates (#3284)",
+      "changed_files": [
+        "checkout-service/checkout-service.csproj",
+        "checkout-service/packages.lock.json"
+      ]
+    },
+    {
+      "sha": "7d7e533c001a",
+      "timestamp": "2026-04-23T07:59:20Z",
+      "author": "Timur Olzhabayev",
+      "message": "[chore] exclude platform.openai.com and gnu.org from link check (#3289)",
+      "changed_files": [
+        ".mlc_config.json",
+        "docs/link-check-config.yml"
+      ]
+    },
+    {
+      "sha": "dc4785b348ba",
+      "timestamp": "2026-04-30T02:23:16Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump swoosh (#3323)",
+      "changed_files": [
+        "checkout-service/mix.exs",
+        "checkout-service/mix.lock"
+      ]
+    },
+    {
+      "sha": "0e6ca5152176",
+      "timestamp": "2026-04-30T03:12:04Z",
+      "author": "Roman Dmytrenko",
+      "message": "fix(frontend): handle corrupted session data in localStorage (#3313)",
+      "changed_files": [
+        "frontend/src/utils/session.ts",
+        "frontend/src/hooks/useCart.ts",
+        "frontend/src/components/CartProvider.tsx"
+      ]
+    },
+    {
+      "sha": "30ba52fd9566",
+      "timestamp": "2026-05-05T06:33:05Z",
+      "author": "Jonathan Munz",
+      "message": "Update React Native example app dependencies (#3296)",
+      "changed_files": [
+        "examples/react-native/package.json",
+        "examples/react-native/yarn.lock"
+      ]
+    },
+    {
+      "sha": "28ed8395ff76",
+      "timestamp": "2026-05-06T14:37:03Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "checkout-service/requirements.txt",
+        "order-service/requirements.txt"
+      ]
+    },
+    {
+      "sha": "49a7631b1ddb",
+      "timestamp": "2026-05-16T12:04:07Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Profiling with firepit (#3333)",
+      "changed_files": [
+        "checkout-service/db/maintenance.py",
+        "checkout-service/db/profiling_hooks.py",
+        "scripts/db/reset_pg_statistics.sql",
+        "docs/profiling.md"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=49a7631b1ddb ('Profiling with firepit') introduced a database profiling setup script (scripts/db/reset_pg_statistics.sql) that executed TRUNCATE pg_statistic on the checkout-db PostgreSQL instance as part of profiling initialization. This wiped all table statistics for the orders table at 2026-05-16T11:57:44Z. Without statistics, the PostgreSQL query planner lost knowledge of column cardinality and value distributions for orders(status, user_id, created_at), causing it to abandon the existing idx_orders_user_status index and fall back to a full sequential scan across ~2.2 million rows. The fetch_user_orders query latency escalated from ~140ms to over 5 seconds, exhausting the 20-connection pool and triggering the circuit breaker, resulting in 503 responses for all checkout and cart endpoints.",
+  "ground_truth_remediation": "1. Immediately run ANALYZE orders; on checkout-db to rebuild pg_statistic rows — this takes under 60 seconds and will allow the planner to resume using idx_orders_user_status, restoring sub-200ms query latency. 2. Reset the circuit breaker in checkout-service by restarting the pod or calling the internal /admin/circuit-breaker/reset endpoint to allow traffic to resume. 3. Revert or patch commit 49a7631b1ddb to remove or gate the TRUNCATE pg_statistic call in reset_pg_statistics.sql behind an explicit DBA confirmation flag to prevent recurrence. 4. Add a post-deploy canary check that verifies pg_statistic row count for critical tables is non-zero before completing any deploy that touches db/maintenance scripts.",
+  "red_herring": null
+}

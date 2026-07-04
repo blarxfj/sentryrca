@@ -1,0 +1,86 @@
+{
+  "id": "syn-028",
+  "subset": "synthetic",
+  "category": "dependency_outage",
+  "affected_service": "checkout-service",
+  "severity": "high",
+  "alert_text": "ALERT: checkout-service p99 latency exceeded 15s threshold (current: 28.4s) — shipping rate calculation requests timing out. Error rate 34% over last 5 minutes. SLO burn rate critical.",
+  "log_window": "2026-05-07T07:18:02.114Z INFO  [checkout-service] Starting order processing pipeline order_id=ORD-992341 customer_id=USR-44821\n2026-05-07T07:18:02.231Z DEBUG [checkout-service] Cart validated: 3 items total_value=142.50 currency=USD\n2026-05-07T07:18:02.312Z DEBUG [checkout-service] Fetching shipping rates from external API host=api.shippingrates.io port=443\n2026-05-07T07:18:02.318Z DEBUG [dns-resolver] Resolving hostname api.shippingrates.io nameserver=10.96.0.10\n2026-05-07T07:18:04.891Z WARN  [dns-resolver] DNS query slow: elapsed=2573ms hostname=api.shippingrates.io attempt=1/3\n2026-05-07T07:18:07.103Z WARN  [dns-resolver] DNS query slow: elapsed=4785ms hostname=api.shippingrates.io attempt=2/3\n2026-05-07T07:18:09.442Z ERROR [dns-resolver] DNS resolution timeout hostname=api.shippingrates.io elapsed=7124ms attempt=3/3\n2026-05-07T07:18:09.443Z ERROR [checkout-service] Failed to resolve shipping API host error=\"dns: lookup api.shippingrates.io: i/o timeout\" order_id=ORD-992341\n2026-05-07T07:18:09.445Z INFO  [checkout-service] Starting order processing pipeline order_id=ORD-992342 customer_id=USR-50193\n2026-05-07T07:18:09.512Z DEBUG [checkout-service] Cart validated: 1 item total_value=29.99 currency=USD\n2026-05-07T07:18:09.521Z DEBUG [dns-resolver] Resolving hostname api.shippingrates.io nameserver=10.96.0.10\n2026-05-07T07:18:11.834Z WARN  [dns-resolver] DNS query slow: elapsed=2313ms hostname=api.shippingrates.io attempt=1/3\n2026-05-07T07:18:14.102Z WARN  [dns-resolver] DNS query slow: elapsed=4581ms hostname=api.shippingrates.io attempt=2/3\n2026-05-07T07:18:16.544Z ERROR [dns-resolver] DNS resolution timeout hostname=api.shippingrates.io elapsed=7023ms attempt=3/3\n2026-05-07T07:18:16.545Z ERROR [checkout-service] Failed to resolve shipping API host error=\"dns: lookup api.shippingrates.io: i/o timeout\" order_id=ORD-992342\n2026-05-07T07:18:16.550Z {\"level\":\"warn\",\"service\":\"shipping-adapter\",\"msg\":\"Shipping rate fetch failed\",\"order_id\":\"ORD-992341\",\"error\":\"dns timeout\",\"fallback\":\"cached_rates\",\"cached_age_seconds\":412}\n2026-05-07T07:18:16.553Z {\"level\":\"warn\",\"service\":\"shipping-adapter\",\"msg\":\"Serving stale cached shipping rates\",\"order_id\":\"ORD-992341\",\"cache_hit\":true,\"stale\":true}\n2026-05-07T07:18:17.001Z INFO  [checkout-service] Starting order processing pipeline order_id=ORD-992343 customer_id=USR-72008\n2026-05-07T07:18:17.112Z DEBUG [checkout-service] Cart validated: 5 items total_value=319.80 currency=USD\n2026-05-07T07:18:17.118Z DEBUG [dns-resolver] Resolving hostname api.shippingrates.io nameserver=10.96.0.10\n2026-05-07T07:18:19.445Z WARN  [dns-resolver] DNS query slow: elapsed=2327ms hostname=api.shippingrates.io attempt=1/3\n2026-05-07T07:18:21.889Z WARN  [dns-resolver] DNS query slow: elapsed=4771ms hostname=api.shippingrates.io attempt=2/3\n2026-05-07T07:18:24.302Z ERROR [dns-resolver] DNS resolution timeout hostname=api.shippingrates.io elapsed=7184ms attempt=3/3\n2026-05-07T07:18:24.306Z ERROR [checkout-service] Failed to resolve shipping API host error=\"dns: lookup api.shippingrates.io: i/o timeout\" order_id=ORD-992343\n2026-05-07T07:18:24.310Z {\"level\":\"error\",\"service\":\"shipping-adapter\",\"msg\":\"Stale cache exceeded TTL threshold\",\"cache_age_seconds\":420,\"max_allowed_seconds\":300,\"order_id\":\"ORD-992343\"}\n2026-05-07T07:18:24.315Z {\"level\":\"error\",\"service\":\"shipping-adapter\",\"msg\":\"Cannot serve shipping rates — cache too stale, refusing order\",\"order_id\":\"ORD-992343\"}\n2026-05-07T07:18:24.320Z ERROR [checkout-service] Order aborted: no valid shipping rates available order_id=ORD-992343 reason=SHIPPING_UNAVAILABLE\n2026-05-07T07:18:25.001Z WARN  [checkout-service] Circuit breaker evaluating state transitions component=shipping-api failures=8 threshold=10\n2026-05-07T07:18:25.114Z INFO  [checkout-service] Starting order processing pipeline order_id=ORD-992344 customer_id=USR-61234\n2026-05-07T07:18:25.220Z DEBUG [dns-resolver] Resolving hostname api.shippingrates.io nameserver=10.96.0.10\n2026-05-07T07:18:27.540Z WARN  [dns-resolver] DNS query slow: elapsed=2320ms hostname=api.shippingrates.io attempt=1/3\n2026-05-07T07:18:29.891Z WARN  [dns-resolver] DNS query slow: elapsed=4671ms hostname=api.shippingrates.io attempt=2/3\n2026-05-07T07:18:32.203Z ERROR [dns-resolver] DNS resolution timeout hostname=api.shippingrates.io elapsed=7012ms attempt=3/3\n2026-05-07T07:18:32.205Z ERROR [checkout-service] Failed to resolve shipping API host error=\"dns: lookup api.shippingrates.io: i/o timeout\" order_id=ORD-992344\n2026-05-07T07:18:32.210Z WARN  [checkout-service] Circuit breaker threshold reached component=shipping-api failures=10 threshold=10 state=OPEN\n2026-05-07T07:18:32.212Z ERROR [checkout-service] CIRCUIT BREAKER OPEN component=shipping-api next_probe_at=2026-05-07T07:19:02Z\n2026-05-07T07:18:32.215Z key=value service=checkout-service event=order_failed order_id=ORD-992344 reason=circuit_breaker_open http_status=503\n2026-05-07T07:18:33.002Z INFO  [checkout-service] Starting order processing pipeline order_id=ORD-992345 customer_id=USR-30071\n2026-05-07T07:18:33.005Z WARN  [checkout-service] Circuit breaker OPEN — skipping shipping API call component=shipping-api order_id=ORD-992345\n2026-05-07T07:18:33.007Z ERROR [checkout-service] Order aborted: circuit breaker open order_id=ORD-992345 reason=SHIPPING_UNAVAILABLE\n2026-05-07T07:18:33.010Z key=value service=checkout-service event=order_failed order_id=ORD-992345 reason=circuit_breaker_open http_status=503\n2026-05-07T07:18:34.001Z INFO  [checkout-service] Starting order processing pipeline order_id=ORD-992346 customer_id=USR-88432\n2026-05-07T07:18:34.004Z WARN  [checkout-service] Circuit breaker OPEN — skipping shipping API call component=shipping-api order_id=ORD-992346\n2026-05-07T07:18:34.007Z ERROR [checkout-service] Order aborted: circuit breaker open order_id=ORD-992346 reason=SHIPPING_UNAVAILABLE\n2026-05-07T07:18:34.008Z key=value service=checkout-service event=order_failed order_id=ORD-992346 reason=circuit_breaker_open http_status=503\n2026-05-07T07:18:35.100Z DEBUG [checkout-service] Internal health check OK — database connectivity nominal latency_ms=3\n2026-05-07T07:18:35.101Z DEBUG [checkout-service] Internal health check OK — cart-service connectivity nominal latency_ms=5\n2026-05-07T07:18:35.102Z DEBUG [checkout-service] Internal health check OK — payment-service connectivity nominal latency_ms=8\n2026-05-07T07:18:35.103Z WARN  [checkout-service] Internal health check DEGRADED — shipping-adapter dns_resolution_failures=12 circuit_breaker=OPEN\n2026-05-07T07:18:36.200Z {\"level\":\"info\",\"service\":\"shipping-adapter\",\"msg\":\"DNS resolution stats\",\"hostname\":\"api.shippingrates.io\",\"total_attempts\":12,\"timeouts\":12,\"successes\":0,\"avg_timeout_ms\":7089}\n2026-05-07T07:18:36.210Z {\"level\":\"warn\",\"service\":\"shipping-adapter\",\"msg\":\"Upstream DNS zone may be unresponsive\",\"nameserver\":\"10.96.0.10\",\"zone\":\"shippingrates.io\",\"note\":\"other external domains resolving normally\"}\n2026-05-07T07:18:37.001Z INFO  [checkout-service] Starting order processing pipeline order_id=ORD-992347 customer_id=USR-19823\n2026-05-07T07:18:37.004Z WARN  [checkout-service] Circuit breaker OPEN — skipping shipping API call component=shipping-api order_id=ORD-992347\n2026-05-07T07:18:37.006Z ERROR [checkout-service] Order aborted: circuit breaker open order_id=ORD-992347 reason=SHIPPING_UNAVAILABLE\n2026-05-07T07:18:37.008Z key=value service=checkout-service event=order_failed order_id=ORD-992347 reason=circuit_breaker_open http_status=503\n2026-05-07T07:18:38.500Z WARN  [checkout-service] Error rate elevated: 34.2% over last 300s threshold=5%\n2026-05-07T07:18:38.510Z WARN  [checkout-service] p99 latency 28420ms over last 300s threshold=15000ms\n2026-05-07T07:18:38.512Z ERROR [checkout-service] SLO burn rate critical: 42x normal consumption remaining_error_budget=1.2%\n2026-05-07T07:18:39.001Z {\"level\":\"debug\",\"service\":\"shipping-adapter\",\"msg\":\"Attempting DNS probe for circuit breaker half-open\",\"hostname\":\"api.shippingrates.io\"}\n2026-05-07T07:18:39.114Z {\"level\":\"warn\",\"service\":\"shipping-adapter\",\"msg\":\"DNS probe timeout\",\"hostname\":\"api.shippingrates.io\",\"elapsed_ms\":7102}\n2026-05-07T07:18:39.116Z {\"level\":\"error\",\"service\":\"shipping-adapter\",\"msg\":\"Circuit breaker probe failed — remaining OPEN\",\"hostname\":\"api.shippingrates.io\",\"next_probe_in_seconds\":60}\n2026-05-07T07:18:40.001Z INFO  [checkout-service] Starting order processing pipeline order_id=ORD-992348 customer_id=USR-55012\n2026-05-07T07:18:40.004Z WARN  [checkout-service] Circuit breaker OPEN — skipping shipping API call component=shipping-api order_id=ORD-992348\n2026-05-07T07:18:40.007Z ERROR [checkout-service] Order aborted: circuit breaker open order_id=ORD-992348 reason=SHIPPING_UNAVAILABLE\n2026-05-07T07:18:40.010Z key=value service=checkout-service event=order_failed order_id=ORD-992348 reason=circuit_breaker_open http_status=503\n2026-05-07T07:18:41.200Z key=value service=checkout-service event=metric dns_resolution_success_other_hosts=true note=google.com_resolved_in_12ms\n2026-05-07T07:18:41.205Z key=value service=checkout-service event=metric dns_resolution_success_other_hosts=true note=api.stripe.com_resolved_in_8ms\n2026-05-07T07:18:42.001Z WARN  [checkout-service] Alerting: shipping dependency degraded — notifying on-call via PagerDuty severity=high component=shipping-api\n2026-05-07T07:19:00.001Z {\"level\":\"debug\",\"service\":\"shipping-adapter\",\"msg\":\"DNS retry stats last 60s\",\"hostname\":\"api.shippingrates.io\",\"attempts\":18,\"timeouts\":18,\"p50_timeout_ms\":7034,\"p99_timeout_ms\":7201}\n2026-05-07T07:19:02.001Z {\"level\":\"debug\",\"service\":\"shipping-adapter\",\"msg\":\"Circuit breaker half-open probe starting\",\"hostname\":\"api.shippingrates.io\"}\n2026-05-07T07:19:09.110Z {\"level\":\"error\",\"service\":\"shipping-adapter\",\"msg\":\"Half-open probe DNS timeout\",\"hostname\":\"api.shippingrates.io\",\"elapsed_ms\":7109}\n2026-05-07T07:19:09.112Z {\"level\":\"error\",\"service\":\"shipping-adapter\",\"msg\":\"Circuit breaker returning to OPEN\",\"component\":\"shipping-api\",\"consecutive_probe_failures\":2}\n2026-05-07T07:19:10.001Z ERROR [checkout-service] Shipping dependency remains unreachable — escalating to P1 incident component=shipping-api dns_failures=18\n2026-05-07T07:19:10.100Z WARN  [checkout-service] Downstream dependency shippingrates.io DNS zone appears unresponsive — checkout orders blocked\n2026-05-07T07:26:15.001Z INFO  [checkout-service] Starting order processing pipeline order_id=ORD-992380 customer_id=USR-11422\n2026-05-07T07:26:15.020Z DEBUG [dns-resolver] Resolving hostname api.shippingrates.io nameserver=10.96.0.10\n2026-05-07T07:26:15.022Z WARN  [dns-resolver] DNS query slow: elapsed=2814ms hostname=api.shippingrates.io attempt=1/3\n2026-05-07T07:26:17.901Z WARN  [dns-resolver] DNS query slow: elapsed=5879ms hostname=api.shippingrates.io attempt=2/3\n2026-05-07T07:26:20.408Z ERROR [dns-resolver] DNS resolution timeout hostname=api.shippingrates.io elapsed=7394ms attempt=3/3\n2026-05-07T07:26:20.410Z ERROR [checkout-service] Failed to resolve shipping API host error=\"dns: lookup api.shippingrates.io: i/o timeout\" order_id=ORD-992380\n2026-05-07T07:26:20.415Z {\"level\":\"error\",\"service\":\"shipping-adapter\",\"msg\":\"DNS failure continues — shippingrates.io zone unresponsive\",\"total_dns_failures_since_incident\":31,\"duration_minutes\":8.3}\n2026-05-07T07:26:21.001Z ERROR [checkout-service] Order aborted: circuit breaker open order_id=ORD-992380 reason=SHIPPING_UNAVAILABLE\n2026-05-07T07:26:21.005Z key=value service=checkout-service event=order_failed order_id=ORD-992380 reason=circuit_breaker_open http_status=503\n2026-05-07T07:28:00.001Z WARN  [checkout-service] Incident duration 10min — all internal services healthy, fault isolated to external DNS for shippingrates.io\n2026-05-07T07:28:00.010Z {\"level\":\"warn\",\"service\":\"shipping-adapter\",\"msg\":\"Recommendation: contact shippingrates.io support or switch to fallback shipping provider\",\"fallback_provider_configured\":true,\"fallback_provider\":\"api.fallback-shipping.io\"}",
+  "recent_deploys": [
+    {
+      "sha": "de201e875db5",
+      "timestamp": "2026-04-21T19:45:44Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 2 updates (#3284)",
+      "changed_files": [
+        "src/checkout-service/checkout-service.csproj",
+        "src/checkout-service/packages.lock.json"
+      ]
+    },
+    {
+      "sha": "c92f3bc755e8",
+      "timestamp": "2026-04-24T03:26:57Z",
+      "author": "Timur Olzhabayev",
+      "message": "chore(grafana): bump image to 13.0.1 and provision default-email receiver (#3288",
+      "changed_files": [
+        "docker-compose.yml",
+        "src/grafana/grafana.ini",
+        "src/grafana/provisioning/alerting/default-email.yml"
+      ]
+    },
+    {
+      "sha": "41b0e7b2e876",
+      "timestamp": "2026-04-24T03:35:36Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "0e6ca5152176",
+      "timestamp": "2026-04-30T03:12:04Z",
+      "author": "Roman Dmytrenko",
+      "message": "fix(frontend): handle corrupted session data in localStorage (#3313)",
+      "changed_files": [
+        "src/frontend/utils/session.ts",
+        "src/frontend/components/Cart.tsx",
+        "src/frontend/tests/session.test.ts"
+      ]
+    },
+    {
+      "sha": "781c571cc008",
+      "timestamp": "2026-05-05T05:40:16Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump bytestring (#3345)",
+      "changed_files": [
+        "src/shipping-adapter/mix.exs",
+        "src/shipping-adapter/mix.lock"
+      ]
+    },
+    {
+      "sha": "5b738e5f6b1b",
+      "timestamp": "2026-05-05T05:40:48Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github/codeql-action (#3337)",
+      "changed_files": [
+        ".github/workflows/codeql-analysis.yml"
+      ]
+    },
+    {
+      "sha": "52a8a76cf862",
+      "timestamp": "2026-05-07T07:06:44Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with ",
+      "changed_files": [
+        "src/shipping-adapter/mix.exs",
+        "src/shipping-adapter/mix.lock",
+        "src/shipping-adapter/config/prod.exs"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "The external shipping rate API provider (api.shippingrates.io) is experiencing DNS infrastructure degradation: all DNS queries to the shippingrates.io zone are timing out after ~7 seconds regardless of retry attempt. This is confirmed by 100% timeout rate across 31+ consecutive DNS resolution attempts while all other external hostnames (api.stripe.com, google.com) resolve normally in <15ms. The checkout-service itself is healthy; the fault is entirely in the upstream DNS infrastructure of the shippingrates.io domain. No recent checkout-service deploy is responsible — the most recent relevant deploy (52a8a76cf862) only bumped mix production dependencies in the shipping-adapter and does not affect DNS resolution logic.",
+  "ground_truth_remediation": "1. Immediately contact shippingrates.io support/status page to report and track the DNS outage. 2. Enable the pre-configured fallback shipping provider (api.fallback-shipping.io) in the shipping-adapter configuration to restore checkout order flow within minutes. 3. If fallback provider requires credentials, retrieve from secrets manager and apply via config update or environment variable injection — no code deploy required. 4. Reset the circuit breaker after fallback is confirmed working by restarting the shipping-adapter or triggering a manual circuit breaker reset via the admin API. 5. Monitor error rate and p99 latency recovery. 6. Once shippingrates.io DNS is restored, validate connectivity and switch back from fallback provider during a low-traffic window.",
+  "red_herring": null
+}

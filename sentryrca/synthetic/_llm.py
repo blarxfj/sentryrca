@@ -78,13 +78,16 @@ async def call_llm_json(
             return content
         except Exception as exc:
             last_exc = exc
+            is_rate_limit = "rate_limit" in str(exc).lower() or "rate limit" in str(exc).lower()
+            delay = 65.0 if is_rate_limit else float(2**attempt)
             log.warning(
                 "llm_call_failed",
                 attempt=attempt + 1,
                 max_attempts=max_attempts,
                 error=str(exc)[:200],
+                retry_delay_s=delay if attempt < max_attempts - 1 else None,
             )
             if attempt < max_attempts - 1:
-                await asyncio.sleep(2**attempt)
+                await asyncio.sleep(delay)
 
     raise RuntimeError(f"LLM call failed after {max_attempts} attempts") from last_exc

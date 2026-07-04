@@ -1,0 +1,89 @@
+{
+  "id": "adv-003",
+  "subset": "adversarial",
+  "category": "dependency_outage",
+  "affected_service": "payment-service",
+  "severity": "high",
+  "alert_text": "ALERT: payment-service p99 latency exceeded 10s for 5 consecutive minutes; forex transaction failure rate at 94%; SLO breach imminent. Runbook: https://wiki.internal/payment-service/forex-failures",
+  "log_window": "2024-03-15T14:00:01Z [payment-service] INFO  Starting payment-service v2.7.4 (pid=18821)\n2024-03-15T14:00:02Z [payment-service] INFO  Feature flag manager initialized; ML recommendation flag active for 20% cohort\n2024-03-15T14:00:03Z [payment-service] INFO  Connected to payment-db primary at 10.0.1.45:5432\n2024-03-15T14:00:04Z [payment-service] INFO  Recommendation model loaded: rec-model-v3.1.onnx (122 MB)\n2024-03-15T14:00:05Z [payment-service] INFO  All subsystems healthy; accepting traffic\n2024-03-15T14:01:15Z [payment-service] INFO  [req=a1b2c3] POST /payments/initiate user=usr_887 amount=450.00 currency=EUR\n2024-03-15T14:01:15Z [payment-service] INFO  [req=a1b2c3] Resolving forex rate: USD -> EUR via api.exchangerates.internal\n2024-03-15T14:01:16Z [payment-service] DEBUG [req=a1b2c3] DNS lookup for api.exchangerates.internal -> cached A record 203.0.113.42 (TTL remaining: 0s)\n2024-03-15T14:01:16Z [payment-service] DEBUG [req=a1b2c3] Attempting TCP connect to 203.0.113.42:443\n2024-03-15T14:01:46Z [payment-service] WARN  [req=a1b2c3] Connection to 203.0.113.42:443 timed out after 30s\n2024-03-15T14:01:46Z [payment-service] ERROR [req=a1b2c3] ForexLookupError: upstream timeout for api.exchangerates.internal (attempt 1/3)\n2024-03-15T14:02:16Z [payment-service] WARN  [req=a1b2c3] Retry 2 to 203.0.113.42:443 timed out after 30s\n2024-03-15T14:02:46Z [payment-service] WARN  [req=a1b2c3] Retry 3 to 203.0.113.42:443 timed out after 30s\n2024-03-15T14:02:46Z [payment-service] ERROR [req=a1b2c3] ForexLookupError: all retries exhausted for api.exchangerates.internal; last IP used: 203.0.113.42\n2024-03-15T14:02:46Z [payment-service] ERROR [req=a1b2c3] Payment failed: cannot complete forex conversion USD->EUR\n2024-03-15T14:02:47Z [payment-service] INFO  [req=d4e5f6] POST /payments/initiate user=usr_204 amount=1200.00 currency=GBP\n2024-03-15T14:02:47Z [payment-service] DEBUG [req=d4e5f6] DNS lookup for api.exchangerates.internal -> USING STALE CACHED A RECORD 203.0.113.42 (TTL expired 312s ago, resolver returned NXDOMAIN, fallback to cache)\n2024-03-15T14:02:47Z [payment-service] WARN  [req=d4e5f6] DNS resolver returned NXDOMAIN for api.exchangerates.internal; stale cache fallback in effect\n2024-03-15T14:02:47Z [payment-service] DEBUG [req=d4e5f6] Attempting TCP connect to 203.0.113.42:443\n2024-03-15T14:03:17Z [payment-service] ERROR [req=d4e5f6] ForexLookupError: upstream timeout for api.exchangerates.internal (attempt 1/3)\n2024-03-15T14:03:47Z [payment-service] ERROR [req=d4e5f6] ForexLookupError: upstream timeout (attempt 2/3)\n2024-03-15T14:04:17Z [payment-service] ERROR [req=d4e5f6] ForexLookupError: all retries exhausted; NXDOMAIN persists for api.exchangerates.internal\n2024-03-15T14:04:18Z [payment-service] INFO  [req=g7h8i9] POST /payments/initiate user=usr_991 amount=75.50 currency=USD\n2024-03-15T14:04:18Z [payment-service] INFO  [req=g7h8i9] No forex conversion required (USD->USD); proceeding directly\n2024-03-15T14:04:18Z [payment-service] INFO  [req=g7h8i9] Payment succeeded in 142ms\n2024-03-15T14:04:19Z [payment-service] INFO  [req=j1k2l3] POST /payments/initiate user=usr_556 amount=340.00 currency=JPY\n2024-03-15T14:04:19Z [payment-service] DEBUG [req=j1k2l3] DNS lookup for api.exchangerates.internal -> NXDOMAIN (no valid A records; stale cache 203.0.113.42 expired)\n2024-03-15T14:04:19Z [payment-service] ERROR [req=j1k2l3] ForexLookupError: DNS NXDOMAIN for api.exchangerates.internal; no fallback available\n2024-03-15T14:04:19Z [payment-service] ERROR [req=j1k2l3] Payment failed: forex unavailable\n2024-03-15T14:04:20Z [payment-service] WARN  ML recommendation flag is active for 20% cohort; recommendation latency p50=18ms p99=34ms within normal bounds\n2024-03-15T14:04:21Z [payment-service] INFO  Recommendation model inference healthy; no errors in last 60s\n2024-03-15T14:05:00Z [payment-service] ERROR DNS resolution failure rate for api.exchangerates.internal: 100% NXDOMAIN over last 60s (18/18 queries)\n2024-03-15T14:05:00Z [payment-service] ERROR Forex failure rate: 94.1% (96/102 requests); all failures are DNS/timeout class, not application logic errors\n2024-03-15T14:05:01Z [payment-service] WARN  [req=m3n4o5] ForexLookupError: NXDOMAIN for api.exchangerates.internal\n2024-03-15T14:05:01Z [payment-service] WARN  [req=p6q7r8] ForexLookupError: NXDOMAIN for api.exchangerates.internal\n2024-03-15T14:05:02Z [payment-service] WARN  [req=s9t0u1] ForexLookupError: NXDOMAIN for api.exchangerates.internal\n2024-03-15T14:05:02Z [payment-service] INFO  [req=v2w3x4] Payment succeeded (USD->USD, no forex required) in 138ms\n2024-03-15T14:05:03Z [payment-service] INFO  [req=y5z6a7] Payment succeeded (USD->USD, no forex required) in 145ms\n2024-03-15T14:05:03Z [payment-service] ERROR [req=b8c9d0] ForexLookupError: NXDOMAIN api.exchangerates.internal\n2024-03-15T14:05:10Z [payment-service] ERROR Upstream DNS check: dig api.exchangerates.internal @10.0.0.53 -> NXDOMAIN (authoritative answer from ns1.exchangerates.internal)\n2024-03-15T14:05:10Z [payment-service] ERROR Historical DNS record 203.0.113.42 was valid until approx 13:55 UTC; TTL was set to 86400s but upstream zone was updated without propagation wait\n2024-03-15T14:05:11Z [payment-service] INFO  Checking recommendation flag impact: USD-only payments (no forex) completing successfully at p99=210ms; confirms ML flag is NOT contributing to failures\n2024-03-15T14:05:12Z [payment-service] ERROR All non-USD payment attempts failing; USD-only payments unaffected; failure is strictly forex/DNS scoped\n2024-03-15T14:05:30Z [payment-service] ERROR Circuit breaker OPEN for forex-client after 10 consecutive failures\n2024-03-15T14:05:30Z [payment-service] WARN  Circuit breaker open; all forex requests will fast-fail until DNS resolves\n2024-03-15T14:06:00Z [payment-service] ERROR ALERT TRIGGERED: payment-service forex failure rate 94% sustained >5m; p99 latency 91200ms (retries contributing to tail latency)\n2024-03-15T14:06:01Z [payment-service] INFO  Incident context: last deploy was 35 minutes ago (sha=9f3e1a7); recommendation flag healthy; no errors in ML serving layer\n2024-03-15T14:06:02Z [payment-service] INFO  Incident context: DNS NXDOMAIN for api.exchangerates.internal began at approximately 13:54 UTC pre-dating most recent deploy by approx 6 minutes\n2024-03-15T14:06:03Z [payment-service] ERROR Root signal: 100% NXDOMAIN on api.exchangerates.internal; stale A record 203.0.113.42 unreachable; upstream zone TTL misconfiguration suspected\n2024-03-15T14:07:00Z [payment-service] ERROR Forex circuit breaker remains OPEN; 0 successful forex calls in last 120s\n2024-03-15T14:07:01Z [payment-service] INFO  Non-forex payments continue to succeed normally (rate: 100% success for USD->USD)\n2024-03-15T14:08:00Z [payment-service] ERROR Sustained DNS NXDOMAIN for api.exchangerates.internal; escalating to on-call network/DNS team\n",
+  "recent_deploys": [
+    {
+      "sha": "2c04a8f1e7d53b90f",
+      "timestamp": "2024-03-14T09:15:00Z",
+      "author": "priya.nair@example.com",
+      "message": "chore: upgrade payment-db client library to v4.2.1",
+      "changed_files": [
+        "go.mod",
+        "go.sum",
+        "internal/db/client.go"
+      ]
+    },
+    {
+      "sha": "7b38d2c09a1f56e4d",
+      "timestamp": "2024-03-14T14:30:00Z",
+      "author": "tomasz.kowalski@example.com",
+      "message": "fix: add retry jitter to payment-processor webhook delivery",
+      "changed_files": [
+        "internal/webhook/delivery.go",
+        "internal/webhook/retry.go",
+        "config/webhook.yaml"
+      ]
+    },
+    {
+      "sha": "a5f91b7e3d20c84f1",
+      "timestamp": "2024-03-14T22:00:00Z",
+      "author": "mei.lin@example.com",
+      "message": "refactor: extract forex client into standalone package",
+      "changed_files": [
+        "internal/forex/client.go",
+        "internal/forex/models.go",
+        "internal/payments/processor.go"
+      ]
+    },
+    {
+      "sha": "3d70f2a18b95c461e",
+      "timestamp": "2024-03-15T08:45:00Z",
+      "author": "carlos.mendez@example.com",
+      "message": "ci: add integration tests for multi-currency payment flows",
+      "changed_files": [
+        "tests/integration/multicurrency_test.go",
+        ".github/workflows/integration.yml"
+      ]
+    },
+    {
+      "sha": "9f3e1a7b2d84c05f6",
+      "timestamp": "2024-03-15T13:25:00Z",
+      "author": "sara.johansson@example.com",
+      "message": "feat: enable ML recommendation algorithm v3 via feature flag for 20% traffic cohort",
+      "changed_files": [
+        "config/feature_flags.yaml",
+        "internal/recommendations/model_loader.go",
+        "internal/recommendations/serving.go",
+        "internal/recommendations/flag_router.go",
+        "models/rec-model-v3.1.onnx.ref"
+      ]
+    },
+    {
+      "sha": "e82c5d3f70a1b94c2",
+      "timestamp": "2024-03-15T13:50:00Z",
+      "author": "devops-bot@example.com",
+      "message": "chore: rotate internal TLS certificates for payment-service sidecar",
+      "changed_files": [
+        "deploy/certs/payment-service-sidecar.pem",
+        "deploy/certs/payment-service-sidecar-key.pem"
+      ]
+    },
+    {
+      "sha": "b16f4e9a07d23c58b",
+      "timestamp": "2024-03-15T13:58:00Z",
+      "author": "priya.nair@example.com",
+      "message": "fix: correct prometheus metric label cardinality for payment_duration_seconds",
+      "changed_files": [
+        "internal/metrics/payment_metrics.go"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "The upstream DNS zone for api.exchangerates.internal was updated by the currency exchange rate API provider, replacing the A record (previously resolving to 203.0.113.42) without an adequate TTL propagation window. The original TTL of 86400s meant the payment-service DNS resolver cached the now-invalid A record 203.0.113.42. When the stale cache expired around 13:54 UTC, all subsequent DNS queries for api.exchangerates.internal returned NXDOMAIN from the authoritative nameserver ns1.exchangerates.internal. The payment-service fell back to the stale cached IP, which was no longer routable, causing all forex lookups to time out. USD-to-USD payments succeeded normally, confirming the failure was strictly scoped to DNS resolution of the forex API. This DNS misconfiguration predates all recent deploys and is entirely unrelated to them.",
+  "ground_truth_remediation": "1. Immediately: Override the local DNS cache on payment-service pods by manually adding a temporary /etc/hosts entry or DNS override for api.exchangerates.internal pointing to the correct new IP obtained from the exchange rate API provider support team. 2. Re-open the forex circuit breaker once DNS resolves correctly to restore payment processing. 3. Contact the exchange rate API provider to confirm the new A record and verify TTL is set to a low value (300s or less) during future zone migrations. 4. Long-term: Implement DNS-level health checks and alerting on NXDOMAIN responses for critical upstream dependencies; consider adding a static fallback IP or secondary DNS resolver for the forex API.",
+  "red_herring": "The most recent feature-bearing deploy (sha=9f3e1a7b2d84c05f6, 13:25 UTC) rolled out an ML recommendation algorithm touching model serving configuration files, landing approximately 35 minutes before the incident alert fired at 14:06 UTC. This looks causally suspicious: the changed files include recommendation serving logic and flag routing code that runs inline with payment processing, and the 20% cohort rollout coincides temporally with the degradation window. However, multiple log lines in the log_window directly exculpate this deploy: (a) at 14:04:20Z the service logs that the ML recommendation flag cohort latency is p50=18ms p99=34ms within normal bounds; (b) at 14:05:11Z the service logs that USD-only payments with no forex are completing successfully at p99=210ms, confirming the ML flag is NOT contributing to failures; (c) at 14:06:01Z the incident context log explicitly notes recommendation flag healthy with no errors in ML serving layer; and (d) all successful payments in the log are USD-to-USD with no forex required, while all failures are strictly NXDOMAIN and timeout class errors against api.exchangerates.internal, a pattern inconsistent with any ML model serving regression. Furthermore, the DNS NXDOMAIN condition is logged as beginning at approximately 13:54 UTC, six minutes before the suspicious deploy was even completed."
+}

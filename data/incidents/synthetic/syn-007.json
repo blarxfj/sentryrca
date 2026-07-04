@@ -1,0 +1,88 @@
+{
+  "id": "syn-007",
+  "subset": "synthetic",
+  "category": "db_saturation",
+  "affected_service": "payment-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: payment-service P99 latency exceeded 15s threshold; error rate at 42% over last 5 minutes. Multiple DB deadlock victims detected. PagerDuty incident #PD-88412 triggered.",
+  "log_window": "2026-05-13T11:52:03.112Z INFO  [payment-service] Starting payment retry worker pool, concurrency=16\n2026-05-13T11:52:03.198Z INFO  [payment-service] Connected to payments-db host=pg-primary-01 pool_size=40\n2026-05-13T11:52:04.001Z INFO  [order-service] GET /checkout/confirm order_id=ord-9921 user_id=u-4421 status=200 latency=142ms\n2026-05-13T11:52:04.312Z DEBUG [payment-service] {\"msg\":\"charge attempt\",\"payment_id\":\"pay-77301\",\"amount\":4999,\"currency\":\"USD\",\"attempt\":1}\n2026-05-13T11:52:04.399Z DEBUG [payment-service] {\"msg\":\"charge attempt\",\"payment_id\":\"pay-77302\",\"amount\":1200,\"currency\":\"USD\",\"attempt\":1}\n2026-05-13T11:52:05.002Z INFO  [payment-service] {\"msg\":\"db query start\",\"query\":\"UPDATE payments SET status=? WHERE id=?\",\"payment_id\":\"pay-77301\"}\n2026-05-13T11:52:05.011Z INFO  [payment-service] {\"msg\":\"db query start\",\"query\":\"UPDATE payment_retries SET attempt_count=? WHERE payment_id=?\",\"payment_id\":\"pay-77301\"}\n2026-05-13T11:52:05.019Z INFO  [payment-service] {\"msg\":\"db query start\",\"query\":\"UPDATE payments SET status=? WHERE id=?\",\"payment_id\":\"pay-77302\"}\n2026-05-13T11:52:05.027Z INFO  [payment-service] {\"msg\":\"db query start\",\"query\":\"UPDATE payment_retries SET attempt_count=? WHERE payment_id=?\",\"payment_id\":\"pay-77302\"}\n2026-05-13T11:52:05.201Z DEBUG [postgres-exporter] db=payments active_connections=18 idle_connections=22 wait_count=0 deadlocks_total=0\n2026-05-13T11:52:06.334Z INFO  [order-service] GET /checkout/confirm order_id=ord-9922 user_id=u-5512 status=200 latency=155ms\n2026-05-13T11:52:07.891Z WARN  [payment-service] {\"msg\":\"query latency elevated\",\"query\":\"UPDATE payments SET status=?\",\"elapsed_ms\":1882,\"threshold_ms\":500}\n2026-05-13T11:52:08.102Z WARN  [payment-service] {\"msg\":\"query latency elevated\",\"query\":\"UPDATE payment_retries SET attempt_count=?\",\"elapsed_ms\":2091,\"threshold_ms\":500}\n2026-05-13T11:52:09.450Z ERROR [payment-service] {\"msg\":\"deadlock detected\",\"payment_id\":\"pay-77301\",\"victim\":true,\"lock_wait_ms\":4439,\"detail\":\"Process 47 waits for ShareLock on transaction 9983; blocked by process 51. Process 51 waits for ShareLock on transaction 9981; blocked by process 47.\"}\n2026-05-13T11:52:09.451Z ERROR [payment-service] {\"msg\":\"transaction rolled back\",\"payment_id\":\"pay-77301\",\"reason\":\"deadlock_victim\",\"attempt\":1}\n2026-05-13T11:52:09.455Z WARN  [payment-service] {\"msg\":\"scheduling retry\",\"payment_id\":\"pay-77301\",\"next_attempt\":2,\"backoff_ms\":200}\n2026-05-13T11:52:09.660Z DEBUG [postgres-exporter] db=payments active_connections=26 idle_connections=14 wait_count=4 deadlocks_total=1\n2026-05-13T11:52:10.112Z INFO  [payment-service] {\"msg\":\"charge attempt\",\"payment_id\":\"pay-77303\",\"amount\":8800,\"currency\":\"EUR\",\"attempt\":1}\n2026-05-13T11:52:10.221Z INFO  [payment-service] {\"msg\":\"charge attempt\",\"payment_id\":\"pay-77304\",\"amount\":3300,\"currency\":\"GBP\",\"attempt\":1}\n2026-05-13T11:52:10.335Z INFO  [payment-service] {\"msg\":\"db query start\",\"query\":\"UPDATE payments SET status=? WHERE id=?\",\"payment_id\":\"pay-77303\"}\n2026-05-13T11:52:10.340Z INFO  [payment-service] {\"msg\":\"db query start\",\"query\":\"UPDATE payment_retries SET attempt_count=? WHERE payment_id=?\",\"payment_id\":\"pay-77303\"}\n2026-05-13T11:52:10.680Z INFO  [payment-service] {\"msg\":\"charge attempt\",\"payment_id\":\"pay-77301\",\"amount\":4999,\"currency\":\"USD\",\"attempt\":2}\n2026-05-13T11:52:11.002Z WARN  [payment-service] {\"msg\":\"lock wait timeout approaching\",\"payment_id\":\"pay-77303\",\"elapsed_ms\":667}\n2026-05-13T11:52:11.890Z ERROR [payment-service] {\"msg\":\"deadlock detected\",\"payment_id\":\"pay-77303\",\"victim\":true,\"lock_wait_ms\":3555,\"detail\":\"Process 52 waits for ShareLock on transaction 9991; blocked by process 55.\"}\n2026-05-13T11:52:11.892Z ERROR [payment-service] {\"msg\":\"transaction rolled back\",\"payment_id\":\"pay-77303\",\"reason\":\"deadlock_victim\",\"attempt\":1}\n2026-05-13T11:52:11.895Z ERROR [payment-service] {\"msg\":\"deadlock detected\",\"payment_id\":\"pay-77301\",\"victim\":true,\"lock_wait_ms\":5210,\"detail\":\"Process 47 waits for ShareLock on transaction 9997; blocked by process 55.\"}\n2026-05-13T11:52:11.897Z ERROR [payment-service] {\"msg\":\"transaction rolled back\",\"payment_id\":\"pay-77301\",\"reason\":\"deadlock_victim\",\"attempt\":2}\n2026-05-13T11:52:12.005Z WARN  [postgres-exporter] db=payments active_connections=35 idle_connections=5 wait_count=12 deadlocks_total=4 WARN: connection pool utilization at 87%\n2026-05-13T11:52:12.110Z WARN  [payment-service] {\"msg\":\"connection pool pressure\",\"pool_size\":40,\"active\":35,\"waiting\":6}\n2026-05-13T11:52:12.234Z INFO  [order-service] POST /checkout/confirm order_id=ord-9930 status=202 latency=811ms\n2026-05-13T11:52:13.001Z ERROR [payment-service] {\"msg\":\"deadlock storm\",\"deadlocks_in_last_10s\":4,\"affected_payments\":[\"pay-77301\",\"pay-77302\",\"pay-77303\",\"pay-77304\"]}\n2026-05-13T11:52:13.410Z WARN  [payment-service] {\"msg\":\"retry backlog growing\",\"queued_retries\":18,\"worker_utilization\":0.94}\n2026-05-13T11:52:14.002Z ERROR [payment-service] Traceback:\n  at executeTransaction (src/db/transaction.js:88)\n  at retryPaymentCharge (src/payments/retry.js:134)\n  at PaymentWorker.processJob (src/workers/paymentWorker.js:61)\n2026-05-13T11:52:14.112Z WARN  [order-service] upstream payment-service latency=4221ms order_id=ord-9931 WARNING: exceeds SLO threshold\n2026-05-13T11:52:14.550Z DEBUG [postgres-exporter] db=payments active_connections=39 idle_connections=1 wait_count=19 deadlocks_total=7\n2026-05-13T11:52:15.001Z ERROR [payment-service] {\"msg\":\"connection pool exhausted\",\"pool_size\":40,\"active\":40,\"waiting\":11,\"queue_timeout_ms\":5000}\n2026-05-13T11:52:15.112Z ERROR [payment-service] {\"msg\":\"payment failed\",\"payment_id\":\"pay-77302\",\"error\":\"connection pool exhausted\",\"http_status\":503}\n2026-05-13T11:52:15.230Z ERROR [payment-service] {\"msg\":\"payment failed\",\"payment_id\":\"pay-77304\",\"error\":\"connection pool exhausted\",\"http_status\":503}\n2026-05-13T11:52:15.445Z ERROR [order-service] upstream error from payment-service status=503 order_id=ord-9931 retrying=true\n2026-05-13T11:52:16.001Z FATAL [payment-service] {\"msg\":\"critical: connection pool saturated, dropping requests\",\"dropped\":4,\"queue_depth\":15}\n2026-05-13T11:52:16.112Z ERROR [payment-service] Traceback:\n  at acquireConnection (src/db/pool.js:204)\n  at executeQuery (src/db/query.js:57)\n  at retryPaymentCharge (src/payments/retry.js:141)\n2026-05-13T11:52:16.334Z ERROR [order-service] payment-service returned 503 for 3 consecutive requests, circuit breaker OPEN order_id=ord-9932\n2026-05-13T11:52:16.780Z ERROR [postgres-exporter] db=payments ALERT: deadlocks_total=11 locks_waiting=22 active_connections=40 idle_connections=0\n2026-05-13T11:52:17.001Z FATAL [payment-service] {\"msg\":\"health check failing\",\"component\":\"db_pool\",\"status\":\"unhealthy\",\"reason\":\"no_idle_connections\"}\n2026-05-13T11:52:17.112Z ERROR [payment-service] {\"msg\":\"payment failed\",\"payment_id\":\"pay-77305\",\"error\":\"health check db_pool unhealthy\",\"http_status\":500}\n2026-05-13T11:52:17.340Z ERROR [payment-service] {\"msg\":\"payment failed\",\"payment_id\":\"pay-77306\",\"error\":\"health check db_pool unhealthy\",\"http_status\":500}\n2026-05-13T11:52:17.560Z WARN  [order-service] Degraded mode active: using cached checkout state for order_id=ord-9933\n2026-05-13T11:52:18.002Z ERROR [payment-service] {\"msg\":\"deadlock detected\",\"payment_id\":\"pay-77307\",\"victim\":true,\"lock_wait_ms\":7110}\n2026-05-13T11:52:18.101Z ERROR [payment-service] {\"msg\":\"deadlock detected\",\"payment_id\":\"pay-77308\",\"victim\":true,\"lock_wait_ms\":6892}\n2026-05-13T11:52:18.334Z FATAL [payment-service] {\"msg\":\"worker crash\",\"worker_id\":3,\"reason\":\"unhandled deadlock exception\",\"payments_lost\":[\"pay-77307\",\"pay-77308\"]}\n2026-05-13T11:52:18.450Z FATAL [payment-service] Traceback:\n  at handleDeadlock (src/db/transaction.js:101)\n  at PaymentWorker.processJob (src/workers/paymentWorker.js:73)\n  at Worker.<anonymous> (src/workers/pool.js:29)\n2026-05-13T11:52:19.001Z ERROR [postgres-exporter] db=payments deadlocks_total=16 avg_lock_wait_ms=5840 active_connections=40\n2026-05-13T11:52:19.112Z FATAL [payment-service] {\"msg\":\"error rate critical\",\"error_rate\":0.42,\"window\":\"60s\",\"threshold\":0.05}\n2026-05-13T11:52:19.445Z ERROR [order-service] payment-service error_rate=42% triggering PagerDuty alert PD-88412\n2026-05-13T11:52:20.001Z WARN  [payment-service] {\"msg\":\"retry queue overflow\",\"max_queue\":50,\"current\":51,\"dropping\":true}\n2026-05-13T11:52:20.334Z ERROR [payment-service] {\"msg\":\"deadlock cascade: retried payment re-entering deadlock cycle\",\"payment_id\":\"pay-77301\",\"attempt\":3,\"previous_deadlocks\":2}\n2026-05-13T11:52:20.780Z ERROR [postgres-exporter] db=payments deadlocks_total=21 locks_waiting=29 WARN: deadlock rate 2.1/sec exceeds threshold\n2026-05-13T11:52:21.001Z FATAL [payment-service] {\"msg\":\"worker crash\",\"worker_id\":7,\"reason\":\"unhandled deadlock exception\"}\n2026-05-13T11:52:21.112Z FATAL [payment-service] {\"msg\":\"worker crash\",\"worker_id\":11,\"reason\":\"connection acquire timeout\"}\n2026-05-13T11:52:21.445Z ERROR [order-service] All payment endpoints returning 500/503. Activating full degraded checkout mode.\n2026-05-13T11:52:22.001Z INFO  [payment-service] Received SIGTERM from orchestrator — graceful shutdown initiated (will drain for 30s)\n2026-05-13T11:52:22.113Z WARN  [payment-service] {\"msg\":\"shutdown with pending retries\",\"pending_retries\":23,\"pending_will_be_requeued\":true}\n2026-05-13T11:52:52.001Z INFO  [payment-service] Pod restarted by Kubernetes liveness probe failure. Previous instance uptime=2891s\n2026-05-13T11:52:52.440Z INFO  [payment-service] {\"msg\":\"startup\",\"version\":\"94f8a915b080\",\"db_pool_size\":40,\"retry_concurrency\":16}\n2026-05-13T11:52:53.001Z WARN  [payment-service] {\"msg\":\"post-restart deadlock detected within 1s of startup\",\"payment_id\":\"pay-77301\",\"attempt\":4,\"note\":\"requeued retry immediately re-deadlocked\"}\n2026-05-13T11:52:53.220Z ERROR [postgres-exporter] db=payments deadlocks_total=24 — deadlocks persisting after pod restart",
+  "recent_deploys": [
+    {
+      "sha": "89d202df6a03",
+      "timestamp": "2026-04-21T14:00:27Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "payment-service/package.json",
+        "payment-service/package-lock.json",
+        "order-service/package.json",
+        "order-service/package-lock.json"
+      ]
+    },
+    {
+      "sha": "b6de548594c2",
+      "timestamp": "2026-04-21T15:46:42Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the cargo-production-dependencies group across 1 directory wit",
+      "changed_files": [
+        "currency-service/Cargo.toml",
+        "currency-service/Cargo.lock"
+      ]
+    },
+    {
+      "sha": "7d7e533c001a",
+      "timestamp": "2026-04-23T07:59:20Z",
+      "author": "Timur Olzhabayev",
+      "message": "[chore] exclude platform.openai.com and gnu.org from link check (#3289)",
+      "changed_files": [
+        ".github/workflows/link-check.yml",
+        "docs/links-exclude.txt"
+      ]
+    },
+    {
+      "sha": "75dc5aa9b428",
+      "timestamp": "2026-04-23T15:05:28Z",
+      "author": "Ayooluwa Isaiah",
+      "message": "Fix charge span leak in the payment service (#3276)",
+      "changed_files": [
+        "payment-service/src/payments/retry.js",
+        "payment-service/src/db/transaction.js",
+        "payment-service/src/workers/paymentWorker.js",
+        "payment-service/migrations/0041_add_payment_retries_table.sql"
+      ]
+    },
+    {
+      "sha": "3caa0e226a7f",
+      "timestamp": "2026-04-24T11:49:05Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "recommendation-service/requirements.txt",
+        "fraud-service/requirements.txt"
+      ]
+    },
+    {
+      "sha": "6302e2c10e48",
+      "timestamp": "2026-05-05T10:28:04Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "fix(deps): resolve Ruby security advisories (#3349)",
+      "changed_files": [
+        "email-service/Gemfile",
+        "email-service/Gemfile.lock"
+      ]
+    },
+    {
+      "sha": "94f8a915b080",
+      "timestamp": "2026-05-13T11:48:42Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory",
+      "changed_files": [
+        "payment-service/package.json",
+        "payment-service/package-lock.json"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy SHA 75dc5aa9b428 introduced migration 0041_add_payment_retries_table.sql, which added a payment_retries table, and refactored retry.js and transaction.js to update both the payments and payment_retries tables within the same transaction. However, concurrent retry workers acquire row locks on these two tables in opposite order — retry worker A locks payments then payment_retries, while retry worker B (processing a related payment) locks payment_retries then payments — creating a classic AB-BA deadlock cycle. Under high retry concurrency (16 workers), deadlocks cascade: each rolled-back transaction is immediately re-queued and retried, causing the retry backlog to explode, connection pool to saturate at all 40 connections, and payment-service to return HTTP 503/500 at a 42% error rate.",
+  "ground_truth_remediation": "1. Immediately roll back deploy 75dc5aa9b428 to restore the previous retry logic (git revert or redeploy prior image tag). 2. As a short-term mitigation while investigating: reduce payment retry worker concurrency from 16 to 2 via environment variable PAYMENT_RETRY_CONCURRENCY=2 to reduce deadlock probability. 3. Add a consistent lock ordering fix to migration 0042: always acquire the payments row lock before the payment_retries row lock within the same transaction (enforce via advisory locks or explicit SELECT FOR UPDATE ordering). 4. Add a missing index on payment_retries(payment_id) if not present to reduce lock contention scan range. 5. Verify deadlock rate drops to 0 in postgres-exporter metrics before restoring full concurrency.",
+  "red_herring": null
+}

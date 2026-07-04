@@ -1,0 +1,77 @@
+{
+  "id": "real-009",
+  "subset": "real_derived",
+  "category": "deploy_regression",
+  "affected_service": "frontend",
+  "severity": "critical",
+  "alert_text": "CRITICAL: frontend service HTTP/3 network stack deadlock detected - 0% of requests succeeding, P99 latency >120s, health check failing for >5 minutes. All web content load requests timing out.",
+  "log_window": "2022-01-13T09:01:02.114Z [frontend] INFO  Starting frontend service v3.8.1 (sha=a3f9c21)\n2022-01-13T09:01:02.891Z [frontend] INFO  HTTP/3 (QUIC) transport layer initialized, alt-svc enabled\n2022-01-13T09:01:03.002Z [frontend] INFO  Listening on :8080 (HTTP/1.1 + HTTP/2 + HTTP/3)\n2022-01-13T09:01:03.150Z [frontend] INFO  Connected to recommendation-service at grpc://recommendation-service:9090\n2022-01-13T09:01:03.200Z [frontend] INFO  Connected to ad-service at grpc://ad-service:9555\n2022-01-13T09:01:03.350Z [frontend] INFO  Connected to cart-service at grpc://cart-service:7070\n2022-01-13T09:05:11.442Z [frontend] INFO  HTTP/3 connection established to cdn.example.com:443 (QUIC v1)\n2022-01-13T09:05:11.550Z [frontend] DEBUG QUIC stream 0x4a opened for GET /static/main.js\n2022-01-13T09:05:11.720Z [frontend] DEBUG QUIC stream 0x4b opened for GET /static/styles.css\n2022-01-13T09:12:33.001Z [frontend] INFO  HTTP/3 connection established to api.example.com:443 (QUIC v1)\n2022-01-13T09:14:55.882Z [frontend] WARN  QUIC stream 0x7f stalled waiting for HEADERS frame - peer not sending response\n2022-01-13T09:14:56.003Z [frontend] WARN  HTTP/3 flow control window blocked on stream 0x7f: send_window=0 recv_window=65536\n2022-01-13T09:14:56.118Z [frontend] WARN  QUIC connection to api.example.com entering slow path: stream_count=48 blocked_streams=1\n2022-01-13T09:15:01.004Z [frontend] ERROR HTTP/3 stream 0x7f: timeout waiting for MAX_STREAM_DATA frame after 5000ms\n2022-01-13T09:15:01.120Z [frontend] ERROR network/http3: QUIC send buffer exhausted - unable to acquire write lock on stream mux\n2022-01-13T09:15:01.225Z [frontend] ERROR goroutine 4821 stuck in h3_stream_scheduler.acquire_send_slot() - deadlock suspected\n2022-01-13T09:15:01.340Z [frontend] ERROR stack trace:\n2022-01-13T09:15:01.341Z [frontend] ERROR   h3_stream_scheduler.acquire_send_slot() network/http3/scheduler.go:214\n2022-01-13T09:15:01.342Z [frontend] ERROR   h3_conn.send_request() network/http3/conn.go:589\n2022-01-13T09:15:01.343Z [frontend] ERROR   frontend.fetchProductCatalog() handlers/catalog.go:112\n2022-01-13T09:15:01.344Z [frontend] ERROR   net/http.(*conn).serve() net/http/server.go:1947\n2022-01-13T09:15:02.001Z [frontend] ERROR HTTP/3 connection to api.example.com: all 50 streams blocked - connection-level flow control deadlock\n2022-01-13T09:15:02.550Z [frontend] ERROR goroutine 4822 stuck in h3_stream_scheduler.acquire_send_slot() - deadlock suspected\n2022-01-13T09:15:02.990Z [frontend] ERROR goroutine 4823 stuck in h3_stream_scheduler.acquire_send_slot() - deadlock suspected\n2022-01-13T09:15:03.112Z [frontend] ERROR goroutine 4824 stuck in h3_stream_scheduler.acquire_send_slot() - deadlock suspected\n2022-01-13T09:15:04.008Z [frontend] ERROR HTTP/3 scheduler mutex contention: 127 goroutines waiting on stream_mux lock\n2022-01-13T09:15:05.001Z [frontend] ERROR [health-check] /healthz endpoint did not respond within 3000ms\n2022-01-13T09:15:05.200Z [frontend] ERROR request queue depth: 1024 (at capacity) - dropping new incoming requests\n2022-01-13T09:15:06.001Z [frontend] ERROR GET /product/OLJCESPC7Z: context deadline exceeded (client timeout)\n2022-01-13T09:15:06.110Z [frontend] ERROR GET /cart: context deadline exceeded (client timeout)\n2022-01-13T09:15:06.220Z [frontend] ERROR GET /: context deadline exceeded (client timeout)\n2022-01-13T09:15:07.002Z [frontend] WARN  HTTP/1.1 fallback not triggered - alt-svc cache still advertising h3 for api.example.com\n2022-01-13T09:15:07.115Z [frontend] ERROR HTTP/3 connection pool exhausted: max_conns=10 active=10 blocked=10\n2022-01-13T09:15:08.001Z [frontend] ERROR network/http3: fatal - connection-level MAX_DATA blocked, no progress possible\n2022-01-13T09:15:08.500Z [frontend] ERROR all outbound HTTP/3 connections to cdn.example.com also stalled\n2022-01-13T09:15:09.001Z [frontend] ERROR service is effectively unresponsive - 0/50 recent requests completed\n2022-01-13T09:15:09.220Z [frontend] WARN  memory usage: heap_alloc=2.1GB (goroutine leak suspected from blocked streams)\n2022-01-13T09:15:10.005Z [frontend] ERROR ALERT FIRED: frontend_requests_success_rate < 1% for 5m\n2022-01-13T09:15:10.300Z [frontend] INFO  PagerDuty notification sent: P0 incident opened\n2022-01-13T09:16:01.001Z [frontend] ERROR [watchdog] goroutine count: 8412 (threshold: 500) - goroutine explosion from HTTP/3 deadlock\n2022-01-13T09:16:01.120Z [frontend] ERROR [watchdog] mutex contention on stream_mux: 4201 goroutines waiting\n2022-01-13T09:16:01.250Z [frontend] ERROR network/http3/scheduler.go:214: lock held by goroutine 4821 for 60s - possible livelock in QUIC flow control update path\n2022-01-13T09:16:03.003Z [frontend] ERROR h3_stream_scheduler: connection-level BLOCKED state entered - introduced in commit a3f9c21 (h3 scheduler refactor)\n2022-01-13T09:16:05.001Z [frontend] ERROR recommendation-service RPC timeout: all frontend->recommendation requests failing (root cause: network thread blocked)\n2022-01-13T09:16:05.220Z [frontend] ERROR ad-service RPC timeout: context deadline exceeded after 5000ms\n2022-01-13T09:16:05.410Z [frontend] ERROR cart-service RPC timeout: context deadline exceeded after 5000ms\n2022-01-13T09:20:01.002Z [frontend] ERROR [incident response] engineer joined. Investigating HTTP/3 stall.\n2022-01-13T09:22:15.001Z [frontend] INFO  Attempting HTTP/3 disable via feature flag: DISABLE_HTTP3=true\n2022-01-13T09:22:15.500Z [frontend] INFO  HTTP/3 transport layer disabled - falling back to HTTP/2\n2022-01-13T09:22:16.001Z [frontend] INFO  Clearing QUIC alt-svc cache for all hosts\n2022-01-13T09:22:17.002Z [frontend] INFO  HTTP/2 connection established to api.example.com:443\n2022-01-13T09:22:17.550Z [frontend] INFO  GET /: 200 OK (142ms) - service recovering\n2022-01-13T09:22:17.900Z [frontend] INFO  GET /product/OLJCESPC7Z: 200 OK (98ms)\n2022-01-13T09:22:18.003Z [frontend] INFO  GET /cart: 200 OK (115ms)\n2022-01-13T09:22:18.500Z [frontend] INFO  request success rate recovering: 45% and climbing\n2022-01-13T09:22:20.001Z [frontend] INFO  goroutine count: 812 (declining - blocked goroutines draining)\n2022-01-13T09:22:25.001Z [frontend] INFO  request success rate: 94%\n2022-01-13T09:22:30.002Z [frontend] INFO  [health-check] /healthz: 200 OK - service healthy\n2022-01-13T09:22:35.001Z [frontend] INFO  request success rate: 99.7% - full recovery achieved\n2022-01-13T09:22:40.001Z [frontend] INFO  PagerDuty notification sent: P0 incident resolved\n2022-01-13T09:22:41.003Z [frontend] INFO  HTTP/3 deadlock confirmed in h3_stream_scheduler.acquire_send_slot() introduced by deploy sha=a3f9c21\n2022-01-13T09:22:42.001Z [frontend] INFO  Post-mortem scheduled: root cause = QUIC flow control BLOCKED state not handled in stream scheduler refactor",
+  "recent_deploys": [
+    {
+      "sha": "f1b8e3d",
+      "timestamp": "2022-01-10T14:22:00Z",
+      "author": "priya.nair",
+      "message": "feat: upgrade gRPC dependencies to v1.43.0",
+      "changed_files": [
+        "go.mod",
+        "go.sum",
+        "internal/grpc/client.go"
+      ]
+    },
+    {
+      "sha": "88cd12a",
+      "timestamp": "2022-01-11T09:05:00Z",
+      "author": "marco.rossetti",
+      "message": "chore: bump base container image to golang:1.17.6-alpine",
+      "changed_files": [
+        "Dockerfile",
+        ".github/workflows/ci.yml"
+      ]
+    },
+    {
+      "sha": "c72fa09",
+      "timestamp": "2022-01-11T16:40:00Z",
+      "author": "sarah.kim",
+      "message": "fix: correct alt-svc cache TTL to respect server max-age hint",
+      "changed_files": [
+        "network/http3/alt_svc.go",
+        "network/http3/alt_svc_test.go"
+      ]
+    },
+    {
+      "sha": "3e5d817",
+      "timestamp": "2022-01-12T11:15:00Z",
+      "author": "dmitri.volkov",
+      "message": "perf: optimize static asset bundling and CDN cache headers",
+      "changed_files": [
+        "handlers/static.go",
+        "config/cdn.yaml",
+        "static/webpack.config.js"
+      ]
+    },
+    {
+      "sha": "a3f9c21",
+      "timestamp": "2022-01-13T07:48:00Z",
+      "author": "lena.hartmann",
+      "message": "refactor: rewrite HTTP/3 stream scheduler to support prioritized stream multiplexing",
+      "changed_files": [
+        "network/http3/scheduler.go",
+        "network/http3/conn.go",
+        "network/http3/scheduler_test.go",
+        "network/http3/flow_control.go"
+      ]
+    },
+    {
+      "sha": "b9d4e55",
+      "timestamp": "2022-01-13T08:30:00Z",
+      "author": "lena.hartmann",
+      "message": "fix: add missing nil check in h3_stream_scheduler priority queue (follow-up)",
+      "changed_files": [
+        "network/http3/scheduler.go"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=a3f9c21 introduced a refactored HTTP/3 stream scheduler (network/http3/scheduler.go) that failed to handle the QUIC connection-level BLOCKED flow control state. When a specific code path caused the connection-level send window to reach zero, acquire_send_slot() entered an infinite wait while holding the stream_mux lock. This caused all subsequent HTTP/3 stream goroutines to pile up waiting for the same lock, deadlocking the entire network stack and making the frontend service completely unresponsive to all web content requests.",
+  "ground_truth_remediation": "Set the feature flag DISABLE_HTTP3=true to immediately force the frontend service to fall back to HTTP/2, bypassing the deadlocked QUIC transport. Clear the alt-svc cache so clients stop advertising HTTP/3 for affected hosts. This restores service within minutes. Follow up by reverting sha=a3f9c21 and sha=b9d4e55 from the main branch and fixing the BLOCKED state handling in h3_stream_scheduler.acquire_send_slot() before re-enabling HTTP/3.",
+  "red_herring": null
+}

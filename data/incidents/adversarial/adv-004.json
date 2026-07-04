@@ -1,0 +1,99 @@
+{
+  "id": "adv-004",
+  "subset": "adversarial",
+  "category": "dependency_outage",
+  "affected_service": "cart-service",
+  "severity": "high",
+  "alert_text": "ALERT: cart-service pod scheduling failures detected — 0/3 replicas available for 4+ minutes. P99 latency >30s, error rate 94%. CartService.AddItem and CartService.GetCart returning 503.",
+  "log_window": "2024-03-15T14:00:12Z INFO  cart-service[pod/cart-7d9f8b-xkp2q] Starting cart-service v3.11.4\n2024-03-15T14:00:13Z INFO  cart-service[pod/cart-7d9f8b-xkp2q] Connected to Redis at redis-cart:6379\n2024-03-15T14:01:44Z INFO  cart-service[pod/cart-7d9f8b-xkp2q] CartService.AddItem OK user=usr_4821 latency=12ms\n2024-03-15T14:02:05Z INFO  cart-service[pod/cart-7d9f8b-xkp2q] CartService.GetCart OK user=usr_3309 latency=9ms\n2024-03-15T14:02:31Z INFO  cart-service[pod/cart-7d9f8b-xkp2q] CartService.AddItem OK user=usr_7741 latency=11ms\n2024-03-15T14:03:00Z INFO  checkout-service[pod/checkout-6bc9d-lmv7r] HTTP client v2.2 initialized, max_conns=100 idle_timeout=90s\n2024-03-15T14:03:01Z INFO  checkout-service[pod/checkout-6bc9d-lmv7r] Downstream cart-service reachable, health check OK\n2024-03-15T14:03:45Z INFO  cart-service[pod/cart-7d9f8b-xkp2q] CartService.AddItem OK user=usr_9902 latency=10ms\n2024-03-15T14:04:18Z INFO  cart-service[pod/cart-7d9f8b-xkp2q] CartService.GetCart OK user=usr_1155 latency=8ms\n2024-03-15T14:05:02Z INFO  cart-service[pod/cart-7d9f8b-xkp2q] CartService.AddItem OK user=usr_6630 latency=13ms\n2024-03-15T14:06:10Z WARN  kube-apiserver[master-0] etcd leader election in progress cluster quorum temporarily unavailable\n2024-03-15T14:06:11Z ERROR kube-apiserver[master-0] lost connection to etcd endpoint https://etcd-0:2379: context deadline exceeded\n2024-03-15T14:06:11Z ERROR kube-apiserver[master-1] lost connection to etcd endpoint https://etcd-1:2379: connection refused network partition suspected\n2024-03-15T14:06:12Z WARN  kube-apiserver[master-0] etcd: no leader elected, retrying (attempt 1/10)\n2024-03-15T14:06:14Z WARN  kube-apiserver[master-0] etcd: no leader elected, retrying (attempt 2/10)\n2024-03-15T14:06:17Z ERROR kube-scheduler scheduler failed to bind pod cart-7d9f8b-nt3wp to node worker-2: etcd write rejected leader unknown\n2024-03-15T14:06:17Z ERROR kube-scheduler scheduler failed to bind pod cart-7d9f8b-rv9xc to node worker-1: etcd write rejected leader unknown\n2024-03-15T14:06:18Z ERROR kube-controller-manager replication controller cannot reconcile cart-service: API server returned 503 ServiceUnavailable\n2024-03-15T14:06:19Z ERROR cart-service[pod/cart-7d9f8b-xkp2q] SIGTERM received pod eviction initiated by kubelet\n2024-03-15T14:06:20Z INFO  cart-service[pod/cart-7d9f8b-xkp2q] Shutting down gracefully...\n2024-03-15T14:06:21Z INFO  cart-service[pod/cart-7d9f8b-xkp2q] Closed Redis connection\n2024-03-15T14:06:22Z INFO  cart-service[pod/cart-7d9f8b-xkp2q] Exited\n2024-03-15T14:06:22Z WARN  kube-apiserver[master-0] etcd: no leader elected, retrying (attempt 5/10)\n2024-03-15T14:06:23Z ERROR kube-apiserver[master-2] etcd cluster unreachable: all endpoints failed health check\n2024-03-15T14:06:24Z ERROR kube-scheduler failed to schedule cart-7d9f8b-nt3wp: 0/4 nodes available API server unavailable\n2024-03-15T14:06:24Z ERROR kube-scheduler failed to schedule cart-7d9f8b-rv9xc: 0/4 nodes available API server unavailable\n2024-03-15T14:06:25Z ERROR ingress-nginx upstream cart-service: no healthy upstream endpoints, returning 503\n2024-03-15T14:06:26Z ERROR cart-service CartService.AddItem FAILED: no pod endpoints available (503)\n2024-03-15T14:06:26Z ERROR cart-service CartService.GetCart FAILED: no pod endpoints available (503)\n2024-03-15T14:06:30Z WARN  kube-apiserver[master-0] etcd: no leader elected, retrying (attempt 7/10)\n2024-03-15T14:06:45Z ERROR kube-controller-manager pod cart-7d9f8b-nt3wp stuck in Pending: FailedScheduling etcd unavailable\n2024-03-15T14:06:46Z ERROR kube-controller-manager pod cart-7d9f8b-rv9xc stuck in Pending: FailedScheduling etcd unavailable\n2024-03-15T14:07:00Z ERROR cart-service CartService.AddItem FAILED: no pod endpoints available (503)\n2024-03-15T14:07:01Z ERROR cart-service CartService.GetCart FAILED: no pod endpoints available (503)\n2024-03-15T14:07:15Z WARN  kube-apiserver[master-1] etcd: no leader elected, retrying (attempt 9/10)\n2024-03-15T14:07:30Z ERROR cart-service CartService.EmptyCart FAILED: no pod endpoints available (503)\n2024-03-15T14:08:00Z ERROR cart-service CartService.AddItem FAILED: no pod endpoints available (503)\n2024-03-15T14:08:10Z INFO  kube-apiserver[master-1] etcd new leader elected: etcd-2 (term=47)\n2024-03-15T14:08:11Z INFO  kube-apiserver[master-0] etcd connection restored to https://etcd-2:2379\n2024-03-15T14:08:11Z INFO  kube-apiserver[master-1] etcd connection restored to https://etcd-2:2379\n2024-03-15T14:08:12Z INFO  kube-scheduler resuming normal scheduling operations\n2024-03-15T14:08:13Z INFO  kube-scheduler successfully bound pod cart-7d9f8b-nt3wp to node worker-2\n2024-03-15T14:08:13Z INFO  kube-scheduler successfully bound pod cart-7d9f8b-rv9xc to node worker-1\n2024-03-15T14:08:25Z INFO  cart-service[pod/cart-7d9f8b-nt3wp] Starting cart-service v3.11.4\n2024-03-15T14:08:26Z INFO  cart-service[pod/cart-7d9f8b-nt3wp] Connected to Redis at redis-cart:6379\n2024-03-15T14:08:27Z INFO  cart-service[pod/cart-7d9f8b-rv9xc] Starting cart-service v3.11.4\n2024-03-15T14:08:27Z INFO  cart-service[pod/cart-7d9f8b-rv9xc] Connected to Redis at redis-cart:6379\n2024-03-15T14:08:30Z INFO  ingress-nginx upstream cart-service: 2 healthy endpoints restored\n2024-03-15T14:08:31Z INFO  cart-service[pod/cart-7d9f8b-nt3wp] CartService.AddItem OK user=usr_4821 latency=14ms\n2024-03-15T14:08:32Z INFO  cart-service[pod/cart-7d9f8b-rv9xc] CartService.GetCart OK user=usr_3309 latency=11ms\n2024-03-15T14:09:00Z INFO  cart-service CartService error rate returning to baseline (0.2%)\n2024-03-15T14:09:05Z INFO  checkout-service[pod/checkout-6bc9d-lmv7r] Downstream cart-service reachable again, resuming order processing\n2024-03-15T14:10:00Z INFO  cart-service all health checks passing, incident resolved",
+  "recent_deploys": [
+    {
+      "sha": "a1c3e5f7b9d2e4f6a8c0b2d4e6f8a0c2d4e6f8a0",
+      "timestamp": "2024-03-15T08:12:00Z",
+      "author": "priya.nair",
+      "message": "feat(cart-service): add cart item quantity cap to prevent oversized carts",
+      "changed_files": [
+        "cart-service/src/cartstore.go",
+        "cart-service/src/server.go",
+        "cart-service/tests/cart_test.go"
+      ]
+    },
+    {
+      "sha": "b2d4f6a8c0e2f4b6d8a0c2e4f6b8d0a2c4e6f8b0",
+      "timestamp": "2024-03-15T09:30:00Z",
+      "author": "tomasz.wierzbicki",
+      "message": "chore(redis): bump redis client to v9.0.5, update connection pool defaults",
+      "changed_files": [
+        "cart-service/go.mod",
+        "cart-service/go.sum",
+        "cart-service/src/redisclient.go"
+      ]
+    },
+    {
+      "sha": "c3e5a7f9b1d3e5a7c9f1b3d5e7a9c1b3d5e7a9c1",
+      "timestamp": "2024-03-15T10:45:00Z",
+      "author": "fatima.al-rashid",
+      "message": "fix(frontend): correct cart badge count not updating on item removal",
+      "changed_files": [
+        "frontend/src/components/CartBadge.tsx",
+        "frontend/src/hooks/useCart.ts",
+        "frontend/src/api/cartClient.ts"
+      ]
+    },
+    {
+      "sha": "d4f6b8a0c2e4d6b8f0a2c4d6e8b0a2c4d6e8b0a2",
+      "timestamp": "2024-03-15T11:55:00Z",
+      "author": "devon.okafor",
+      "message": "refactor(checkout-service): upgrade HTTP client library from v2.1 to v2.2 for improved connection pooling",
+      "changed_files": [
+        "checkout-service/go.mod",
+        "checkout-service/go.sum",
+        "checkout-service/src/client/httpclient.go",
+        "checkout-service/src/client/transport.go",
+        "checkout-service/src/client/retry.go",
+        "checkout-service/src/client/timeout.go",
+        "checkout-service/src/handlers/cart_handler.go",
+        "checkout-service/src/handlers/payment_handler.go",
+        "checkout-service/src/handlers/shipping_handler.go",
+        "checkout-service/src/middleware/tracing.go",
+        "checkout-service/src/middleware/logging.go",
+        "checkout-service/tests/integration/cart_checkout_test.go",
+        "checkout-service/tests/unit/httpclient_test.go",
+        "checkout-service/docs/http_client_migration.md"
+      ]
+    },
+    {
+      "sha": "e5a7c9b1d3f5e7c9a1b3d5f7e9a1b3d5f7e9a1b3",
+      "timestamp": "2024-03-15T12:20:00Z",
+      "author": "yuki.tanaka",
+      "message": "ci: add integration test stage for checkout-to-cart gRPC contract",
+      "changed_files": [
+        ".github/workflows/integration.yml",
+        "checkout-service/tests/integration/grpc_contract_test.go"
+      ]
+    },
+    {
+      "sha": "f6b8d0a2c4e6f8d0b2a4c6e8f0b2a4c6e8f0b2a4",
+      "timestamp": "2024-03-15T13:10:00Z",
+      "author": "ana.lindqvist",
+      "message": "docs(cart-service): update API reference for EmptyCart endpoint",
+      "changed_files": [
+        "cart-service/docs/api_reference.md",
+        "cart-service/proto/cart.proto"
+      ]
+    },
+    {
+      "sha": "07c9e1b3d5a7f9c1e3b5d7a9f1c3e5b7d9a1f3c5",
+      "timestamp": "2024-03-15T13:40:00Z",
+      "author": "marcus.bell",
+      "message": "chore(monitoring): add Prometheus scrape config for cart-service latency histograms",
+      "changed_files": [
+        "monitoring/prometheus/scrape_configs.yaml",
+        "monitoring/grafana/dashboards/cart_service.json"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "A network partition between the three Kubernetes control-plane nodes at 14:06:10Z disrupted etcd cluster quorum, triggering a leader election (etcd term 47). During the roughly 2-minute election window, the kube-apiserver on all master nodes lost connectivity to etcd, causing it to reject all write operations including pod scheduling bindings. The existing cart-service pod (cart-7d9f8b-xkp2q) received a SIGTERM during the disruption and was evicted; replacement pods (cart-7d9f8b-nt3wp, cart-7d9f8b-rv9xc) were stuck in Pending state because the kube-scheduler could not commit scheduling decisions to etcd. This left cart-service with 0/3 replicas for approximately 4 minutes (14:06:19Z to 14:08:30Z) until etcd-2 was elected leader and normal scheduling resumed. This is entirely unrelated to any application-level deploy.",
+  "ground_truth_remediation": "1. Immediately verify etcd cluster health with etcdctl endpoint health --cluster and confirm all three etcd members have rejoined quorum under the new leader (etcd-2, term=47). 2. Investigate the network partition by reviewing CNI and switch logs between control-plane nodes around 14:06:00Z to identify the root cause such as a NIC flap, misconfigured network policy, or cloud provider network event. 3. Confirm cart-service is fully recovered with at least 2 of 3 replicas Running and passing health checks. 4. Short-term: increase etcd heartbeat and election timeouts to reduce sensitivity to transient network blips. 5. Long-term: add dedicated monitoring for etcd leader elections and control-plane network latency, and configure a PagerDuty alert for etcd quorum loss separate from application-level alerts.",
+  "red_herring": "The checkout-service deploy (SHA d4f6b8a0c2e4d6b8f0a2c4d6e8b0a2c4d6e8b0a2, deployed at 11:55Z) upgraded the HTTP client library from v2.1 to v2.2, touching 14 files including cart_handler.go, transport.go, and retry.go which are components directly involved in checkout-to-cart communication. This change landed roughly 2 hours before the incident and is superficially suspicious because cart-service was the affected service and checkout-service is its primary downstream caller. An investigator might hypothesize that the new HTTP client introduced connection-pool exhaustion or a retry storm that overwhelmed cart-service. However, the logs provide clear exculpatory evidence: (1) at 14:03:00 to 14:03:01Z checkout-service logged successful initialization of the v2.2 HTTP client and confirmed cart-service was reachable, meaning the library worked correctly for over an hour before the incident with no errors; (2) cart-service itself continued serving requests normally until 14:06:19Z with sub-15ms latency and zero HTTP errors; (3) the failure mode was instantaneous 503s on all cart endpoints simultaneously rather than a gradual connection-pool degradation that a library change would cause; (4) logs at 14:06:10 through 14:06:24Z explicitly show etcd leader election messages, kube-apiserver etcd connectivity loss with context deadline exceeded and connection refused errors, and kube-scheduler failures to bind pods, none of which can be caused by an application-layer HTTP client change; and (5) recovery occurred at 14:08:10Z precisely when etcd elected a new leader, not when any deploy was rolled back."
+}

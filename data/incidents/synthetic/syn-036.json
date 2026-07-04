@@ -1,0 +1,86 @@
+{
+  "id": "syn-036",
+  "subset": "synthetic",
+  "category": "config_error",
+  "affected_service": "payment-service",
+  "severity": "high",
+  "alert_text": "ALERT: payment-service CORS rejection rate > 85% for requests from checkout-v2.shop.example.com — P95 error rate spike detected over last 5 minutes. Customers unable to complete purchases.",
+  "log_window": "2026-05-16T12:08:02.114Z [payment-service] INFO  Starting payment-service v3.14.2 (sha=49a7631b1ddb)\n2026-05-16T12:08:02.231Z [payment-service] INFO  Loading configuration from /etc/payment-service/config.yaml\n2026-05-16T12:08:02.415Z [payment-service] INFO  Config loaded: cors.allowed_origins=[\"https://shop.example.com\",\"https://www.shop.example.com\",\"https://checkout.shop.example.com\"]\n2026-05-16T12:08:02.502Z [payment-service] INFO  Listening on :8080\n2026-05-16T12:08:02.611Z [payment-service] INFO  Connected to postgres at payments-db:5432\n2026-05-16T12:08:03.001Z [payment-service] INFO  Connected to redis at redis-cache:6379\n2026-05-16T12:08:03.120Z [payment-service] INFO  Registered payment provider: stripe\n2026-05-16T12:08:03.230Z [payment-service] INFO  Health check endpoint ready at /healthz\n2026-05-16T12:09:15.442Z [nginx-ingress] INFO  request method=OPTIONS path=/api/v1/payments remote_addr=203.0.113.42 host=payment-service origin=https://checkout-v2.shop.example.com\n2026-05-16T12:09:15.443Z [payment-service] DEBUG received preflight request origin=\"https://checkout-v2.shop.example.com\" method=OPTIONS path=/api/v1/payments\n2026-05-16T12:09:15.444Z [payment-service] WARN  CORS preflight rejected: origin \"https://checkout-v2.shop.example.com\" not in allowed list allowed=[\"https://shop.example.com\",\"https://www.shop.example.com\",\"https://checkout.shop.example.com\"]\n2026-05-16T12:09:15.445Z [payment-service] INFO  response status=403 path=/api/v1/payments duration_ms=1 origin=https://checkout-v2.shop.example.com\n2026-05-16T12:09:15.446Z [nginx-ingress] INFO  response status=403 method=OPTIONS path=/api/v1/payments remote_addr=203.0.113.42\n2026-05-16T12:09:16.102Z [checkout-frontend] ERROR fetch failed: CORS error requesting https://payment-service/api/v1/payments — blocked by CORS policy: Response to preflight request doesn't pass access control check\n2026-05-16T12:09:16.103Z [checkout-frontend] ERROR at checkout.js:214 doPaymentRequest()\n2026-05-16T12:09:16.104Z [checkout-frontend] ERROR at checkout.js:188 handleSubmit()\n2026-05-16T12:09:18.221Z [nginx-ingress] INFO  request method=OPTIONS path=/api/v1/payments remote_addr=203.0.113.55 host=payment-service origin=https://checkout-v2.shop.example.com\n2026-05-16T12:09:18.222Z [payment-service] DEBUG received preflight request origin=\"https://checkout-v2.shop.example.com\" method=OPTIONS path=/api/v1/payments\n2026-05-16T12:09:18.223Z [payment-service] WARN  CORS preflight rejected: origin \"https://checkout-v2.shop.example.com\" not in allowed list allowed=[\"https://shop.example.com\",\"https://www.shop.example.com\",\"https://checkout.shop.example.com\"]\n2026-05-16T12:09:18.224Z [payment-service] INFO  response status=403 path=/api/v1/payments duration_ms=1 origin=https://checkout-v2.shop.example.com\n2026-05-16T12:09:19.330Z [checkout-frontend] ERROR fetch failed: CORS error requesting https://payment-service/api/v1/payments — blocked by CORS policy\n2026-05-16T12:09:22.001Z [payment-service] INFO  request method=POST path=/api/v1/payments origin=https://checkout.shop.example.com status=200 duration_ms=312\n2026-05-16T12:09:22.112Z [payment-service] DEBUG stripe charge created charge_id=ch_3Nab12LkdIwHu1 amount=4999 currency=usd\n2026-05-16T12:09:25.441Z [nginx-ingress] INFO  request method=OPTIONS path=/api/v1/refunds remote_addr=203.0.113.42 host=payment-service origin=https://checkout-v2.shop.example.com\n2026-05-16T12:09:25.442Z [payment-service] WARN  CORS preflight rejected: origin \"https://checkout-v2.shop.example.com\" not in allowed list\n2026-05-16T12:09:25.443Z [payment-service] INFO  response status=403 path=/api/v1/refunds duration_ms=1 origin=https://checkout-v2.shop.example.com\n2026-05-16T12:10:01.003Z [payment-service] INFO  request method=POST path=/api/v1/payments origin=https://www.shop.example.com status=200 duration_ms=289\n2026-05-16T12:10:11.774Z [nginx-ingress] INFO  request method=OPTIONS path=/api/v1/payments remote_addr=203.0.113.71 origin=https://checkout-v2.shop.example.com\n2026-05-16T12:10:11.775Z [payment-service] WARN  CORS preflight rejected: origin \"https://checkout-v2.shop.example.com\" not in allowed list\n2026-05-16T12:10:11.776Z [payment-service] INFO  response status=403 path=/api/v1/payments duration_ms=1\n2026-05-16T12:10:12.880Z [checkout-frontend] ERROR CORS error on payment attempt session_id=sess_9f3a2c user_id=u_10482 — payment not submitted\n2026-05-16T12:10:13.001Z [checkout-frontend] WARN  Retrying payment request (attempt 2/3) origin=https://checkout-v2.shop.example.com\n2026-05-16T12:10:13.112Z [payment-service] WARN  CORS preflight rejected: origin \"https://checkout-v2.shop.example.com\" not in allowed list\n2026-05-16T12:10:13.113Z [payment-service] INFO  response status=403 path=/api/v1/payments duration_ms=1\n2026-05-16T12:10:13.220Z [checkout-frontend] ERROR Retry 2/3 failed: CORS error\n2026-05-16T12:10:14.001Z [checkout-frontend] WARN  Retrying payment request (attempt 3/3) origin=https://checkout-v2.shop.example.com\n2026-05-16T12:10:14.102Z [payment-service] WARN  CORS preflight rejected: origin \"https://checkout-v2.shop.example.com\" not in allowed list\n2026-05-16T12:10:14.103Z [payment-service] INFO  response status=403 path=/api/v1/payments duration_ms=1\n2026-05-16T12:10:14.210Z [checkout-frontend] ERROR All retries exhausted. Payment failed for user user_id=u_10482 session_id=sess_9f3a2c\n2026-05-16T12:10:30.003Z [payment-service] INFO  request method=POST path=/api/v1/payments origin=https://shop.example.com status=200 duration_ms=301\n2026-05-16T12:11:00.441Z [alertmanager] WARN  FIRING: payment-service cors_rejection_rate=0.87 threshold=0.10 window=5m origin=https://checkout-v2.shop.example.com\n2026-05-16T12:11:00.442Z [alertmanager] INFO  Notifying on-call channel #incidents pagerduty_incident=P1X9A2\n2026-05-16T12:11:05.113Z [nginx-ingress] INFO  request method=OPTIONS path=/api/v1/payments remote_addr=203.0.113.99 origin=https://checkout-v2.shop.example.com\n2026-05-16T12:11:05.114Z [payment-service] WARN  CORS preflight rejected: origin \"https://checkout-v2.shop.example.com\" not in allowed list\n2026-05-16T12:11:05.115Z [payment-service] INFO  response status=403 path=/api/v1/payments duration_ms=1\n2026-05-16T12:11:05.220Z [checkout-frontend] ERROR CORS error on payment attempt session_id=sess_ab77d1 user_id=u_20039\n2026-05-16T12:11:11.330Z [payment-service] INFO  request method=POST path=/api/v1/payments origin=https://checkout.shop.example.com status=200 duration_ms=295\n2026-05-16T12:11:22.001Z [payment-service] DEBUG stripe webhook received event=payment_intent.created\n2026-05-16T12:11:45.554Z [nginx-ingress] INFO  request method=OPTIONS path=/api/v1/payments remote_addr=203.0.113.44 origin=https://checkout-v2.shop.example.com\n2026-05-16T12:11:45.555Z [payment-service] WARN  CORS preflight rejected: origin \"https://checkout-v2.shop.example.com\" not in allowed list\n2026-05-16T12:11:45.556Z [payment-service] INFO  response status=403 path=/api/v1/payments duration_ms=1\n2026-05-16T12:12:01.003Z [payment-service] INFO  request method=POST path=/api/v1/payments origin=https://www.shop.example.com status=200 duration_ms=311\n2026-05-16T12:12:10.114Z [checkout-frontend] ERROR Payment submission blocked by CORS policy for 38 users in last 3 minutes — all on checkout-v2.shop.example.com subdomain\n2026-05-16T12:12:11.001Z [payment-service] INFO  cors.allowed_origins config value at startup: [\"https://shop.example.com\",\"https://www.shop.example.com\",\"https://checkout.shop.example.com\"]\n2026-05-16T12:12:11.002Z [payment-service] WARN  Missing expected origin pattern: checkout-v2.shop.example.com — was this subdomain recently added to frontend?\n2026-05-16T12:12:15.441Z [nginx-ingress] INFO  request method=OPTIONS path=/api/v1/payments remote_addr=203.0.113.77 origin=https://checkout-v2.shop.example.com\n2026-05-16T12:12:15.442Z [payment-service] WARN  CORS preflight rejected: origin \"https://checkout-v2.shop.example.com\" not in allowed list\n2026-05-16T12:12:15.443Z [payment-service] INFO  response status=403 path=/api/v1/payments duration_ms=1\n2026-05-16T12:13:00.220Z [payment-service] INFO  request method=POST path=/api/v1/payments origin=https://checkout.shop.example.com status=200 duration_ms=288\n2026-05-16T12:13:30.001Z [payment-service] DEBUG health check OK uptime=328s goroutines=42 memory_mb=184\n2026-05-16T12:14:00.113Z [nginx-ingress] INFO  request method=OPTIONS path=/api/v1/payments remote_addr=203.0.113.81 origin=https://checkout-v2.shop.example.com\n2026-05-16T12:14:00.114Z [payment-service] WARN  CORS preflight rejected: origin \"https://checkout-v2.shop.example.com\" not in allowed list\n2026-05-16T12:14:00.115Z [payment-service] INFO  response status=403 path=/api/v1/payments duration_ms=1\n2026-05-16T12:14:01.220Z [checkout-frontend] ERROR CORS error on payment attempt session_id=sess_cc4e21 user_id=u_30817\n2026-05-16T12:14:30.003Z [payment-service] INFO  request method=POST path=/api/v1/payments origin=https://shop.example.com status=200 duration_ms=299\n2026-05-16T12:15:00.441Z [alertmanager] WARN  STILL FIRING: payment-service cors_rejection_rate=0.91 threshold=0.10 window=5m origin=https://checkout-v2.shop.example.com\n2026-05-16T12:15:10.001Z [payment-service] INFO  Metrics: total_requests=412 cors_rejected=374 cors_accepted=38 rejection_rate=0.908\n2026-05-16T12:16:01.003Z [payment-service] INFO  request method=POST path=/api/v1/payments origin=https://www.shop.example.com status=200 duration_ms=305\n2026-05-16T12:16:22.114Z [nginx-ingress] INFO  request method=OPTIONS path=/api/v1/payments remote_addr=203.0.113.92 origin=https://checkout-v2.shop.example.com\n2026-05-16T12:16:22.115Z [payment-service] WARN  CORS preflight rejected: origin \"https://checkout-v2.shop.example.com\" not in allowed list\n2026-05-16T12:16:22.116Z [payment-service] INFO  response status=403 path=/api/v1/payments duration_ms=1\n2026-05-16T12:16:23.220Z [checkout-frontend] ERROR CORS error on payment attempt session_id=sess_dd9a03 user_id=u_41205",
+  "recent_deploys": [
+    {
+      "sha": "0982a0268aec",
+      "timestamp": "2026-04-16T14:12:23Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump eslint-config-next (#3270)",
+      "changed_files": [
+        "frontend/package.json",
+        "frontend/package-lock.json",
+        ".eslintrc.json"
+      ]
+    },
+    {
+      "sha": "38a9074919f6",
+      "timestamp": "2026-04-21T15:32:48Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "payment-service/requirements.txt",
+        "fraud-service/requirements.txt"
+      ]
+    },
+    {
+      "sha": "7b1231238df3",
+      "timestamp": "2026-04-23T08:01:17Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] Fix dependabot configuration (#3298)",
+      "changed_files": [
+        ".github/dependabot.yml"
+      ]
+    },
+    {
+      "sha": "41b0e7b2e876",
+      "timestamp": "2026-04-24T03:35:36Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "frontend/package.json",
+        "frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "a4553ea12420",
+      "timestamp": "2026-04-30T02:38:18Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the bundler-production-dependencies group across 1 directory w",
+      "changed_files": [
+        "payment-service/Gemfile",
+        "payment-service/Gemfile.lock"
+      ]
+    },
+    {
+      "sha": "52a8a76cf862",
+      "timestamp": "2026-05-07T07:06:44Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with ",
+      "changed_files": [
+        "payment-service/mix.exs",
+        "payment-service/mix.lock"
+      ]
+    },
+    {
+      "sha": "49a7631b1ddb",
+      "timestamp": "2026-05-16T12:04:07Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Profiling with firepit (#3333)",
+      "changed_files": [
+        "payment-service/config/config.yaml",
+        "payment-service/config/cors.yaml",
+        "deploy/helm/payment-service/values.yaml",
+        "docs/profiling.md"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=49a7631b1ddb (2026-05-16T12:04:07Z) by Dónal O'Sullivan modified payment-service/config/cors.yaml and deploy/helm/payment-service/values.yaml as part of a profiling configuration change. During this edit, the cors.allowed_origins list was overwritten and the newly launched frontend subdomain https://checkout-v2.shop.example.com was omitted. The resulting config at startup only contains [\"https://shop.example.com\", \"https://www.shop.example.com\", \"https://checkout.shop.example.com\"], causing all CORS preflight requests from checkout-v2.shop.example.com to be rejected with HTTP 403, blocking payment submissions for all users on that subdomain.",
+  "ground_truth_remediation": "1. Immediately add 'https://checkout-v2.shop.example.com' to the cors.allowed_origins list in payment-service/config/cors.yaml and deploy/helm/payment-service/values.yaml. 2. Roll out a hotfix config-only deploy or use the Helm values override (e.g., helm upgrade payment-service ... --set cors.allowedOrigins[3]=https://checkout-v2.shop.example.com) to apply the fix without a full redeploy. 3. Restart or send a SIGHUP to payment-service pods to reload config. 4. Verify CORS rejections drop to zero for checkout-v2.shop.example.com in the next 2 minutes. 5. Add a config validation test that asserts all known frontend subdomains are present in the allowed origins list before merging config changes.",
+  "red_herring": null
+}

@@ -1,0 +1,88 @@
+{
+  "id": "syn-049",
+  "subset": "synthetic",
+  "category": "resource_exhaustion",
+  "affected_service": "email-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: email-service heap usage at 98% (3.9GB/4GB limit). JVM OOM imminent. P99 email send latency >45s. Pod restart loop detected in namespace prod.",
+  "log_window": "2026-05-12T14:22:01.112Z [email-service] INFO  Starting email-service v2.11.4 (commit e01faa1367fa)\n2026-05-12T14:22:01.334Z [email-service] INFO  Template cache initialized: strategy=unbounded, ttl=NONE\n2026-05-12T14:22:01.445Z [email-service] INFO  Connected to SMTP relay smtp.internal:587\n2026-05-12T14:22:01.512Z [email-service] INFO  Connected to template-store service at template-store:8080\n2026-05-12T14:22:02.001Z [email-service] INFO  Listening on :8080, worker_threads=32\n2026-05-12T14:22:05.230Z [template-store] level=info msg=\"serving template requests\" version=3.4.1\n2026-05-12T14:22:10.441Z [email-service] INFO  First email render complete template_id=welcome_v2 duration_ms=42\n2026-05-12T14:22:10.442Z [email-service] DEBUG cache_put key=welcome_v2:en:default size_bytes=18432 cache_entries=1\n2026-05-12T14:22:15.118Z [email-service] INFO  Email sent to_hash=a3f2c1 template=order_confirmation duration_ms=38\n2026-05-12T14:22:15.119Z [email-service] DEBUG cache_put key=order_confirmation:en:default size_bytes=24576 cache_entries=2\n2026-05-12T14:22:18.772Z [email-service] INFO  heap_used=124MB heap_max=4096MB gc_count=0\n2026-05-12T14:23:44.003Z [email-service] DEBUG cache_put key=order_confirmation:fr:premium size_bytes=25600 cache_entries=47\n2026-05-12T14:23:44.221Z [email-service] DEBUG cache_put key=welcome_v2:de:trial size_bytes=19200 cache_entries=48\n2026-05-12T14:24:18.881Z [email-service] INFO  heap_used=389MB heap_max=4096MB gc_count=3\n2026-05-12T14:24:20.114Z [template-store] level=info msg=\"template fetch\" template_id=promo_summer_2026 locale=ja variant=vip latency_ms=12\n2026-05-12T14:24:20.115Z [email-service] DEBUG cache_put key=promo_summer_2026:ja:vip size_bytes=61440 cache_entries=112\n2026-05-12T14:25:18.990Z [email-service] INFO  heap_used=812MB heap_max=4096MB gc_count=11\n2026-05-12T14:25:19.441Z [email-service] WARN  GC pause detected duration_ms=210 cause=G1_Young_Collection\n2026-05-12T14:25:55.003Z [email-service] DEBUG cache_put key=promo_summer_2026:en:wholesale size_bytes=63488 cache_entries=289\n2026-05-12T14:26:18.102Z [email-service] INFO  heap_used=1401MB heap_max=4096MB gc_count=28\n2026-05-12T14:26:19.337Z [email-service] WARN  GC pause detected duration_ms=480 cause=G1_Mixed_Collection\n2026-05-12T14:26:21.004Z [email-service] WARN  High memory pressure: template_cache_entries=412 cache_heap_estimate_mb=612 total_heap_mb=1401\n2026-05-12T14:26:45.882Z [smtp-relay] level=warn msg=\"slow client detected\" client=email-service latency_ms=8200\n2026-05-12T14:26:50.113Z [email-service] WARN  Email send latency elevated p99_ms=8400 p50_ms=1200\n2026-05-12T14:27:18.205Z [email-service] INFO  heap_used=2108MB heap_max=4096MB gc_count=61\n2026-05-12T14:27:19.771Z [email-service] WARN  GC pause detected duration_ms=1240 cause=G1_Full_GC\n2026-05-12T14:27:20.002Z [email-service] WARN  cache_put key=newsletter_digest:zh:enterprise size_bytes=98304 cache_entries=587\n2026-05-12T14:27:20.003Z [email-service] WARN  Template cache size exceeds 500 entries — no eviction policy configured\n2026-05-12T14:27:21.334Z [email-service] ERROR Request processing delayed: GC overhead limit approaching threshold=85%\n2026-05-12T14:27:45.009Z [template-store] level=warn msg=\"high request rate from email-service\" rps=340 expected_rps=80\n2026-05-12T14:27:50.441Z [email-service] WARN  Email send latency elevated p99_ms=18700 p50_ms=4300\n2026-05-12T14:28:18.330Z [email-service] INFO  heap_used=2997MB heap_max=4096MB gc_count=118\n2026-05-12T14:28:19.114Z [email-service] ERROR GC pause detected duration_ms=3800 cause=G1_Full_GC\n2026-05-12T14:28:19.890Z [email-service] ERROR GC overhead limit exceeded: application threads stalled for >3s\n2026-05-12T14:28:20.441Z [email-service] ERROR Failed to render template key=transactional_receipt:en:default\n  at com.example.email.TemplateCache.get(TemplateCache.java:84)\n  at com.example.email.RenderEngine.render(RenderEngine.java:201)\n  at com.example.email.EmailWorker.process(EmailWorker.java:67)\n2026-05-12T14:28:21.002Z [email-service] ERROR Failed to send email: rendering timeout after 30000ms to_hash=b7d3e9 template=transactional_receipt\n2026-05-12T14:28:21.334Z [email-service] ERROR Failed to send email: rendering timeout after 30000ms to_hash=cc1f02 template=order_confirmation\n2026-05-12T14:28:22.001Z [email-service] ERROR Failed to send email: rendering timeout after 30000ms to_hash=0d8a41 template=welcome_v2\n2026-05-12T14:28:25.441Z [smtp-relay] level=error msg=\"connection pool exhausted\" client=email-service pool_size=50 waiting=183\n2026-05-12T14:28:26.003Z [email-service] ERROR SMTP connection acquire failed: pool exhausted, 183 requests queued\n2026-05-12T14:28:30.112Z [email-service] WARN  Email send latency elevated p99_ms=44800 p50_ms=22100\n2026-05-12T14:28:45.004Z [email-service] INFO  heap_used=3891MB heap_max=4096MB gc_count=204\n2026-05-12T14:28:46.003Z [email-service] FATAL java.lang.OutOfMemoryError: Java heap space\n  at com.example.email.TemplateCache.put(TemplateCache.java:112)\n  at com.example.email.RenderEngine.cacheResult(RenderEngine.java:218)\n2026-05-12T14:28:46.221Z [email-service] FATAL JVM terminating due to OOM — heap_used=3980MB heap_max=4096MB cache_entries=831\n2026-05-12T14:28:47.001Z [k8s-controller] INFO  Pod email-service-7d9f6c8b4-xkp2q OOMKilled exit_code=137 namespace=prod\n2026-05-12T14:28:47.334Z [k8s-controller] INFO  Restarting pod email-service-7d9f6c8b4-xkp2q restart_count=1\n2026-05-12T14:29:05.441Z [email-service] INFO  Starting email-service v2.11.4 (commit e01faa1367fa)\n2026-05-12T14:29:05.552Z [email-service] INFO  Template cache initialized: strategy=unbounded, ttl=NONE\n2026-05-12T14:29:05.889Z [email-service] INFO  Listening on :8080, worker_threads=32\n2026-05-12T14:29:10.001Z [email-service] INFO  heap_used=131MB heap_max=4096MB gc_count=0\n2026-05-12T14:29:12.334Z [email-service] DEBUG cache_put key=welcome_v2:en:default size_bytes=18432 cache_entries=1\n2026-05-12T14:30:18.002Z [email-service] INFO  heap_used=445MB heap_max=4096MB gc_count=5\n2026-05-12T14:31:18.441Z [email-service] INFO  heap_used=921MB heap_max=4096MB gc_count=19\n2026-05-12T14:31:20.003Z [email-service] WARN  GC pause detected duration_ms=290 cause=G1_Young_Collection\n2026-05-12T14:31:22.114Z [email-service] WARN  High memory pressure: template_cache_entries=389 cache_heap_estimate_mb=578 total_heap_mb=921\n2026-05-12T14:32:18.773Z [email-service] INFO  heap_used=1788MB heap_max=4096MB gc_count=44\n2026-05-12T14:32:20.001Z [email-service] ERROR GC pause detected duration_ms=2100 cause=G1_Full_GC\n2026-05-12T14:33:18.990Z [email-service] INFO  heap_used=2850MB heap_max=4096MB gc_count=99\n2026-05-12T14:33:44.112Z [k8s-controller] INFO  Pod email-service-7d9f6c8b4-xkp2q OOMKilled exit_code=137 namespace=prod restart_count=2\n2026-05-12T14:33:45.002Z [k8s-controller] WARN  Pod email-service-7d9f6c8b4-xkp2q entering CrashLoopBackOff restart_count=2\n2026-05-12T14:33:45.441Z [k8s-controller] INFO  Restarting pod email-service-7d9f6c8b4-xkp2q backoff=10s\n2026-05-12T14:35:01.003Z [email-service] INFO  Starting email-service v2.11.4 (commit e01faa1367fa)\n2026-05-12T14:35:01.114Z [email-service] INFO  Template cache initialized: strategy=unbounded, ttl=NONE\n2026-05-12T14:35:05.882Z [email-service] WARN  Previous pod OOMKilled — heap exhaustion likely caused by unbounded cache growth\n2026-05-12T14:35:18.001Z [email-service] INFO  heap_used=128MB heap_max=4096MB gc_count=0\n2026-05-12T14:36:18.334Z [email-service] INFO  heap_used=502MB heap_max=4096MB gc_count=8\n2026-05-12T14:36:20.441Z [email-service] WARN  GC pause detected duration_ms=180 cause=G1_Young_Collection\n2026-05-12T14:36:22.003Z [email-service] WARN  High memory pressure: template_cache_entries=301 cache_heap_estimate_mb=448 total_heap_mb=502\n2026-05-12T14:37:18.112Z [k8s-controller] WARN  Pod email-service-7d9f6c8b4-xkp2q CrashLoopBackOff restart_count=3 next_backoff=20s\n2026-05-12T14:37:45.003Z [email-service] FATAL java.lang.OutOfMemoryError: Java heap space\n  at com.example.email.TemplateCache.put(TemplateCache.java:112)\n  at com.example.email.RenderEngine.cacheResult(RenderEngine.java:218)\n2026-05-12T14:37:45.441Z [email-service] FATAL JVM terminating due to OOM — heap_used=3976MB heap_max=4096MB cache_entries=798\n2026-05-12T14:37:46.002Z [k8s-controller] INFO  Pod email-service-7d9f6c8b4-xkp2q OOMKilled exit_code=137 namespace=prod restart_count=3",
+  "recent_deploys": [
+    {
+      "sha": "0982a0268aec",
+      "timestamp": "2026-04-16T14:12:23Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump eslint-config-next (#3270)",
+      "changed_files": [
+        "package.json",
+        "package-lock.json"
+      ]
+    },
+    {
+      "sha": "60d18e40e88c",
+      "timestamp": "2026-04-23T08:23:08Z",
+      "author": "Juliano Costa",
+      "message": "[frontend] fix: handle undefined product images across multiple components (#329",
+      "changed_files": [
+        "src/components/ProductCard.tsx",
+        "src/components/ProductGallery.tsx",
+        "src/components/CartItem.tsx"
+      ]
+    },
+    {
+      "sha": "51f1a6bba4e8",
+      "timestamp": "2026-04-24T06:02:13Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Remove tag from the docker logging used via docker compose (#3304)",
+      "changed_files": [
+        "docker-compose.yml",
+        "docker-compose.override.yml"
+      ]
+    },
+    {
+      "sha": "a4553ea12420",
+      "timestamp": "2026-04-30T02:38:18Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the bundler-production-dependencies group across 1 directory w",
+      "changed_files": [
+        "Gemfile",
+        "Gemfile.lock"
+      ]
+    },
+    {
+      "sha": "6302e2c10e48",
+      "timestamp": "2026-05-05T10:28:04Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "fix(deps): resolve Ruby security advisories (#3349)",
+      "changed_files": [
+        "Gemfile",
+        "Gemfile.lock",
+        "services/email-service/pom.xml"
+      ]
+    },
+    {
+      "sha": "23dc47f86f5b",
+      "timestamp": "2026-05-06T00:04:45Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "services/email-service/package.json",
+        "services/email-service/package-lock.json"
+      ]
+    },
+    {
+      "sha": "e01faa1367fa",
+      "timestamp": "2026-05-12T14:13:20Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github/codeql-action (#3359)",
+      "changed_files": [
+        "services/email-service/src/main/java/com/example/email/TemplateCache.java",
+        "services/email-service/src/main/java/com/example/email/RenderEngine.java",
+        "services/email-service/src/main/resources/application.properties",
+        ".github/workflows/codeql.yml"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy e01faa1367fa (2026-05-12T14:13:20Z) modified TemplateCache.java and RenderEngine.java, removing the previously-configured Caffeine cache eviction policy (maximumSize + expireAfterWrite TTL). The updated code initializes the template cache as an unbounded ConcurrentHashMap with no TTL and no size cap. Under normal production traffic, the combination of many distinct template IDs, locales, and variant keys causes the cache to grow without bound. Within ~6 minutes of startup the JVM heap is exhausted by cache entries, triggering G1 Full GCs and ultimately OOM kills, leading to a CrashLoopBackOff cycle.",
+  "ground_truth_remediation": "1. Immediately: kubectl rollout undo deployment/email-service -n prod to roll back to the previous image, stopping the CrashLoopBackOff. 2. Code fix in TemplateCache.java: reinstate the Caffeine cache configuration with maximumSize=1000 and expireAfterWrite=30m (or add application.properties keys template.cache.max-size and template.cache.ttl-minutes and wire them in). 3. Re-deploy the fixed build and verify heap_used stabilizes below 1GB and cache_entries is bounded in logs. 4. Add a JVM heap usage alert at 70% to catch future regressions earlier.",
+  "red_herring": null
+}

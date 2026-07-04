@@ -1,0 +1,67 @@
+{
+  "id": "real-003",
+  "subset": "real_derived",
+  "category": "deploy_regression",
+  "affected_service": "postgres",
+  "severity": "critical",
+  "alert_text": "CRITICAL: checkout-service job queue depth > 5000 and rising; distributor scan error rate 100% for 8 minutes. Zero jobs dispatched in last 5 min.",
+  "log_window": "2024-03-14T10:02:11Z [checkout-service] INFO  Starting job distributor scan cycle id=scan-19843\n2024-03-14T10:02:11Z [checkout-service] DEBUG Querying pending jobs from postgres table=job_queue limit=500\n2024-03-14T10:02:11Z [postgres] LOG  statement: SELECT id, payload, priority, metadata FROM job_queue WHERE status=pending ORDER BY created_at LIMIT 500\n2024-03-14T10:02:12Z [checkout-service] ERROR Schema validation failed on row id=7f3a1c22 field=priority expected=integer got=string value=high\n2024-03-14T10:02:12Z [checkout-service] ERROR Schema validation failed on row id=7f3a1c23 field=priority expected=integer got=string value=high\n2024-03-14T10:02:12Z [checkout-service] ERROR Schema validation failed on row id=7f3a1c24 field=priority expected=integer got=string value=normal\n2024-03-14T10:02:12Z [checkout-service] ERROR Distributor scan aborted: schema validation errors=500 total_rows=500 dispatched=0\n2024-03-14T10:02:12Z [checkout-service] WARN  Retrying scan in 15s after validation failure cycle=1\n2024-03-14T10:02:27Z [checkout-service] INFO  Starting job distributor scan cycle id=scan-19844\n2024-03-14T10:02:27Z [checkout-service] ERROR Schema validation failed on row id=7f3a1c22 field=priority expected=integer got=string value=high\n2024-03-14T10:02:27Z [checkout-service] ERROR Distributor scan aborted: schema validation errors=500 total_rows=500 dispatched=0\n2024-03-14T10:02:27Z [checkout-service] WARN  Retrying scan in 15s after validation failure cycle=2\n2024-03-14T10:02:42Z [checkout-service] ERROR Distributor scan aborted: schema validation errors=500 total_rows=500 dispatched=0\n2024-03-14T10:02:42Z [checkout-service] WARN  Retrying scan in 15s after validation failure cycle=3\n2024-03-14T10:03:00Z [alertmanager] FIRING alert=CheckoutJobQueueDepth severity=critical queue_depth=5312\n2024-03-14T10:03:00Z [alertmanager] FIRING alert=DistributorDispatchRate value=0 threshold=10 window=5m\n2024-03-14T10:03:15Z [checkout-service] ERROR Distributor scan aborted: schema validation errors=500 total_rows=500 dispatched=0\n2024-03-14T10:03:30Z [checkout-service] ERROR Distributor scan aborted: schema validation errors=500 total_rows=500 dispatched=0\n2024-03-14T10:03:45Z [checkout-service] WARN  Consecutive scan failures=10 no jobs dispatched since deploy sha=f5a9b234\n2024-03-14T10:04:00Z [checkout-service] ERROR Distributor scan aborted: schema validation errors=500 total_rows=500 dispatched=0\n2024-03-14T10:04:15Z [checkout-service] ERROR Distributor scan aborted: schema validation errors=500 total_rows=500 dispatched=0\n2024-03-14T10:05:00Z [checkout-service] INFO  Operator initiated rollback to sha=a3f8d120\n2024-03-14T10:05:12Z [checkout-service] INFO  Service restarted with sha=a3f8d120\n2024-03-14T10:05:15Z [checkout-service] INFO  Starting job distributor scan cycle id=scan-19860\n2024-03-14T10:05:15Z [checkout-service] DEBUG Querying pending jobs from postgres table=job_queue limit=500\n2024-03-14T10:05:16Z [postgres] LOG  statement: SELECT id, payload, priority, metadata FROM job_queue WHERE status=pending ORDER BY created_at LIMIT 500\n2024-03-14T10:05:16Z [checkout-service] ERROR Schema validation failed on row id=7f3b0011 field=priority expected=string got=integer value=1\n2024-03-14T10:05:16Z [checkout-service] ERROR Schema validation failed on row id=7f3b0012 field=priority expected=string got=integer value=2\n2024-03-14T10:05:16Z [checkout-service] ERROR Schema validation failed on row id=7f3b0013 field=priority expected=string got=integer value=1\n2024-03-14T10:05:16Z [checkout-service] ERROR Distributor scan aborted: schema validation errors=312 total_rows=500 dispatched=0\n2024-03-14T10:05:16Z [checkout-service] WARN  Post-rollback validation failure: rows written between deploy and rollback use new integer type old schema expects string cycle=1\n2024-03-14T10:05:31Z [checkout-service] ERROR Distributor scan aborted: schema validation errors=312 total_rows=500 dispatched=0\n2024-03-14T10:05:31Z [checkout-service] WARN  Retrying scan in 15s after validation failure cycle=2\n2024-03-14T10:05:46Z [checkout-service] ERROR Distributor scan aborted: schema validation errors=312 total_rows=500 dispatched=0\n2024-03-14T10:06:00Z [alertmanager] queue_depth=5891 still_firing=true\n2024-03-14T10:06:01Z [checkout-service] WARN  Rollback did not resolve issue: mixed row types present in job_queue table\n2024-03-14T10:06:17Z [checkout-service] ERROR Distributor scan aborted: schema validation errors=312 total_rows=500 dispatched=0\n2024-03-14T10:06:32Z [checkout-service] ERROR Distributor scan aborted: schema validation errors=312 total_rows=500 dispatched=0\n2024-03-14T10:07:00Z [ops] INFO  Escalating to on-call engineer: rollback insufficient mixed schema state in job_queue\n2024-03-14T10:07:15Z [checkout-service] ERROR Distributor scan aborted: schema validation errors=312 total_rows=500 dispatched=0\n2024-03-14T10:07:30Z [checkout-service] ERROR Distributor scan aborted: schema validation errors=312 total_rows=500 dispatched=0\n2024-03-14T10:08:00Z [ops] INFO  Initiating manual hotfix deploy sha=e92c4f71 desc=ignore priority field in scan validation\n2024-03-14T10:08:45Z [checkout-service] INFO  Service started with hotfix sha=e92c4f71\n2024-03-14T10:08:48Z [checkout-service] INFO  Starting job distributor scan cycle id=scan-19880\n2024-03-14T10:08:48Z [checkout-service] DEBUG Querying pending jobs from postgres table=job_queue limit=500\n2024-03-14T10:08:49Z [checkout-service] INFO  Distributor scan completed dispatched=500 errors=0 cycle=1\n2024-03-14T10:08:49Z [checkout-service] INFO  Jobs dispatched to workers count=500\n2024-03-14T10:08:50Z [checkout-service] INFO  Starting job distributor scan cycle id=scan-19881\n2024-03-14T10:08:51Z [checkout-service] INFO  Distributor scan completed dispatched=500 errors=0 cycle=2\n2024-03-14T10:09:05Z [checkout-service] INFO  Distributor scan completed dispatched=500 errors=0 cycle=3\n2024-03-14T10:09:20Z [checkout-service] INFO  Distributor scan completed dispatched=491 errors=0 cycle=4\n2024-03-14T10:09:35Z [checkout-service] INFO  Distributor scan completed dispatched=203 errors=0 cycle=5\n2024-03-14T10:09:50Z [checkout-service] INFO  Distributor scan completed dispatched=87 errors=0 cycle=6\n2024-03-14T10:10:05Z [checkout-service] INFO  Distributor scan completed dispatched=12 errors=0 cycle=7\n2024-03-14T10:10:11Z [ops] INFO  Scaling checkout-service replicas from 3 to 8 to drain backlog\n2024-03-14T10:10:20Z [checkout-service] INFO  Distributor scan completed dispatched=0 errors=0 cycle=8 queue_depth=0\n2024-03-14T10:10:21Z [alertmanager] RESOLVED alert=CheckoutJobQueueDepth\n2024-03-14T10:10:21Z [alertmanager] RESOLVED alert=DistributorDispatchRate\n2024-03-14T10:10:25Z [checkout-service] INFO  Queue fully drained. Normal operation resumed.\n2024-03-14T10:11:00Z [ops] INFO  Beginning data migration to normalize priority column to integer type\n2024-03-14T10:11:03Z [postgres] LOG  statement: ALTER TABLE job_queue ALTER COLUMN priority TYPE integer USING CASE WHEN priority=high THEN 1 WHEN priority=normal THEN 2 ELSE 3 END\n2024-03-14T10:11:15Z [postgres] LOG  ALTER TABLE complete rows_migrated=18432\n2024-03-14T10:12:00Z [ops] INFO  Schema migration complete. Planning permanent fix deploy.\n2024-03-14T10:13:00Z [checkout-service] INFO  Distributor running normally on hotfix build. Permanent fix in progress.\n2024-03-14T10:15:00Z [ops] INFO  Post-incident queue depth=0 dispatch_rate=nominal all_systems_green=true",
+  "recent_deploys": [
+    {
+      "sha": "c1d4e890",
+      "timestamp": "2024-03-13T08:15:00Z",
+      "author": "priya.nair",
+      "message": "Refactor job payload serialization for improved throughput",
+      "changed_files": [
+        "checkout-service/internal/distributor/serializer.go",
+        "checkout-service/internal/distributor/serializer_test.go"
+      ]
+    },
+    {
+      "sha": "b72f3301",
+      "timestamp": "2024-03-13T14:30:00Z",
+      "author": "james.okafor",
+      "message": "Add distributed tracing spans to distributor scan cycle",
+      "changed_files": [
+        "checkout-service/internal/distributor/scan.go",
+        "checkout-service/internal/telemetry/tracer.go"
+      ]
+    },
+    {
+      "sha": "a3f8d120",
+      "timestamp": "2024-03-13T22:05:00Z",
+      "author": "liu.wei",
+      "message": "Bump dependencies: upgrade pgx driver to v5.4.1",
+      "changed_files": [
+        "go.mod",
+        "go.sum",
+        "checkout-service/go.mod"
+      ]
+    },
+    {
+      "sha": "f5a9b234",
+      "timestamp": "2024-03-14T07:45:00Z",
+      "author": "sarah.chen",
+      "message": "Migrate job_queue.priority column from VARCHAR to INTEGER for sort performance",
+      "changed_files": [
+        "checkout-service/internal/distributor/validator.go",
+        "checkout-service/internal/models/job.go",
+        "checkout-service/db/migrations/0042_priority_int.sql",
+        "checkout-service/db/migrations/0042_priority_int_test.go"
+      ]
+    },
+    {
+      "sha": "e92c4f71",
+      "timestamp": "2024-03-14T10:08:00Z",
+      "author": "ops-hotfix-bot",
+      "message": "HOTFIX: disable strict priority field validation in distributor scan to restore job dispatch",
+      "changed_files": [
+        "checkout-service/internal/distributor/validator.go",
+        "checkout-service/internal/distributor/scan.go"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=f5a9b234 changed the priority column in the job_queue PostgreSQL table from VARCHAR (e.g. high, normal) to INTEGER (e.g. 1, 2), and updated the checkout-service distributor schema validator to expect an integer type. Rows written before the migration retained the old string values while new rows used integers. The strict schema validator in the distributor scan loop failed on every legacy-type row and aborted the entire scan batch, dispatching zero jobs. Rolling back the service to sha=a3f8d120 reversed the validator expectation back to string, but rows written during the window when sha=f5a9b234 was live now contained integers, causing the same strict validation failure in the opposite direction and keeping job dispatch at zero even after rollback.",
+  "ground_truth_remediation": "1. Hand-deploy hotfix build sha=e92c4f71 which disables strict type-checking on the priority field, allowing the distributor to process rows regardless of column type. 2. Manually scale checkout-service replicas from 3 to 8 to drain the accumulated job backlog of approximately 5900 jobs. 3. Run a data migration to normalize all rows to the new integer type using CASE WHEN priority=high THEN 1 WHEN priority=normal THEN 2 ELSE 3 END. 4. Deploy the permanent fix re-enabling strict integer validation once all rows are homogeneous. 5. Post-incident: enforce backward-compatible multi-phase schema migrations using the expand-contract pattern with schema validation tests run against both old and new row formats before deploy.",
+  "red_herring": null
+}

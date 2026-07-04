@@ -1,0 +1,86 @@
+{
+  "id": "syn-044",
+  "subset": "synthetic",
+  "category": "resource_exhaustion",
+  "affected_service": "frontend",
+  "severity": "critical",
+  "alert_text": "CRITICAL: frontend pod memory usage at 98% (7.8GB/8GB limit); OOMKill imminent. P99 latency > 30s. Alert fired at 2026-05-06T15:22:10Z.",
+  "log_window": "2026-05-06T15:02:11.103Z [frontend] INFO  server=http addr=:8080 msg=\"HTTP server started\"\n2026-05-06T15:02:14.217Z [frontend] INFO  msg=\"connected to backend API\" host=api-service:9090\n2026-05-06T15:02:15.441Z [frontend] DEBUG msg=\"middleware chain initialized\" middlewares=[cors,auth,buffer,metrics]\n2026-05-06T15:03:00.012Z [nginx] 192.168.1.44 - GET /shop 200 1204 \"Mozilla/5.0\" 0.042\n2026-05-06T15:03:01.883Z [nginx] 192.168.1.91 - GET /cart 200 980 \"Mozilla/5.0\" 0.039\n2026-05-06T15:03:03.552Z [frontend] DEBUG req_id=a1b2 msg=\"response buffer allocated\" size=65536\n2026-05-06T15:03:04.001Z [frontend] DEBUG req_id=a1b2 msg=\"upstream fetch started\" upstream=api-service\n2026-05-06T15:03:05.770Z [frontend] INFO  req_id=a1b2 msg=\"request complete\" status=200 duration_ms=218\n2026-05-06T15:04:10.002Z [api-service] {\"level\":\"info\",\"ts\":\"2026-05-06T15:04:10.002Z\",\"msg\":\"serving request\",\"path\":\"/api/products\",\"latency_ms\":45}\n2026-05-06T15:05:22.318Z [nginx] 10.0.0.5 - GET /checkout 200 4411 \"Mozilla/5.0\" 0.097\n2026-05-06T15:06:00.442Z [frontend] DEBUG msg=\"GC stats\" heap_alloc_mb=210 heap_sys_mb=310 gc_pause_ms=1.2\n2026-05-06T15:06:31.882Z [frontend] INFO  msg=\"active connections\" count=112\n2026-05-06T15:07:14.003Z [frontend] WARN  msg=\"detected slow upstream\" upstream=api-service latency_ms=1840 req_id=c3d4\n2026-05-06T15:07:14.410Z [frontend] DEBUG req_id=c3d4 msg=\"client disconnect detected\" remote=10.0.1.22:54321\n2026-05-06T15:07:14.412Z [frontend] DEBUG req_id=c3d4 msg=\"response buffer NOT released\" reason=\"middleware did not check context cancellation\"\n2026-05-06T15:07:15.001Z [api-service] {\"level\":\"warn\",\"ts\":\"2026-05-06T15:07:15.001Z\",\"msg\":\"upstream timeout approaching\",\"req_id\":\"c3d4\",\"elapsed_ms\":1850}\n2026-05-06T15:07:45.113Z [frontend] WARN  msg=\"leaked buffer detected\" req_id=c3d4 buffer_size_kb=64 held_since_sec=31\n2026-05-06T15:08:00.990Z [frontend] DEBUG msg=\"GC stats\" heap_alloc_mb=388 heap_sys_mb=512 gc_pause_ms=4.8\n2026-05-06T15:08:12.552Z [nginx] 10.0.2.7 - GET /product/88 499 0 \"Mozilla/5.0\" 12.003\n2026-05-06T15:08:13.001Z [nginx] 10.0.3.8 - GET /cart 499 0 \"Mozilla/5.0\" 15.881\n2026-05-06T15:08:13.212Z [frontend] WARN  msg=\"client disconnected mid-request\" count_last_60s=18 req_ids=[e5f6,g7h8,i9j0,k1l2,m3n4]\n2026-05-06T15:08:13.880Z [frontend] WARN  msg=\"response buffers not released for disconnected clients\" leaked_count=18 total_leaked_kb=1152\n2026-05-06T15:08:20.001Z [frontend] DEBUG req_id=e5f6 msg=\"buffer still held\" held_since_sec=47\n2026-05-06T15:08:20.003Z [frontend] DEBUG req_id=g7h8 msg=\"buffer still held\" held_since_sec=44\n2026-05-06T15:08:25.441Z [api-service] {\"level\":\"error\",\"ts\":\"2026-05-06T15:08:25.441Z\",\"msg\":\"request queue depth elevated\",\"depth\":312}\n2026-05-06T15:08:30.772Z [frontend] ERROR msg=\"buffer pool exhaustion approaching\" pool_used_pct=71 total_pool_mb=512\n2026-05-06T15:08:45.001Z [frontend] DEBUG msg=\"GC stats\" heap_alloc_mb=590 heap_sys_mb=780 gc_pause_ms=18.4\n2026-05-06T15:09:01.223Z [nginx] 10.0.4.9 - GET /shop 499 0 \"Mozilla/5.0\" 20.114\n2026-05-06T15:09:02.001Z [nginx] 10.0.5.2 - POST /checkout 499 0 \"Mozilla/5.0\" 22.003\n2026-05-06T15:09:10.333Z [frontend] WARN  msg=\"high GC pressure\" gc_pause_ms=18.4 threshold_ms=10\n2026-05-06T15:09:11.441Z [frontend] WARN  msg=\"goroutine holding buffer past client disconnect\" goroutine_id=48821 req_id=o5p6 held_sec=58\n2026-05-06T15:09:11.443Z [frontend] WARN  msg=\"goroutine holding buffer past client disconnect\" goroutine_id=48834 req_id=q7r8 held_sec=55\n2026-05-06T15:09:11.445Z [frontend] WARN  msg=\"goroutine holding buffer past client disconnect\" goroutine_id=48867 req_id=s9t0 held_sec=53\n2026-05-06T15:09:15.991Z [frontend] ERROR msg=\"leaked response buffers accumulating\" leaked_total_mb=142 active_requests=287\n2026-05-06T15:09:20.001Z [frontend] ERROR msg=\"memory pressure high\" rss_mb=3840 limit_mb=8192 used_pct=46\n2026-05-06T15:10:00.002Z [frontend] DEBUG msg=\"GC stats\" heap_alloc_mb=1024 heap_sys_mb=1380 gc_pause_ms=55.2\n2026-05-06T15:10:01.883Z [frontend] ERROR msg=\"GC pause exceeds SLO\" gc_pause_ms=55.2 slo_ms=20\n2026-05-06T15:10:15.774Z [api-service] {\"level\":\"error\",\"ts\":\"2026-05-06T15:10:15.774Z\",\"msg\":\"connection pool near limit\",\"used\":195,\"max\":200}\n2026-05-06T15:10:22.001Z [nginx] upstream timed out (110: Connection timed out) while reading response header from upstream, client: 10.0.1.5, server: frontend\n2026-05-06T15:10:23.441Z [nginx] upstream timed out (110: Connection timed out) while reading response header from upstream, client: 10.0.2.8, server: frontend\n2026-05-06T15:11:00.005Z [frontend] ERROR msg=\"buffer pool exhaustion approaching\" pool_used_pct=89 total_pool_mb=512\n2026-05-06T15:11:01.003Z [frontend] ERROR msg=\"memory pressure high\" rss_mb=5500 limit_mb=8192 used_pct=67\n2026-05-06T15:11:05.221Z [frontend] WARN  msg=\"goroutine count elevated\" goroutines=9842 baseline=1200\n2026-05-06T15:11:06.003Z [frontend] ERROR goroutine 48821 [running]:\nmain.(*responseBufferMiddleware).ServeHTTP(0xc000a1b240, 0xc000b3c100)\n\t/app/middleware/buffer.go:87 +0x1a3\nnet/http.(*ServeMux).ServeHTTP(0xc000a1b240, 0xc000b3c100)\n\t/usr/local/go/src/net/http/server.go:2547 +0x149\n2026-05-06T15:11:30.883Z [frontend] DEBUG msg=\"GC stats\" heap_alloc_mb=2200 heap_sys_mb=2900 gc_pause_ms=112.7\n2026-05-06T15:11:31.001Z [frontend] FATAL msg=\"GC pause critical\" gc_pause_ms=112.7 heap_alloc_mb=2200\n2026-05-06T15:12:00.441Z [nginx] 10.0.0.0/8 - GET /shop 502 0 \"Mozilla/5.0\" 30.001\n2026-05-06T15:12:01.003Z [nginx] 10.0.0.0/8 - POST /checkout 502 0 \"Mozilla/5.0\" 30.003\n2026-05-06T15:12:05.772Z [frontend] ERROR msg=\"buffer pool exhausted\" pool_used_pct=100 dropped_requests=43\n2026-05-06T15:12:06.001Z [frontend] ERROR msg=\"dropping incoming requests, no buffer available\" dropped_count=43\n2026-05-06T15:12:10.003Z [frontend] ERROR msg=\"memory pressure high\" rss_mb=7200 limit_mb=8192 used_pct=87\n2026-05-06T15:12:30.441Z [frontend] WARN  msg=\"goroutine count critical\" goroutines=22481 baseline=1200\n2026-05-06T15:12:45.113Z [api-service] {\"level\":\"fatal\",\"ts\":\"2026-05-06T15:12:45.113Z\",\"msg\":\"too many connections from frontend\",\"connections\":210}\n2026-05-06T15:13:00.001Z [frontend] DEBUG msg=\"GC stats\" heap_alloc_mb=3800 heap_sys_mb=4900 gc_pause_ms=310.4\n2026-05-06T15:13:01.442Z [frontend] FATAL msg=\"out of memory, triggering OOMKill\" rss_mb=7900 limit_mb=8192\n2026-05-06T15:13:01.883Z [frontend] FATAL msg=\"goroutine dump initiated\" goroutines=24002\n2026-05-06T15:13:02.001Z [frontend] goroutine 48821 [running]:\nmain.(*responseBufferMiddleware).ServeHTTP(0xc000a1b240, 0xc000b3c100)\n\t/app/middleware/buffer.go:87 +0x1a3\n2026-05-06T15:13:02.012Z [frontend] goroutine 48834 [running]:\nmain.(*responseBufferMiddleware).ServeHTTP(0xc000a1b360, 0xc000b3c200)\n\t/app/middleware/buffer.go:87 +0x1a3\n2026-05-06T15:13:02.441Z [k8s] OOMKilled: container frontend in pod frontend-7d9f4c8b6-xk2qp exceeded memory limit 8Gi\n2026-05-06T15:13:03.001Z [k8s] Pod frontend-7d9f4c8b6-xk2qp restarting (OOMKilled) restart_count=1\n2026-05-06T15:13:10.002Z [nginx] connect() failed (111: Connection refused) while connecting to upstream\n2026-05-06T15:13:11.442Z [nginx] 10.0.0.0/8 - GET /shop 503 0 \"Mozilla/5.0\" 0.001\n2026-05-06T15:13:45.003Z [k8s] Pod frontend-7d9f4c8b6-xk2qp restarted successfully restart_count=1\n2026-05-06T15:14:00.113Z [frontend] INFO  server=http addr=:8080 msg=\"HTTP server started\"\n2026-05-06T15:14:01.002Z [frontend] DEBUG msg=\"GC stats\" heap_alloc_mb=88 heap_sys_mb=140 gc_pause_ms=0.9\n2026-05-06T15:14:10.441Z [nginx] 10.0.1.5 - GET /shop 200 1204 \"Mozilla/5.0\" 0.041\n2026-05-06T15:15:00.003Z [frontend] WARN  msg=\"memory growing again\" rss_mb=420 leaked_buffers=11 held_sec_avg=22\n2026-05-06T15:15:01.002Z [frontend] WARN  msg=\"buffer NOT released after client disconnect\" req_id=u1v2 goroutine_id=50012\n2026-05-06T15:15:01.441Z [frontend] WARN  msg=\"buffer NOT released after client disconnect\" req_id=w3x4 goroutine_id=50034\n2026-05-06T15:16:00.001Z [frontend] DEBUG msg=\"GC stats\" heap_alloc_mb=310 heap_sys_mb=490 gc_pause_ms=9.1\n2026-05-06T15:16:30.113Z [frontend] ERROR msg=\"buffer pool exhaustion approaching\" pool_used_pct=58 total_pool_mb=512\n2026-05-06T15:17:00.441Z [frontend] WARN  msg=\"goroutine count elevated\" goroutines=4812 baseline=1200\n2026-05-06T15:17:10.003Z [frontend] ERROR msg=\"memory pressure high\" rss_mb=2100 limit_mb=8192 used_pct=25\n2026-05-06T15:18:00.002Z [frontend] ERROR msg=\"leaked response buffers accumulating\" leaked_total_mb=88 active_requests=198\n2026-05-06T15:19:00.441Z [frontend] WARN  msg=\"memory growing again post-restart, root cause not resolved\" rss_mb=3200\n2026-05-06T15:22:00.001Z [frontend] FATAL msg=\"OOMKill imminent\" rss_mb=7800 limit_mb=8192\n2026-05-06T15:22:10.113Z [k8s] OOMKilled: container frontend in pod frontend-7d9f4c8b6-xk2qp exceeded memory limit 8Gi",
+  "recent_deploys": [
+    {
+      "sha": "d7df5ef51d88",
+      "timestamp": "2026-04-21T12:05:02Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the bundler-production-dependencies group across 1 directory w",
+      "changed_files": [
+        "frontend/Gemfile",
+        "frontend/Gemfile.lock"
+      ]
+    },
+    {
+      "sha": "38a9074919f6",
+      "timestamp": "2026-04-21T15:32:48Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "frontend/requirements.txt",
+        "src/shippingservice/requirements.txt"
+      ]
+    },
+    {
+      "sha": "de201e875db5",
+      "timestamp": "2026-04-21T19:45:44Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 2 updates (#3284)",
+      "changed_files": [
+        "src/cartservice/src/cartservice.csproj",
+        "src/cartservice/src/Directory.Packages.props"
+      ]
+    },
+    {
+      "sha": "3caa0e226a7f",
+      "timestamp": "2026-04-24T11:49:05Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "frontend/requirements.txt",
+        "src/recommendationservice/requirements.txt"
+      ]
+    },
+    {
+      "sha": "974792d4cdda",
+      "timestamp": "2026-05-05T05:40:26Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with ",
+      "changed_files": [
+        "frontend/mix.exs",
+        "frontend/mix.lock"
+      ]
+    },
+    {
+      "sha": "997d9970c437",
+      "timestamp": "2026-05-05T08:45:37Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the go-production-dependencies group across 2 directories with",
+      "changed_files": [
+        "frontend/go.mod",
+        "frontend/go.sum",
+        "frontend/middleware/buffer.go",
+        "frontend/middleware/buffer_test.go"
+      ]
+    },
+    {
+      "sha": "28ed8395ff76",
+      "timestamp": "2026-05-06T14:37:03Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/recommendationservice/requirements.txt",
+        "src/loadgenerator/requirements.txt"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha 997d9970c437 (2026-05-05T08:45:37Z) updated the Go middleware dependency in frontend/middleware/buffer.go. The updated version introduced a regression in responseBufferMiddleware.ServeHTTP (line 87): after a client disconnects (HTTP 499), the middleware allocates a response buffer from the pool but never checks context cancellation (ctx.Done()) before or after the upstream fetch. The buffer is held in memory for the lifetime of the goroutine, which waits indefinitely for the upstream API response even after the client is gone. Under high traffic with any upstream latency, this leaks thousands of 64KB buffers, exhausting heap memory and causing an OOMKill within ~10 minutes.",
+  "ground_truth_remediation": "1. Immediately restart frontend pods to restore service (buys ~10 minutes before memory re-exhausts). 2. Roll back deploy 997d9970c437 by reverting frontend/go.mod, frontend/go.sum, and frontend/middleware/buffer.go to their state at sha 974792d4cdda, then redeploy. 3. Long-term fix: add a context cancellation check in responseBufferMiddleware.ServeHTTP — after client disconnect is detected via ctx.Done(), call bufferPool.Put(buf) and return immediately without waiting for the upstream response. Add a test case simulating client disconnects under slow upstream conditions.",
+  "red_herring": null
+}

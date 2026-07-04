@@ -1,0 +1,88 @@
+{
+  "id": "syn-043",
+  "subset": "synthetic",
+  "category": "resource_exhaustion",
+  "affected_service": "ad-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: ad-service goroutine count exceeded 50000 (current: 61432). Memory usage at 94% (3.76GB/4GB). Pod OOMKill imminent. SLO breach: ad-service error rate 34% over last 5 minutes.",
+  "log_window": "2026-04-28T02:31:14.002Z INFO  [ad-service] Starting ad-service v2.7.1 (sha=310357e9b0b4)\n2026-04-28T02:31:14.118Z INFO  [ad-service] Listening on :9555, metrics on :9090\n2026-04-28T02:31:14.203Z INFO  [ad-service] HTTP client initialized: timeout=30s, max_idle_conns=100\n2026-04-28T02:31:20.441Z INFO  [ad-service] {\"msg\":\"request received\",\"method\":\"GetAds\",\"context_keys\":[\"books\",\"travel\"],\"trace_id\":\"abc123\"}\n2026-04-28T02:31:20.502Z INFO  [ad-service] {\"msg\":\"fetching ad metadata\",\"upstream\":\"ad-catalog-service\",\"url\":\"http://ad-catalog:8080/v2/ads\"}\n2026-04-28T02:31:20.611Z INFO  [ad-service] {\"msg\":\"ad metadata fetch ok\",\"status\":200,\"latency_ms\":109}\n2026-04-28T02:31:21.003Z DEBUG [ad-service] goroutine_count=42 heap_alloc_mb=48.2\n2026-04-28T02:32:05.119Z INFO  [ad-service] {\"msg\":\"request received\",\"method\":\"GetAds\",\"context_keys\":[\"electronics\"],\"trace_id\":\"def456\"}\n2026-04-28T02:32:05.204Z INFO  [ad-service] {\"msg\":\"fetching ad metadata\",\"upstream\":\"ad-catalog-service\",\"url\":\"http://ad-catalog:8080/v2/ads\"}\n2026-04-28T02:32:05.318Z INFO  [ad-service] {\"msg\":\"ad metadata fetch ok\",\"status\":200,\"latency_ms\":114}\n2026-04-28T02:32:06.001Z DEBUG [ad-service] goroutine_count=58 heap_alloc_mb=51.7\n2026-04-28T02:33:01.004Z DEBUG [ad-service] goroutine_count=134 heap_alloc_mb=67.3\n2026-04-28T02:33:01.120Z WARN  [ad-service] goroutine count growing unexpectedly: current=134 baseline=42\n2026-04-28T02:34:00.002Z DEBUG [ad-service] goroutine_count=412 heap_alloc_mb=134.8\n2026-04-28T02:34:00.118Z WARN  [ad-service] goroutine count growing unexpectedly: current=412 baseline=42\n2026-04-28T02:34:12.331Z INFO  [ad-catalog-service] level=info msg=\"GET /v2/ads\" status=200 duration=98ms client=ad-service\n2026-04-28T02:34:12.332Z INFO  [ad-catalog-service] level=info msg=\"GET /v2/ads\" status=200 duration=102ms client=ad-service\n2026-04-28T02:34:12.334Z INFO  [ad-catalog-service] level=info msg=\"GET /v2/ads\" status=200 duration=97ms client=ad-service\n2026-04-28T02:35:00.003Z DEBUG [ad-service] goroutine_count=1847 heap_alloc_mb=412.1\n2026-04-28T02:35:00.120Z WARN  [ad-service] heap allocation rate high: 412MB used, GC running frequently\n2026-04-28T02:35:00.240Z WARN  [ad-service] GC pause duration=48ms (threshold=20ms)\n2026-04-28T02:35:01.003Z WARN  [ad-service] goroutine leak suspected: goroutine_count=1847, most goroutines blocked on net/http.(*persistConn).readLoop\n2026-04-28T02:35:15.441Z INFO  [ad-catalog-service] level=info msg=\"GET /v2/ads\" status=200 duration=104ms client=ad-service\n2026-04-28T02:35:31.002Z INFO  [otel-collector] export_success service=ad-service spans=142 metrics=38\n2026-04-28T02:36:00.004Z DEBUG [ad-service] goroutine_count=5203 heap_alloc_mb=891.4\n2026-04-28T02:36:00.225Z WARN  [ad-service] GC pause duration=112ms (threshold=20ms); application throughput degrading\n2026-04-28T02:36:01.003Z ERROR [ad-service] goroutine stack sample:\n  net/http.(*persistConn).readLoop(0xc004a12000)\n    /usr/local/go/src/net/http/transport.go:2205\n  created by net/http.(*Transport).dialConnFor\n    /usr/local/go/src/net/http/transport.go:1750\n2026-04-28T02:36:01.110Z ERROR [ad-service] goroutine stack sample:\n  net/http.(*persistConn).writeLoop(0xc004a12100)\n    /usr/local/go/src/net/http/transport.go:2480\n  created by net/http.(*Transport).dialConnFor\n    /usr/local/go/src/net/http/transport.go:1750\n2026-04-28T02:36:02.002Z WARN  [ad-service] open file descriptors: current=8921 limit=10000 (89% of limit)\n2026-04-28T02:37:00.005Z DEBUG [ad-service] goroutine_count=12841 heap_alloc_mb=1644.2\n2026-04-28T02:37:00.338Z ERROR [ad-service] GC pause duration=289ms; request latency severely impacted\n2026-04-28T02:37:01.004Z ERROR [ad-service] open file descriptors: current=9741 limit=10000 (97% of limit)\n2026-04-28T02:37:01.220Z ERROR [ad-service] {\"msg\":\"request failed\",\"method\":\"GetAds\",\"error\":\"context deadline exceeded\",\"trace_id\":\"ghi789\"}\n2026-04-28T02:37:01.340Z ERROR [ad-service] {\"msg\":\"request failed\",\"method\":\"GetAds\",\"error\":\"context deadline exceeded\",\"trace_id\":\"jkl012\"}\n2026-04-28T02:37:15.002Z INFO  [ad-catalog-service] level=warn msg=\"connection pool pressure\" active_conns=987 idle_conns=0\n2026-04-28T02:37:20.118Z WARN  [otel-collector] export_slow service=ad-service latency_ms=1840 (threshold=500ms)\n2026-04-28T02:38:00.006Z DEBUG [ad-service] goroutine_count=24619 heap_alloc_mb=2481.7\n2026-04-28T02:38:00.444Z ERROR [ad-service] memory pressure critical: heap_alloc=2481MB, next_gc=2600MB\n2026-04-28T02:38:01.003Z ERROR [ad-service] 14 goroutines blocked waiting for HTTP response body drain\n2026-04-28T02:38:01.112Z ERROR [ad-service] suspected cause: resp.Body.Close() not called after HTTP client requests in fetchAdMetadata()\n2026-04-28T02:38:02.003Z ERROR [ad-service] {\"msg\":\"request failed\",\"method\":\"GetAds\",\"error\":\"dial tcp: lookup ad-catalog: too many open files\",\"trace_id\":\"mno345\"}\n2026-04-28T02:38:02.224Z ERROR [ad-service] {\"msg\":\"request failed\",\"method\":\"GetAds\",\"error\":\"dial tcp: lookup ad-catalog: too many open files\",\"trace_id\":\"pqr678\"}\n2026-04-28T02:38:02.340Z ERROR [ad-service] {\"msg\":\"request failed\",\"method\":\"GetAds\",\"error\":\"dial tcp: lookup ad-catalog: too many open files\",\"trace_id\":\"stu901\"}\n2026-04-28T02:38:30.001Z INFO  [ad-catalog-service] level=error msg=\"upstream ad-service flooding connection pool\" src_ip=10.0.1.42\n2026-04-28T02:39:00.007Z DEBUG [ad-service] goroutine_count=38204 heap_alloc_mb=3102.9\n2026-04-28T02:39:00.551Z FATAL [ad-service] GC overhead limit exceeded: GC using >95% of CPU\n2026-04-28T02:39:01.003Z ERROR [ad-service] dropping incoming requests: goroutine pool saturated\n2026-04-28T02:39:01.118Z ERROR [ad-service] {\"msg\":\"request failed\",\"method\":\"GetAds\",\"error\":\"server overloaded, retry later\",\"trace_id\":\"vwx234\"}\n2026-04-28T02:39:01.220Z ERROR [ad-service] {\"msg\":\"request failed\",\"method\":\"GetAds\",\"error\":\"server overloaded, retry later\",\"trace_id\":\"yza567\"}\n2026-04-28T02:39:15.004Z ERROR [otel-collector] export_failed service=ad-service error=\"connection refused\"\n2026-04-28T02:40:00.008Z DEBUG [ad-service] goroutine_count=61432 heap_alloc_mb=3762.4\n2026-04-28T02:40:00.881Z FATAL [ad-service] out of memory: runtime: out of memory allocating 262144-byte block\n2026-04-28T02:40:00.882Z FATAL [ad-service] runtime stack:\n  runtime.throw2({0x12a3b40?, 0x0?})\n    /usr/local/go/src/runtime/panic.go:1023\n  runtime.(*mheap).alloc.func1()\n    /usr/local/go/src/runtime/mheap.go:910\n2026-04-28T02:40:00.990Z FATAL [ad-service] goroutine 1 [running]:\n2026-04-28T02:40:01.001Z FATAL [ad-service] process killed by OOM killer: RSS=3921MB limit=4096MB\n2026-04-28T02:40:05.002Z INFO  [ad-service] Starting ad-service v2.7.1 (sha=310357e9b0b4) [RESTART]\n2026-04-28T02:40:05.120Z WARN  [ad-service] goroutine_count=44 heap_alloc_mb=49.1 (post-restart baseline)\n2026-04-28T02:40:10.334Z WARN  [ad-service] goroutine count growing unexpectedly: current=198 baseline=44\n2026-04-28T02:40:20.551Z ERROR [ad-service] goroutine leak pattern detected again: readLoop goroutines accumulating\n2026-04-28T02:40:20.660Z ERROR [ad-service] root symptom: HTTP responses from fetchAdMetadata() not being closed; transport connections held open indefinitely",
+  "recent_deploys": [
+    {
+      "sha": "0982a0268aec",
+      "timestamp": "2026-04-16T14:12:23Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump eslint-config-next (#3270)",
+      "changed_files": [
+        "package.json",
+        "package-lock.json",
+        ".eslintrc.js"
+      ]
+    },
+    {
+      "sha": "c789fc89a688",
+      "timestamp": "2026-04-21T11:57:50Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "src/ad-service/package.json",
+        "src/ad-service/package-lock.json"
+      ]
+    },
+    {
+      "sha": "d7df5ef51d88",
+      "timestamp": "2026-04-21T12:05:02Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the bundler-production-dependencies group across 1 directory w",
+      "changed_files": [
+        "src/ad-service/go.mod",
+        "src/ad-service/go.sum",
+        "src/ad-service/vendor/modules.txt"
+      ]
+    },
+    {
+      "sha": "53f46ae9eb45",
+      "timestamp": "2026-04-22T13:56:23Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 6 updates (#3295)",
+      "changed_files": [
+        "src/ad-service/AdService.csproj",
+        "src/ad-service/packages.lock.json"
+      ]
+    },
+    {
+      "sha": "1d475a67d631",
+      "timestamp": "2026-04-24T06:49:14Z",
+      "author": "Juliano Costa",
+      "message": "chore: add retry configuration parameters to lychee (#3306)",
+      "changed_files": [
+        ".lychee.toml",
+        ".github/workflows/links.yml"
+      ]
+    },
+    {
+      "sha": "1c521d91f664",
+      "timestamp": "2026-04-25T09:36:06Z",
+      "author": "Patrice Chalin",
+      "message": "ci: enable persisted lychee caching in checks workflow (#3314)",
+      "changed_files": [
+        ".github/workflows/checks.yml",
+        ".lychee.toml"
+      ]
+    },
+    {
+      "sha": "310357e9b0b4",
+      "timestamp": "2026-04-28T02:25:29Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the cargo-production-dependencies group across 1 directory wit",
+      "changed_files": [
+        "src/ad-service/internal/client/ad_catalog_client.go",
+        "src/ad-service/internal/ads/fetcher.go",
+        "src/ad-service/go.mod",
+        "src/ad-service/go.sum"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=310357e9b0b4 introduced a refactor of ad_catalog_client.go and fetcher.go in which the fetchAdMetadata() function performs HTTP GET requests via http.DefaultClient but omits the mandatory resp.Body.Close() call after reading the response. In Go, failing to close the HTTP response body prevents the underlying TCP connection from being returned to the transport's connection pool, causing net/http.(*persistConn).readLoop and writeLoop goroutines to remain blocked indefinitely. Under normal request load this causes goroutines and file descriptors to accumulate monotonically, leading to heap exhaustion and eventual OOMKill within ~9 minutes of service start.",
+  "ground_truth_remediation": "1. Immediately restart the ad-service pod to restore service (buys ~9 minutes of operation). 2. Roll back sha=310357e9b0b4 by reverting src/ad-service/internal/client/ad_catalog_client.go and src/ad-service/internal/ads/fetcher.go to their pre-deploy state, ensuring every HTTP response body is closed with `defer resp.Body.Close()` immediately after the http.Get/Do call and before processing the body. 3. Add a static analysis lint rule (e.g., timakin/bodyclose linter) to the CI pipeline to catch missing resp.Body.Close() calls. 4. Deploy the fix and confirm goroutine count stabilizes at baseline (<100) after 10+ minutes of traffic.",
+  "red_herring": null
+}

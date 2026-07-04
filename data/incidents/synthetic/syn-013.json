@@ -1,0 +1,89 @@
+{
+  "id": "syn-013",
+  "subset": "synthetic",
+  "category": "deploy_regression",
+  "affected_service": "frontend",
+  "severity": "high",
+  "alert_text": "ALERT: frontend LCP p75 > 8000ms on mobile clients for 15+ minutes. Conversion rate dropped 34% since 10:59 UTC. Web Vitals SLO breach imminent.",
+  "log_window": "2026-05-13T11:00:02.113Z [frontend] INFO  Server started on port 8080, build=47b7d39a4628\n2026-05-13T11:00:02.891Z [frontend] INFO  Webpack bundle served: main.js size=4.82MB, vendor.js size=3.17MB\n2026-05-13T11:00:03.204Z [frontend] DEBUG Static asset cache warmed: 47 files\n2026-05-13T11:00:05.447Z [cdn-edge] INFO  request_id=req-00001 method=GET path=/ ua=Mobile-Safari/15 status=200 ttfb_ms=210\n2026-05-13T11:00:05.901Z [cdn-edge] INFO  request_id=req-00002 method=GET path=/static/main.js ua=Mobile-Safari/15 status=200 content_length=4823042\n2026-05-13T11:00:06.312Z [cdn-edge] WARN  request_id=req-00002 transfer_time_ms=3800 threshold_ms=2000 asset=main.js client_type=mobile\n2026-05-13T11:00:08.774Z [rum-collector] INFO  session=sess-8821 lcp_ms=6120 device=mobile page=/ build=47b7d39a4628\n2026-05-13T11:00:09.001Z [rum-collector] WARN  session=sess-8821 lcp_ms=6120 exceeds_threshold=true threshold_ms=2500\n2026-05-13T11:00:11.233Z [cdn-edge] INFO  request_id=req-00005 method=GET path=/static/main.js ua=Chrome-Mobile/121 status=200 content_length=4823042\n2026-05-13T11:00:11.988Z [cdn-edge] WARN  request_id=req-00005 transfer_time_ms=4102 threshold_ms=2000 asset=main.js client_type=mobile\n2026-05-13T11:01:15.442Z [rum-collector] INFO  session=sess-8834 lcp_ms=7340 device=mobile page=/ build=47b7d39a4628\n2026-05-13T11:01:15.780Z [rum-collector] WARN  session=sess-8834 lcp_ms=7340 exceeds_threshold=true threshold_ms=2500\n2026-05-13T11:01:16.002Z [rum-collector] INFO  session=sess-8835 lcp_ms=890 device=desktop page=/ build=47b7d39a4628\n2026-05-13T11:01:22.117Z [frontend] DEBUG bundle_report: chunk=main.js raw_bytes=4823042 gzip_bytes=1241038 modules=2847\n2026-05-13T11:01:22.119Z [frontend] WARN  bundle_report: main.js exceeds size budget of 1500000 bytes (raw). Current: 4823042 bytes. Increase of ~3.1MB vs last build.\n2026-05-13T11:01:22.120Z [frontend] WARN  bundle_report: Possible cause — large unoptimized dependency detected in chunk main.js\n2026-05-13T11:01:22.121Z [frontend] DEBUG bundle_report: top modules by size: moment.js=512KB, lodash=430KB, @tremor/react=380KB, recharts=290KB, @mui/material=270KB\n2026-05-13T11:01:22.122Z [frontend] WARN  bundle_report: moment.js included without tree-shaking. Consider dynamic import or replacement.\n2026-05-13T11:02:01.883Z [rum-collector] INFO  session=sess-8849 lcp_ms=8910 device=mobile page=/ build=47b7d39a4628\n2026-05-13T11:02:01.991Z [rum-collector] ERROR session=sess-8849 lcp_ms=8910 LCP_TIMEOUT device=mobile threshold_ms=2500 delta_pct=256\n2026-05-13T11:02:02.340Z [cdn-edge] INFO  request_id=req-00041 method=GET path=/static/main.js ua=Mobile-Chrome/120 status=200 content_length=4823042\n2026-05-13T11:02:02.991Z [cdn-edge] WARN  request_id=req-00041 transfer_time_ms=5210 threshold_ms=2000 asset=main.js client_type=mobile slow_network=3G\n2026-05-13T11:02:03.100Z [frontend] INFO  GET /health status=200 latency_ms=3\n2026-05-13T11:02:45.002Z [rum-collector] INFO  session=sess-8855 lcp_ms=9120 device=mobile page=/ build=47b7d39a4628\n2026-05-13T11:02:45.110Z [rum-collector] ERROR session=sess-8855 lcp_ms=9120 LCP_TIMEOUT device=mobile threshold_ms=2500\n2026-05-13T11:02:45.221Z [rum-collector] INFO  mobile_lcp_p75_ms=8340 mobile_lcp_p95_ms=11200 desktop_lcp_p75_ms=920 desktop_lcp_p95_ms=1580 window=2m\n2026-05-13T11:03:10.778Z [alerting] WARN  SLO:frontend-lcp-mobile breach_duration_min=3 current_p75_ms=8340 budget_p75_ms=2500\n2026-05-13T11:03:11.002Z [frontend] DEBUG asset_pipeline: compression=gzip level=6 main.js in_bytes=4823042 out_bytes=1241038 ratio=0.257\n2026-05-13T11:03:22.440Z [cdn-edge] WARN  cache_hit_ratio=0.12 asset=main.js reason=new_build_hash cache_age_seconds=142\n2026-05-13T11:03:22.441Z [cdn-edge] INFO  purging stale cache for build=47b7d39a4628 assets=52\n2026-05-13T11:03:30.009Z [rum-collector] INFO  session=sess-8871 lcp_ms=8750 device=mobile page=/products build=47b7d39a4628\n2026-05-13T11:03:30.110Z [rum-collector] ERROR session=sess-8871 lcp_ms=8750 LCP_TIMEOUT device=mobile threshold_ms=2500\n2026-05-13T11:03:31.000Z [rum-collector] INFO  conversion_rate_delta=-0.34 window=15m baseline_build=52a8a76cf862 current_build=47b7d39a4628\n2026-05-13T11:03:45.882Z [frontend] WARN  resource_hint_missing: main.js not preloaded via <link rel=preload>, consider adding to document head\n2026-05-13T11:04:00.112Z [rum-collector] INFO  mobile_lcp_p75_ms=8820 desktop_lcp_p75_ms=910 window=4m build=47b7d39a4628\n2026-05-13T11:04:00.113Z [alerting] ERROR SLO:frontend-lcp-mobile p75=8820ms CRITICAL breach. Paging on-call. Service=frontend build=47b7d39a4628\n2026-05-13T11:04:01.500Z [frontend] INFO  GET /health status=200 latency_ms=4\n2026-05-13T11:04:10.334Z [cdn-edge] INFO  request_id=req-00102 method=GET path=/static/main.js ua=Mobile-Safari/16 status=200 content_length=4823042\n2026-05-13T11:04:10.991Z [cdn-edge] WARN  request_id=req-00102 transfer_time_ms=6001 threshold_ms=2000 asset=main.js client_type=mobile slow_network=4G\n2026-05-13T11:04:15.220Z [rum-collector] INFO  session=sess-8890 lcp_ms=9480 device=mobile page=/ build=47b7d39a4628\n2026-05-13T11:04:15.330Z [rum-collector] ERROR session=sess-8890 lcp_ms=9480 LCP_TIMEOUT device=mobile threshold_ms=2500\n2026-05-13T11:04:30.001Z [frontend] WARN  npm_audit: 0 vulnerabilities detected in new dependencies\n2026-05-13T11:04:45.112Z [rum-collector] INFO  session=sess-8901 lcp_ms=880 device=desktop page=/ build=47b7d39a4628\n2026-05-13T11:04:45.113Z [rum-collector] DEBUG desktop_lcp_healthy: p75=910ms well_within_slo=true\n2026-05-13T11:05:02.007Z [frontend] DEBUG webpack_stats: build_time_ms=41200 build=47b7d39a4628 chunks=18 total_assets_bytes=8120480\n2026-05-13T11:05:02.010Z [frontend] WARN  webpack_stats: total_assets_bytes=8120480 previous_build_bytes=4998320 diff_bytes=+3122160 diff_pct=+62.5\n2026-05-13T11:05:02.011Z [frontend] ERROR webpack_stats: Bundle size budget exceeded! budget_bytes=5000000 actual_bytes=8120480. Build 47b7d39a4628 introduced by chore(deps): bump npm-production-dependencies\n2026-05-13T11:05:02.012Z [frontend] ERROR webpack_stats: Largest new modules: moment/moment.js (+512KB), recharts/index.js (+290KB), @tremor/react/dist/esm/index.js (+380KB)\n2026-05-13T11:05:02.013Z [frontend] WARN  webpack_stats: No bundle size gate enforced at CI — budget check was advisory only\n2026-05-13T11:05:15.441Z [rum-collector] INFO  mobile_lcp_p75_ms=8960 desktop_lcp_p75_ms=905 window=5m build=47b7d39a4628\n2026-05-13T11:05:16.002Z [alerting] ERROR SLO:frontend-lcp-mobile p75=8960ms sustained 5m. Escalating severity=HIGH.\n2026-05-13T11:06:01.338Z [cdn-edge] WARN  p95_transfer_time_ms=6800 asset=main.js client_type=mobile last_5m_requests=148\n2026-05-13T11:06:01.340Z [cdn-edge] INFO  desktop p95_transfer_time_ms=620 asset=main.js last_5m_requests=312\n2026-05-13T11:06:15.002Z [rum-collector] ERROR mobile_bounce_rate_delta=+0.28 window=6m baseline_build=52a8a76cf862 current_build=47b7d39a4628 cause=lcp_timeout\n2026-05-13T11:06:30.118Z [frontend] INFO  GET /health status=200 latency_ms=3\n2026-05-13T11:07:00.441Z [rum-collector] INFO  mobile_lcp_p75_ms=9010 desktop_lcp_p75_ms=911 window=7m build=47b7d39a4628\n2026-05-13T11:07:00.442Z [rum-collector] ERROR LCP degradation confirmed on mobile only. Desktop unaffected. Symptom consistent with large blocking JS asset on slow connections.\n2026-05-13T11:07:10.009Z [frontend] DEBUG serve_static: path=/static/main.js etag=47b7d39-main cache_control=max-age=31536000\n2026-05-13T11:07:22.117Z [cdn-edge] WARN  origin_fetch_rate=0.88 asset=main.js reason=low_cache_hit new_build_hash expected_to_stabilize_in_min=20\n2026-05-13T11:08:00.003Z [alerting] ERROR SLO:frontend-conversion-rate conversion_rate_delta=-0.34 threshold=-0.10 duration_min=8 build=47b7d39a4628\n2026-05-13T11:08:15.221Z [rum-collector] INFO  mobile_lcp_p75_ms=9100 window=8m. No improvement observed since deploy at 10:59:26Z.\n2026-05-13T11:08:16.002Z [rum-collector] WARN  Regression started at 2026-05-13T10:59:26Z correlating with deploy sha=47b7d39a4628\n2026-05-13T11:08:30.009Z [frontend] INFO  GET /health status=200 latency_ms=3\n2026-05-13T11:09:01.112Z [frontend] WARN  no_rollback_triggered: auto-rollback disabled for frontend service. Manual intervention required.\n2026-05-13T11:09:15.441Z [rum-collector] ERROR session=sess-9011 lcp_ms=10200 device=mobile page=/ build=47b7d39a4628 LCP_TIMEOUT\n2026-05-13T11:09:30.001Z [cdn-edge] ERROR high_latency_asset_count=52 asset_type=js client_type=mobile p99_transfer_ms=9800\n2026-05-13T11:10:00.002Z [alerting] FATAL SLO:frontend-lcp-mobile p75=9100ms > 10min sustained. Conversion SLO also breached. Incident declared. on-call notified.\n2026-05-13T11:10:01.338Z [rum-collector] INFO  mobile_lcp_p75_ms=9100 desktop_lcp_p75_ms=908 window=10m build=47b7d39a4628\n2026-05-13T11:10:02.001Z [rum-collector] DEBUG previous_build=52a8a76cf862 mobile_lcp_p75_ms=1820 desktop_lcp_p75_ms=890 confirming_regression=true",
+  "recent_deploys": [
+    {
+      "sha": "75dc5aa9b428",
+      "timestamp": "2026-04-23T15:05:28Z",
+      "author": "Ayooluwa Isaiah",
+      "message": "Fix charge span leak in the payment service (#3276)",
+      "changed_files": [
+        "src/paymentservice/charge.js",
+        "src/paymentservice/tracer.js",
+        "test/paymentservice/charge.test.js"
+      ]
+    },
+    {
+      "sha": "81528af3e3be",
+      "timestamp": "2026-04-28T14:09:01Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump idna_adapter (#3320)",
+      "changed_files": [
+        "src/frontend/package-lock.json",
+        "requirements.txt"
+      ]
+    },
+    {
+      "sha": "dc4785b348ba",
+      "timestamp": "2026-04-30T02:23:16Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump swoosh (#3323)",
+      "changed_files": [
+        "src/emailservice/mix.lock",
+        "src/emailservice/mix.exs"
+      ]
+    },
+    {
+      "sha": "f266a31c651b",
+      "timestamp": "2026-04-30T02:38:44Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 4 directories wit",
+      "changed_files": [
+        "src/recommendationservice/requirements.txt",
+        "src/productcatalogservice/requirements.txt",
+        "src/checkoutservice/requirements.txt",
+        "src/shippingservice/requirements.txt"
+      ]
+    },
+    {
+      "sha": "83dce9a815b2",
+      "timestamp": "2026-05-05T09:51:41Z",
+      "author": "Juliano Costa",
+      "message": "[chore] Promote Dónal to approver (#3336)",
+      "changed_files": [
+        "CODEOWNERS",
+        "docs/approvers.md"
+      ]
+    },
+    {
+      "sha": "52a8a76cf862",
+      "timestamp": "2026-05-07T07:06:44Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with ",
+      "changed_files": [
+        "src/emailservice/mix.lock",
+        "src/emailservice/mix.exs"
+      ]
+    },
+    {
+      "sha": "47b7d39a4628",
+      "timestamp": "2026-05-13T10:59:26Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json",
+        "src/frontend/webpack.config.js",
+        "src/frontend/node_modules/.package-lock.json"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=47b7d39a4628 (2026-05-13T10:59:26Z) bumped npm production dependencies in the frontend service, which introduced large unoptimized transitive dependencies — specifically moment.js (~512KB), @tremor/react (~380KB), and recharts (~290KB) — causing the webpack-compiled main.js bundle to grow from ~1.6MB to ~4.8MB (raw). On mobile connections (3G/4G), this ~3.2MB increase in blocking JS causes render-blocking download times of 4–6 seconds, pushing LCP p75 from ~1820ms to ~9100ms, breaching the 2500ms SLO. Desktop clients on faster connections are unaffected. The CI bundle size gate was advisory-only and did not block the deploy.",
+  "ground_truth_remediation": "Immediately roll back the frontend service to the previous build sha=52a8a76cf862 to restore the smaller bundle and bring mobile LCP p75 back within SLO (<2500ms). After rollback, re-introduce the npm dependency bumps selectively with tree-shaking enforced for moment.js (replace with date-fns or use moment/min/moment.min.js), add hard bundle size budget enforcement in webpack.config.js and CI (fail build if main.js exceeds 1.5MB), and enable code-splitting for @tremor/react and recharts via dynamic import() before re-deploying.",
+  "red_herring": null
+}

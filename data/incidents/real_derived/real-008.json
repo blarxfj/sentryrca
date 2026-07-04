@@ -1,0 +1,89 @@
+{
+  "id": "real-008",
+  "subset": "real_derived",
+  "category": "config_error",
+  "affected_service": "frontend",
+  "severity": "critical",
+  "alert_text": "CRITICAL: Global service unavailability detected. 100% of health checks failing across all regions. frontend, checkout-service, payment-service, ad-service all returning connection timeouts. Internal tooling unreachable. BGP route withdrawal suspected on core backbone.",
+  "log_window": "2024-03-12T09:58:01.002Z [router-config-mgmt] INFO  Initiating scheduled backbone router configuration push (job_id=cfg-push-20240312-0001)\n2024-03-12T09:58:03.114Z [router-config-mgmt] INFO  Pushing config to edge-router-01.backbone (region=us-east)\n2024-03-12T09:58:03.891Z [router-config-mgmt] INFO  Pushing config to edge-router-02.backbone (region=us-west)\n2024-03-12T09:58:04.220Z [router-config-mgmt] INFO  Pushing config to edge-router-03.backbone (region=eu-west)\n2024-03-12T09:58:04.998Z [router-config-mgmt] INFO  Pushing config to edge-router-04.backbone (region=ap-southeast)\n2024-03-12T09:58:05.441Z [router-config-mgmt] INFO  Config push complete for all backbone routers (job_id=cfg-push-20240312-0001)\n2024-03-12T09:58:06.003Z [bgp-monitor] WARN  Unexpected BGP route withdrawal detected on edge-router-01.backbone (prefixes=203.0.113.0/24,198.51.100.0/24)\n2024-03-12T09:58:06.215Z [bgp-monitor] WARN  Unexpected BGP route withdrawal detected on edge-router-02.backbone (prefixes=203.0.113.0/24,198.51.100.0/24)\n2024-03-12T09:58:06.440Z [bgp-monitor] WARN  BGP session flapping on edge-router-03.backbone (peer=upstream-transit-01)\n2024-03-12T09:58:06.882Z [bgp-monitor] ERROR BGP route withdrawal cascade - ALL backbone prefixes withdrawn from global routing table\n2024-03-12T09:58:07.001Z [dns-resolver] ERROR DNS resolution failure: nameserver unreachable for internal.corp (timeout after 5000ms)\n2024-03-12T09:58:07.112Z [frontend] ERROR  Upstream connection failed: dial tcp 10.0.1.45:8080: connect: no route to host\n2024-03-12T09:58:07.334Z [frontend] ERROR  Upstream connection failed: dial tcp 10.0.1.46:8080: connect: no route to host\n2024-03-12T09:58:07.556Z [checkout-service] ERROR  gRPC dial failed: rpc error: code = Unavailable desc = connection refused (target=payment-service:50051)\n2024-03-12T09:58:07.778Z [payment-service] ERROR  Cannot reach downstream: dial tcp 10.0.2.20:5432: connect: network unreachable\n2024-03-12T09:58:07.891Z [ad-service] ERROR  AdRequest RPC failed: context deadline exceeded (timeout=2s)\n2024-03-12T09:58:08.002Z [frontend] ERROR  Health check endpoint /healthz returned no response (attempt 1/3)\n2024-03-12T09:58:08.445Z [load-balancer] ERROR  Backend pool frontend-pool health: 0/24 nodes passing (was 24/24 at 09:57:50)\n2024-03-12T09:58:08.667Z [load-balancer] ERROR  Backend pool checkout-pool health: 0/12 nodes passing\n2024-03-12T09:58:08.889Z [load-balancer] ERROR  Backend pool payment-pool health: 0/8 nodes passing\n2024-03-12T09:58:09.001Z [frontend] ERROR  Health check endpoint /healthz returned no response (attempt 2/3)\n2024-03-12T09:58:09.223Z [frontend] ERROR  Health check endpoint /healthz returned no response (attempt 3/3) - marking unhealthy\n2024-03-12T09:58:09.445Z [redis] ERROR  Connection pool exhausted: all 128 connections timed out waiting for backbone reachability\n2024-03-12T09:58:09.667Z [cart-service] ERROR  Redis PING failed: dial tcp 10.0.3.10:6379: connect: connection timed out\n2024-03-12T09:58:09.889Z [recommendation-service] ERROR  Cannot connect to model-serving backend: dial tcp 10.0.4.55:8500: no route to host\n2024-03-12T09:58:10.112Z [kafka] ERROR  Broker unreachable: kafka-broker-01:9092 (connection timeout 5000ms)\n2024-03-12T09:58:10.334Z [kafka] ERROR  Broker unreachable: kafka-broker-02:9092 (connection timeout 5000ms)\n2024-03-12T09:58:10.556Z [email-service] ERROR  SMTP relay unreachable: smtp-internal.corp:587 connection refused\n2024-03-12T09:58:10.778Z [currency-service] ERROR  Exchange rate fetch failed: HTTP GET https://rates-api.internal/v1/latest - dial tcp: lookup rates-api.internal: no such host\n2024-03-12T09:58:11.001Z [postgres] ERROR  pg: connection to server at 10.0.5.10:5432 failed: connection refused - Is the server running?\n2024-03-12T09:58:11.223Z [bgp-monitor] ERROR  ALL 4 backbone routers have withdrawn ALL advertised prefixes - network is fully partitioned\n2024-03-12T09:58:11.445Z [alertmanager] CRITICAL FIRING: GlobalOutage - 100% of service health checks failing across us-east, us-west, eu-west, ap-southeast\n2024-03-12T09:58:11.667Z [router-config-mgmt] ERROR  Post-push validation FAILED: backbone routers report 0 active BGP sessions (expected >=48)\n2024-03-12T09:58:11.889Z [router-config-mgmt] ERROR  Config validation audit: new ACL ruleset in cfg-push-20240312-0001 contains deny-all catch-all applied BEFORE permit rules - rule ordering error\n2024-03-12T09:58:12.112Z [router-config-mgmt] ERROR  BGP peer authentication keys in pushed config do NOT match upstream transit provider keys - all BGP sessions rejected by peers\n2024-03-12T09:58:12.334Z [on-call-pager] CRITICAL Page sent to NOC team: backbone config push caused full BGP withdrawal (job_id=cfg-push-20240312-0001)\n2024-03-12T09:58:15.001Z [frontend] ERROR  Request failed: GET / HTTP/1.1 - 503 Service Unavailable (upstream pool empty)\n2024-03-12T09:58:15.223Z [frontend] ERROR  Request failed: POST /cart HTTP/1.1 - 503 Service Unavailable\n2024-03-12T09:58:15.445Z [checkout-service] ERROR  ProcessOrder failed: upstream payment-service unreachable after 3 retries\n2024-03-12T09:58:20.001Z [router-config-mgmt] INFO  NOC engineer jsmith initiated config rollback (job_id=cfg-rollback-20240312-0001, target=cfg-push-20240312-0000)\n2024-03-12T09:58:22.334Z [router-config-mgmt] INFO  Rollback push complete to edge-router-01.backbone\n2024-03-12T09:58:23.112Z [router-config-mgmt] INFO  Rollback push complete to edge-router-02.backbone\n2024-03-12T09:58:24.001Z [router-config-mgmt] INFO  Rollback push complete to edge-router-03.backbone\n2024-03-12T09:58:24.779Z [router-config-mgmt] INFO  Rollback push complete to edge-router-04.backbone\n2024-03-12T09:58:25.001Z [bgp-monitor] INFO  BGP session re-established on edge-router-01.backbone (peer=upstream-transit-01, prefixes=203.0.113.0/24 re-advertised)\n2024-03-12T09:58:25.334Z [bgp-monitor] INFO  BGP session re-established on edge-router-02.backbone\n2024-03-12T09:58:25.667Z [bgp-monitor] INFO  BGP session re-established on edge-router-03.backbone\n2024-03-12T09:58:26.001Z [bgp-monitor] INFO  BGP session re-established on edge-router-04.backbone - routing table converging\n2024-03-12T09:58:30.112Z [dns-resolver] INFO  DNS resolution restored for internal.corp\n2024-03-12T09:58:30.445Z [load-balancer] INFO  Backend pool frontend-pool health recovering: 18/24 nodes passing\n2024-03-12T09:58:31.001Z [redis] INFO  Connection pool recovered: 128/128 connections available\n2024-03-12T09:58:31.334Z [cart-service] INFO  Redis PING OK (latency=2ms)\n2024-03-12T09:58:31.667Z [kafka] INFO  Broker kafka-broker-01:9092 reachable - consumer group lag recovering\n2024-03-12T09:58:32.001Z [frontend] INFO  Health check /healthz OK - marking healthy\n2024-03-12T09:58:32.334Z [checkout-service] INFO  payment-service connection restored\n2024-03-12T09:58:32.667Z [payment-service] INFO  postgres connection pool restored (active=10/20)\n2024-03-12T09:58:33.001Z [ad-service] INFO  AdRequest RPC succeeded (latency=45ms)\n2024-03-12T09:58:33.334Z [load-balancer] INFO  Backend pool frontend-pool health: 24/24 nodes passing - fully recovered\n2024-03-12T09:58:33.667Z [alertmanager] INFO  RESOLVED: GlobalOutage - all service health checks passing (outage_duration=26s)\n2024-03-12T09:58:34.001Z [router-config-mgmt] INFO  Config rollback job_id=cfg-rollback-20240312-0001 verified successful - BGP sessions stable, all prefixes active\n2024-03-12T09:58:35.112Z [router-config-mgmt] WARN  Root cause identified: cfg-push-20240312-0001 contained incorrect BGP peer MD5 authentication keys and malformed ACL rule ordering (deny-all before permit) in backbone-router-acl.conf and bgp-peers.conf\n",
+  "recent_deploys": [
+    {
+      "sha": "a1c3e5f7b9d2",
+      "timestamp": "2024-03-10T14:22:00Z",
+      "author": "alice.chen",
+      "message": "Update frontend TLS certificate rotation cron schedule",
+      "changed_files": [
+        "infra/tls/cert-rotation.yaml",
+        "charts/frontend/values.yaml"
+      ]
+    },
+    {
+      "sha": "3b7d9e1f4a02",
+      "timestamp": "2024-03-10T18:45:00Z",
+      "author": "bob.martinez",
+      "message": "Bump checkout-service grpc retry timeout to 5s",
+      "changed_files": [
+        "services/checkout-service/config/grpc.yaml",
+        "services/checkout-service/main.go"
+      ]
+    },
+    {
+      "sha": "7f2a0c4e8d16",
+      "timestamp": "2024-03-11T09:10:00Z",
+      "author": "carol.nguyen",
+      "message": "Add new BGP peer MD5 key rotation for upstream transit providers",
+      "changed_files": [
+        "network/backbone/bgp-peers.conf",
+        "network/backbone/bgp-keys.vault",
+        "network/backbone/README.md"
+      ]
+    },
+    {
+      "sha": "d4e6a8b0c312",
+      "timestamp": "2024-03-11T15:30:00Z",
+      "author": "dave.okonkwo",
+      "message": "Refactor backbone router ACL ruleset to support new IP ranges",
+      "changed_files": [
+        "network/backbone/backbone-router-acl.conf",
+        "network/backbone/acl-policy-v2.conf",
+        "network/backbone/tests/acl_test.go"
+      ]
+    },
+    {
+      "sha": "e9f1b3d5a724",
+      "timestamp": "2024-03-11T19:55:00Z",
+      "author": "eve.patel",
+      "message": "Merge BGP key rotation and ACL refactor into unified router config bundle",
+      "changed_files": [
+        "network/backbone/router-config-bundle.tar.gz",
+        "network/backbone/bgp-peers.conf",
+        "network/backbone/backbone-router-acl.conf",
+        "scripts/push-router-config.sh"
+      ]
+    },
+    {
+      "sha": "f0a2c4e6b813",
+      "timestamp": "2024-03-12T08:30:00Z",
+      "author": "frank.li",
+      "message": "Schedule automated backbone router config push for 09:58 UTC maintenance window",
+      "changed_files": [
+        "infra/automation/router-config-push-job.yaml",
+        "infra/automation/config-push-schedule.cron"
+      ]
+    },
+    {
+      "sha": "1b3d5f7a9c04",
+      "timestamp": "2024-03-12T09:45:00Z",
+      "author": "carol.nguyen",
+      "message": "Final pre-push validation: ACL and BGP config linting (skipped integration test due to maintenance window constraints)",
+      "changed_files": [
+        "network/backbone/backbone-router-acl.conf",
+        "network/backbone/bgp-peers.conf",
+        "network/backbone/.ci-skip-integration"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "The backbone router configuration push (job_id=cfg-push-20240312-0001), triggered by the automated job scheduled in commit f0a2c4e6b813, deployed a bundled config assembled in commit e9f1b3d5a724. This bundle contained two critical errors introduced across commits 7f2a0c4e8d16 and d4e6a8b0c312: (1) The BGP peer MD5 authentication keys in bgp-peers.conf were rotated to new values that did not yet match what upstream transit providers had configured, causing all BGP sessions to be rejected immediately upon config push. (2) The refactored ACL ruleset in backbone-router-acl.conf placed the catch-all deny-all rule before the explicit permit rules due to a merge ordering error, causing all transit traffic to be dropped at the ACL level even if BGP had recovered. Both errors combined caused all four backbone routers to simultaneously withdraw all BGP-advertised prefixes, resulting in a complete global network partition and 100% service unavailability across all dependent services.",
+  "ground_truth_remediation": "Immediately roll back the backbone router configuration to the last known-good config snapshot (cfg-push-20240312-0000) using the router-config-mgmt tooling rollback command targeting all four backbone routers. Once BGP sessions re-establish and routing tables converge (expected within 60-90 seconds per router), verify all BGP sessions are active and all prefixes re-advertised. Then correct the ACL rule ordering in backbone-router-acl.conf so permit rules precede deny-all, and coordinate with upstream transit providers to synchronize BGP peer MD5 keys before any subsequent push. Add mandatory integration and simulation tests to the CI pipeline for backbone config changes and require a staged canary rollout to a single non-critical router before global push.",
+  "red_herring": null
+}

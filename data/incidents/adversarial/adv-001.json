@@ -1,0 +1,84 @@
+{
+  "id": "adv-001",
+  "subset": "adversarial",
+  "category": "dependency_outage",
+  "affected_service": "checkout-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: checkout-service payment callback success rate dropped to 0% for the last 10 minutes. Error budget exhausted. PagerDuty P1 triggered at 2024-03-14T03:47:00Z.",
+  "log_window": "2024-03-14T03:20:01Z [INFO] checkout-service starting up, pid=18821\n2024-03-14T03:20:02Z [INFO] nginx rate-limit config reloaded: zone=checkout_api burst=50 rate=100r/s\n2024-03-14T03:20:03Z [INFO] nginx rate-limit config reloaded successfully, no active connections dropped\n2024-03-14T03:20:05Z [INFO] checkout-service ready, listening on :8080\n2024-03-14T03:21:00Z [INFO] POST /checkout/initiate 200 latency=42ms user=u-9921\n2024-03-14T03:21:15Z [INFO] POST /checkout/initiate 200 latency=39ms user=u-4432\n2024-03-14T03:22:00Z [INFO] payment-callback received from payments.example-processor.io, order_id=ord-7741\n2024-03-14T03:22:01Z [INFO] POST /checkout/initiate 200 latency=41ms user=u-8810\n2024-03-14T03:23:00Z [INFO] payment-callback received from payments.example-processor.io, order_id=ord-7742\n2024-03-14T03:24:10Z [INFO] POST /checkout/initiate 200 latency=38ms user=u-3301\n2024-03-14T03:25:00Z [INFO] payment-callback received from payments.example-processor.io, order_id=ord-7743\n2024-03-14T03:26:00Z [INFO] POST /checkout/initiate 200 latency=44ms user=u-5599\n2024-03-14T03:27:00Z [INFO] payment-callback received from payments.example-processor.io, order_id=ord-7744\n2024-03-14T03:28:00Z [INFO] POST /checkout/initiate 200 latency=40ms user=u-2287\n2024-03-14T03:29:00Z [INFO] payment-callback received from payments.example-processor.io, order_id=ord-7745\n2024-03-14T03:30:00Z [INFO] POST /checkout/initiate 200 latency=43ms user=u-6674\n2024-03-14T03:35:00Z [INFO] POST /checkout/initiate 200 latency=41ms user=u-1123\n2024-03-14T03:36:12Z [ERROR] TLS handshake failed connecting to payments.example-processor.io:443 ssl_error=SSL_CERTIFICATE_EXPIRED peer_cert_subject=CN=payments.example-processor.io peer_cert_expiry=2024-03-14T03:35:59Z order_id=ord-7746\n2024-03-14T03:36:12Z [WARN] payment callback verification failed for order_id=ord-7746, retrying in 5s (attempt 1/3)\n2024-03-14T03:36:17Z [ERROR] TLS handshake failed connecting to payments.example-processor.io:443 ssl_error=SSL_CERTIFICATE_EXPIRED peer_cert_subject=CN=payments.example-processor.io peer_cert_expiry=2024-03-14T03:35:59Z order_id=ord-7746\n2024-03-14T03:36:17Z [WARN] payment callback verification failed for order_id=ord-7746, retrying in 5s (attempt 2/3)\n2024-03-14T03:36:22Z [ERROR] TLS handshake failed connecting to payments.example-processor.io:443 ssl_error=SSL_CERTIFICATE_EXPIRED peer_cert_subject=CN=payments.example-processor.io peer_cert_expiry=2024-03-14T03:35:59Z order_id=ord-7746\n2024-03-14T03:36:22Z [ERROR] payment callback permanently failed for order_id=ord-7746 after 3 attempts, moving to dead-letter queue\n2024-03-14T03:36:30Z [INFO] POST /checkout/initiate 200 latency=39ms user=u-7712\n2024-03-14T03:37:00Z [ERROR] TLS handshake failed connecting to payments.example-processor.io:443 ssl_error=SSL_CERTIFICATE_EXPIRED peer_cert_subject=CN=payments.example-processor.io peer_cert_expiry=2024-03-14T03:35:59Z order_id=ord-7747\n2024-03-14T03:37:00Z [WARN] payment callback verification failed for order_id=ord-7747, retrying in 5s (attempt 1/3)\n2024-03-14T03:37:05Z [ERROR] TLS handshake failed connecting to payments.example-processor.io:443 ssl_error=SSL_CERTIFICATE_EXPIRED peer_cert_subject=CN=payments.example-processor.io peer_cert_expiry=2024-03-14T03:35:59Z order_id=ord-7747\n2024-03-14T03:37:05Z [WARN] payment callback verification failed for order_id=ord-7747, retrying in 5s (attempt 2/3)\n2024-03-14T03:37:10Z [ERROR] TLS handshake failed connecting to payments.example-processor.io:443 ssl_error=SSL_CERTIFICATE_EXPIRED peer_cert_subject=CN=payments.example-processor.io peer_cert_expiry=2024-03-14T03:35:59Z order_id=ord-7747\n2024-03-14T03:37:10Z [ERROR] payment callback permanently failed for order_id=ord-7747 after 3 attempts, moving to dead-letter queue\n2024-03-14T03:37:15Z [INFO] POST /checkout/initiate 200 latency=45ms user=u-9003\n2024-03-14T03:38:00Z [ERROR] TLS handshake failed connecting to payments.example-processor.io:443 ssl_error=SSL_CERTIFICATE_EXPIRED peer_cert_subject=CN=payments.example-processor.io peer_cert_expiry=2024-03-14T03:35:59Z order_id=ord-7748\n2024-03-14T03:38:22Z [ERROR] payment callback permanently failed for order_id=ord-7748 after 3 attempts, moving to dead-letter queue\n2024-03-14T03:39:00Z [ERROR] TLS handshake failed connecting to payments.example-processor.io:443 ssl_error=SSL_CERTIFICATE_EXPIRED peer_cert_subject=CN=payments.example-processor.io peer_cert_expiry=2024-03-14T03:35:59Z order_id=ord-7749\n2024-03-14T03:39:22Z [ERROR] payment callback permanently failed for order_id=ord-7749 after 3 attempts, moving to dead-letter queue\n2024-03-14T03:40:00Z [INFO] POST /checkout/initiate 200 latency=42ms user=u-4455\n2024-03-14T03:40:01Z [ERROR] TLS handshake failed connecting to payments.example-processor.io:443 ssl_error=SSL_CERTIFICATE_EXPIRED peer_cert_subject=CN=payments.example-processor.io peer_cert_expiry=2024-03-14T03:35:59Z order_id=ord-7750\n2024-03-14T03:40:23Z [ERROR] payment callback permanently failed for order_id=ord-7750 after 3 attempts, moving to dead-letter queue\n2024-03-14T03:41:00Z [WARN] dead-letter queue depth=5, threshold=3 alerting on-call\n2024-03-14T03:41:10Z [INFO] rate-limiter stats: zone=checkout_api accepted=1240 rejected=0 rate limiting NOT active\n2024-03-14T03:42:00Z [ERROR] TLS handshake failed connecting to payments.example-processor.io:443 ssl_error=SSL_CERTIFICATE_EXPIRED peer_cert_subject=CN=payments.example-processor.io peer_cert_expiry=2024-03-14T03:35:59Z order_id=ord-7751\n2024-03-14T03:42:22Z [ERROR] payment callback permanently failed for order_id=ord-7751 after 3 attempts, moving to dead-letter queue\n2024-03-14T03:43:00Z [ERROR] TLS handshake failed connecting to payments.example-processor.io:443 ssl_error=SSL_CERTIFICATE_EXPIRED peer_cert_subject=CN=payments.example-processor.io peer_cert_expiry=2024-03-14T03:35:59Z order_id=ord-7752\n2024-03-14T03:43:22Z [ERROR] payment callback permanently failed for order_id=ord-7752 after 3 attempts, moving to dead-letter queue\n2024-03-14T03:44:00Z [INFO] POST /checkout/initiate 200 latency=41ms user=u-3312\n2024-03-14T03:44:01Z [ERROR] TLS handshake failed connecting to payments.example-processor.io:443 ssl_error=SSL_CERTIFICATE_EXPIRED peer_cert_subject=CN=payments.example-processor.io peer_cert_expiry=2024-03-14T03:35:59Z order_id=ord-7753\n2024-03-14T03:44:23Z [ERROR] payment callback permanently failed for order_id=ord-7753 after 3 attempts, moving to dead-letter queue\n2024-03-14T03:45:00Z [ERROR] TLS handshake failed connecting to payments.example-processor.io:443 ssl_error=SSL_CERTIFICATE_EXPIRED peer_cert_subject=CN=payments.example-processor.io peer_cert_expiry=2024-03-14T03:35:59Z order_id=ord-7754\n2024-03-14T03:45:22Z [ERROR] payment callback permanently failed for order_id=ord-7754 after 3 attempts, moving to dead-letter queue\n2024-03-14T03:46:00Z [WARN] dead-letter queue depth=9, payment callback success_rate=0.00% over last 10m\n2024-03-14T03:46:10Z [INFO] rate-limiter stats: zone=checkout_api accepted=1389 rejected=0 rate limiting NOT active\n2024-03-14T03:47:00Z [CRITICAL] SLO breach: payment_callback_success_rate=0.00% below threshold=99.5%, error_budget_exhausted=true\n2024-03-14T03:47:01Z [INFO] PagerDuty P1 alert fired: checkout-service payment callback success rate 0%\n2024-03-14T03:47:05Z [ERROR] TLS handshake failed connecting to payments.example-processor.io:443 ssl_error=SSL_CERTIFICATE_EXPIRED peer_cert_subject=CN=payments.example-processor.io peer_cert_expiry=2024-03-14T03:35:59Z order_id=ord-7755\n2024-03-14T03:47:27Z [ERROR] payment callback permanently failed for order_id=ord-7755 after 3 attempts, moving to dead-letter queue\n2024-03-14T03:48:00Z [INFO] POST /checkout/initiate 200 latency=40ms user=u-8821 checkout initiation still succeeding\n2024-03-14T03:48:10Z [INFO] nginx worker processes healthy, no restarts detected since rate-limit config reload at 03:20:02Z\n2024-03-14T03:48:15Z [ERROR] TLS handshake failed connecting to payments.example-processor.io:443 ssl_error=SSL_CERTIFICATE_EXPIRED peer_cert_subject=CN=payments.example-processor.io peer_cert_expiry=2024-03-14T03:35:59Z order_id=ord-7756\n2024-03-14T03:48:37Z [ERROR] payment callback permanently failed for order_id=ord-7756 after 3 attempts, moving to dead-letter queue\n2024-03-14T03:49:00Z [INFO] rate-limiter stats: zone=checkout_api accepted=1502 rejected=0 rate limiting NOT active\n2024-03-14T03:49:10Z [ERROR] TLS handshake failed connecting to payments.example-processor.io:443 ssl_error=SSL_CERTIFICATE_EXPIRED peer_cert_subject=CN=payments.example-processor.io peer_cert_expiry=2024-03-14T03:35:59Z order_id=ord-7757\n2024-03-14T03:49:32Z [ERROR] payment callback permanently failed for order_id=ord-7757 after 3 attempts, moving to dead-letter queue\n2024-03-14T03:50:00Z [WARN] dead-letter queue depth=12, escalating to engineering lead",
+  "recent_deploys": [
+    {
+      "sha": "a3f8c21d09e4b76f2a1059cd83e7a4b5f6d21c08",
+      "timestamp": "2024-03-13T08:15:00Z",
+      "author": "priya.sharma",
+      "message": "feat: add order_id to payment callback structured logs",
+      "changed_files": [
+        "checkout-service/internal/payment/callback_handler.go",
+        "checkout-service/internal/logging/fields.go"
+      ]
+    },
+    {
+      "sha": "b7d14e3f88a2c591047bcde56f1a3d72e8c04a91",
+      "timestamp": "2024-03-13T11:42:00Z",
+      "author": "james.okonkwo",
+      "message": "chore: bump go.mod dependencies to latest patch versions",
+      "changed_files": [
+        "checkout-service/go.mod",
+        "checkout-service/go.sum"
+      ]
+    },
+    {
+      "sha": "c2e09a7d14f3b85620acde781f59c24d37b18f42",
+      "timestamp": "2024-03-13T14:30:00Z",
+      "author": "mei.tanaka",
+      "message": "fix: correct dead-letter queue threshold alert from 10 to 3",
+      "changed_files": [
+        "checkout-service/internal/queue/deadletter.go",
+        "checkout-service/config/alerts.yaml"
+      ]
+    },
+    {
+      "sha": "d5f22b8e01c7a934d8bcef902e46d85a19c27b53",
+      "timestamp": "2024-03-13T18:05:00Z",
+      "author": "rafael.mendez",
+      "message": "refactor: extract payment retry logic into dedicated RetryPolicy struct",
+      "changed_files": [
+        "checkout-service/internal/payment/retry_policy.go",
+        "checkout-service/internal/payment/callback_handler.go",
+        "checkout-service/internal/payment/retry_policy_test.go"
+      ]
+    },
+    {
+      "sha": "e8a41c6f27b3d0592e1cfa834d70b29e48d53c64",
+      "timestamp": "2024-03-13T22:50:00Z",
+      "author": "sara.lindqvist",
+      "message": "ci: add integration test for checkout-service rate limiting under load",
+      "changed_files": [
+        "checkout-service/tests/integration/rate_limit_test.go",
+        ".github/workflows/checkout-service-ci.yml"
+      ]
+    },
+    {
+      "sha": "f1b93d5a40e8c27641dfab0256c83f91b7e64d75",
+      "timestamp": "2024-03-14T03:18:00Z",
+      "author": "james.okonkwo",
+      "message": "ops: tune nginx rate-limit zone burst=50 rate=100r/s for checkout API",
+      "changed_files": [
+        "infra/nginx/conf.d/checkout-service-ratelimit.conf",
+        "infra/nginx/conf.d/checkout-service-upstream.conf"
+      ]
+    },
+    {
+      "sha": "a9c07e2b53d1f4870a3ebc19748da05c26f97e81",
+      "timestamp": "2024-03-14T03:19:30Z",
+      "author": "deploy-bot",
+      "message": "chore: automated canary promotion for checkout-service v2.41.3",
+      "changed_files": [
+        "infra/k8s/checkout-service/deployment.yaml"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "The Let's Encrypt TLS certificate for payments.example-processor.io (the payment processor's webhook endpoint) expired at 2024-03-14T03:35:59Z. All subsequent outbound TLS connections from checkout-service to that endpoint failed with SSL_CERTIFICATE_EXPIRED during the handshake phase, causing every payment callback to be rejected and queued in the dead-letter queue. This is an external third-party certificate management failure entirely unrelated to any checkout-service deploy.",
+  "ground_truth_remediation": "1. Immediately contact the payment processor's on-call support line and report the expired TLS certificate on payments.example-processor.io:443. 2. As a short-term workaround (with security review), consider temporarily disabling TLS certificate expiry validation for the payment processor webhook endpoint to restore callback processing while the processor renews their cert, only if contractually and security-policy permissible. 3. Once the processor has renewed and redeployed their certificate, verify TLS handshakes succeed with: openssl s_client -connect payments.example-processor.io:443. 4. Replay dead-letter queue messages to recover missed payment confirmations for order IDs ord-7746 through ord-7757 and beyond. 5. Add a proactive external TLS certificate expiry monitor for all critical third-party endpoints alerting at 30 days and 7 days before expiry.",
+  "red_herring": "The nginx rate-limit config deploy (SHA f1b93d5a40e8c27641dfab0256c83f91b7e64d75) by on-call engineer james.okonkwo at 03:18:00Z, just 18 minutes before failures began at 03:36:12Z, is superficially suspicious: rate-limiting changes to the checkout API could plausibly cause payment callbacks to be throttled or dropped. However, the logs contain clear exculpatory evidence that rate limiting is not the cause: (a) the rate-limiter stats logged at 03:41:10Z, 03:46:10Z, and 03:49:00Z consistently show rejected=0, meaning zero requests were ever rate-limited; (b) checkout initiation requests continued to return HTTP 200 throughout the incident with normal latencies, proving the nginx config change did not disrupt inbound traffic; (c) every error message explicitly names ssl_error=SSL_CERTIFICATE_EXPIRED with peer_cert_expiry=2024-03-14T03:35:59Z, a TLS layer failure on an outbound connection to an external host that is completely outside the scope of nginx rate-limit configuration; and (d) the nginx reload at 03:20:02Z completed successfully with no active connections dropped, and the service remained healthy for over 15 minutes before failures began precisely at the certificate expiry timestamp."
+}

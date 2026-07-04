@@ -1,0 +1,86 @@
+{
+  "id": "syn-039",
+  "subset": "synthetic",
+  "category": "config_error",
+  "affected_service": "redis",
+  "severity": "high",
+  "alert_text": "ALERT: Redis RDB persistence disabled — save '' detected in running config after snapshot failure; data durability at risk. Host: redis-primary-01. Duration: 18m.",
+  "log_window": "2026-05-16T12:21:03.112Z [redis] INFO  Redis 7.2.4 (de201e875db5/0) 64 bit, standalone mode, port 6379, pid 1\n2026-05-16T12:21:03.118Z [redis] INFO  Configuration loaded from /etc/redis/redis.conf\n2026-05-16T12:21:03.119Z [redis] INFO  oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo\n2026-05-16T12:21:03.121Z [redis] INFO  Server initialized\n2026-05-16T12:21:03.124Z [redis] INFO  Ready to accept connections tcp\n2026-05-16T12:21:04.201Z [redis] INFO  DB 0: 142847 keys, 0 expires; LRU clock: 14182741\n2026-05-16T12:21:04.204Z [redis] DEBUG  maxmemory-policy=allkeys-lru maxmemory=4gb\n2026-05-16T12:21:04.210Z [redis] DEBUG  appendonly=no save=\"\" (persistence disabled)\n2026-05-16T12:21:04.212Z [redis] WARN  RDB persistence is currently disabled via save=\"\" config directive\n2026-05-16T12:21:05.310Z [cart-service] INFO  {\"level\":\"info\",\"msg\":\"Connected to Redis\",\"host\":\"redis-primary-01\",\"port\":6379,\"ts\":\"2026-05-16T12:21:05.310Z\"}\n2026-05-16T12:21:05.318Z [cart-service] INFO  {\"level\":\"info\",\"msg\":\"Cart service initialized\",\"ts\":\"2026-05-16T12:21:05.318Z\"}\n2026-05-16T12:21:06.002Z [session-service] INFO  service=session-service level=INFO msg=\"Redis connection established\" addr=redis-primary-01:6379\n2026-05-16T12:21:06.410Z [redis] DEBUG  client id=3 addr=10.0.1.45:54210 cmd=PING\n2026-05-16T12:21:07.001Z [redis] DEBUG  client id=4 addr=10.0.1.47:51882 cmd=PING\n2026-05-16T12:21:10.501Z [redis] INFO  10 clients connected, 1.23M memory used\n2026-05-16T12:21:15.001Z [redis-exporter] INFO  level=info msg=\"Scrape completed\" duration=0.021s\n2026-05-16T12:21:15.014Z [redis-exporter] WARN  level=warn msg=\"redis_rdb_last_save_timestamp_seconds is 0; RDB save has never occurred or persistence is disabled\"\n2026-05-16T12:21:15.019Z [redis-exporter] WARN  level=warn msg=\"redis_rdb_changes_since_last_save=47829; no snapshot scheduled\"\n2026-05-16T12:21:20.003Z [redis] DEBUG  Received BGSAVE from client id=1\n2026-05-16T12:21:20.008Z [redis] WARN  BGSAVE failed: RDB persistence is disabled (save=\"\"); ignoring BGSAVE command\n2026-05-16T12:21:20.012Z [cart-service] WARN  {\"level\":\"warn\",\"msg\":\"Unexpected BGSAVE response: ERR Background save disabled\",\"ts\":\"2026-05-16T12:21:20.012Z\"}\n2026-05-16T12:21:25.501Z [redis-exporter] INFO  level=info msg=\"Scrape completed\" duration=0.019s\n2026-05-16T12:21:25.512Z [redis-exporter] ERROR level=error msg=\"rdb_last_bgsave_status=err\" detail=\"Background save disabled\"\n2026-05-16T12:21:30.002Z [redis] INFO  Background saving started — SKIPPED (save disabled)\n2026-05-16T12:21:30.220Z [redis] WARN  save=\"\" means no scheduled RDB saves; data loss on restart is possible\n2026-05-16T12:21:35.101Z [session-service] INFO  service=session-service level=INFO msg=\"Session written\" session_id=s9f3a2 ttl=1800\n2026-05-16T12:21:35.410Z [session-service] INFO  service=session-service level=INFO msg=\"Session written\" session_id=sa2c41 ttl=1800\n2026-05-16T12:21:40.003Z [redis-exporter] INFO  level=info msg=\"Scrape completed\" duration=0.022s\n2026-05-16T12:21:40.011Z [redis-exporter] WARN  level=warn msg=\"redis_rdb_last_save_timestamp_seconds still 0 after 36s uptime\"\n2026-05-16T12:21:45.200Z [redis] INFO  20 clients connected, 1.41M memory used\n2026-05-16T12:21:50.003Z [cart-service] DEBUG  {\"level\":\"debug\",\"msg\":\"Heartbeat OK\",\"redis_ping_ms\":0.4,\"ts\":\"2026-05-16T12:21:50.003Z\"}\n2026-05-16T12:22:00.001Z [redis] INFO  Accepted connection from 10.0.1.52:60012\n2026-05-16T12:22:05.501Z [redis-exporter] ERROR level=error msg=\"Alert condition: rdb_persistence_disabled=1 for >60s\"\n2026-05-16T12:22:05.509Z [redis-exporter] ERROR level=error msg=\"Firing alert: RedisPersistenceDisabled\" labels=\"{instance='redis-primary-01:6379'}\"\n2026-05-16T12:22:10.201Z [redis] WARN  CONFIG GET save returns empty string — persistence fully disabled\n2026-05-16T12:22:15.003Z [redis] DEBUG  Keyspace: db0 keys=143102 expires=12201\n2026-05-16T12:22:20.002Z [cart-service] ERROR  {\"level\":\"error\",\"msg\":\"Redis BGSAVE returned error: Background save disabled\",\"retries\":3,\"ts\":\"2026-05-16T12:22:20.002Z\"}\n2026-05-16T12:22:20.018Z [cart-service] WARN  {\"level\":\"warn\",\"msg\":\"Cart data not persisted to RDB snapshot; in-memory only\",\"ts\":\"2026-05-16T12:22:20.018Z\"}\n2026-05-16T12:22:25.501Z [redis-exporter] INFO  level=info msg=\"Scrape completed\" duration=0.018s\n2026-05-16T12:22:30.001Z [redis] INFO  30 clients connected, 1.62M memory used\n2026-05-16T12:22:35.210Z [session-service] WARN  service=session-service level=WARN msg=\"No RDB checkpoint detected; session data unprotected against pod restart\"\n2026-05-16T12:22:40.002Z [redis] WARN  Persistence config: save=\"\" appendonly=no — NEITHER RDB NOR AOF is active\n2026-05-16T12:22:40.009Z [redis] ERROR Durability risk: all writes are in-memory only; restart will cause data loss\n2026-05-16T12:22:45.501Z [redis-exporter] ERROR level=error msg=\"redis_aof_enabled=0 and rdb_persistence_disabled=1; full data loss on pod restart\"\n2026-05-16T12:22:50.002Z [redis] INFO  MEM: used_memory_rss=1.71M used_memory_peak=1.71M mem_fragmentation_ratio=1.04\n2026-05-16T12:22:55.001Z [redis] DEBUG  client id=12 addr=10.0.1.45:54211 cmd=SET key=cart:user:8812 expiry=3600\n2026-05-16T12:23:00.003Z [redis] INFO  40 clients connected, 1.83M memory used\n2026-05-16T12:23:05.501Z [redis-exporter] INFO  level=info msg=\"Scrape completed\" duration=0.020s\n2026-05-16T12:23:10.001Z [redis] WARN  BGSAVE requested by cart-service — disabled; responding ERR\n2026-05-16T12:23:15.202Z [cart-service] ERROR  {\"level\":\"error\",\"msg\":\"Periodic snapshot check failed — Redis persistence confirmed disabled\",\"ts\":\"2026-05-16T12:23:15.202Z\"}\n2026-05-16T12:23:15.210Z [cart-service] ERROR  {\"level\":\"error\",\"msg\":\"Escalating: cart data durability SLO breach imminent\",\"ts\":\"2026-05-16T12:23:15.210Z\"}\n2026-05-16T12:23:20.001Z [redis] INFO  CONFIG REWRITE blocked — would overwrite running config with save=\"\"\n2026-05-16T12:23:25.501Z [redis-exporter] ERROR level=error msg=\"Page sent: RedisPersistenceDisabled sustained >2m\"\n2026-05-16T12:23:30.002Z [redis] DEBUG  Keyspace: db0 keys=143398 expires=12310\n2026-05-16T12:23:35.001Z [session-service] ERROR  service=session-service level=ERROR msg=\"Session durability compromised; RDB save disabled and AOF off\"\n  at session/store.go:214 writeCheckpoint()\n  at session/store.go:182 periodicFlush()\n2026-05-16T12:23:40.003Z [redis] WARN  uptime=139s total_commands_processed=28341 total_keys_written=4892\n2026-05-16T12:23:45.201Z [redis] INFO  CONFIG GET save: (empty array) — confirms save=\"\" active\n2026-05-16T12:23:50.001Z [redis] ERROR persistence_enabled=false; rdb_enabled=false; aof_enabled=false\n2026-05-16T12:23:55.501Z [redis-exporter] ERROR level=error msg=\"PagerDuty alert dispatched: redis-primary-01 persistence disabled — 143398 keys at risk\"\n2026-05-16T12:24:00.002Z [redis] INFO  50 clients connected, 2.01M memory used\n2026-05-16T12:24:05.001Z [cart-service] WARN  {\"level\":\"warn\",\"msg\":\"Issuing oncall page for Redis persistence outage\",\"ts\":\"2026-05-16T12:24:05.001Z\"}\n2026-05-16T12:24:10.003Z [redis] WARN  save config key is empty string — was set to '' in /etc/redis/redis.conf by last deploy\n2026-05-16T12:24:10.009Z [redis] WARN  Expected config: save 3600 1 OR save 300 100 OR save 60 10000\n2026-05-16T12:24:15.001Z [redis] DEBUG  client id=18 addr=10.0.1.47:51883 cmd=INFO persistence\n2026-05-16T12:24:20.002Z [redis-exporter] WARN  level=warn msg=\"Total unsaved changes since boot: 52041\"\n2026-05-16T12:24:25.001Z [redis] INFO  Accepted connection from monitoring-agent 10.0.2.10:49201\n2026-05-16T12:24:30.003Z [redis] WARN  RDB child never forked since startup — no snapshot on disk\n2026-05-16T12:24:35.501Z [redis-exporter] ERROR level=error msg=\"redis_rdb_last_save_timestamp_seconds=0 persists; incident confirmed open\"\n2026-05-16T12:24:40.002Z [redis] FATAL persistence=disabled uptime=337s keys_at_risk=143621 — operator intervention required\n2026-05-16T12:24:40.010Z [redis] ERROR  To restore: set save \"3600 1 300 100 60 10000\" via CONFIG SET or fix /etc/redis/redis.conf and RESTART\n2026-05-16T12:24:45.001Z [cart-service] ERROR  {\"level\":\"error\",\"msg\":\"Redis health check FAIL: persistence=disabled\",\"healthy\":false,\"ts\":\"2026-05-16T12:24:45.001Z\"}\n2026-05-16T12:24:50.003Z [session-service] FATAL service=session-service level=FATAL msg=\"Aborting periodic checkpoint: Redis has no persistence backend\" code=ENOPERSIST\n  at session/store.go:214 writeCheckpoint()\n  at session/store.go:182 periodicFlush()\n  at session/main.go:88 runLoop()\n2026-05-16T12:24:55.001Z [redis] INFO  60 clients connected, 2.18M memory used\n2026-05-16T12:25:00.003Z [redis-exporter] ERROR level=error msg=\"Incident syn-039 active: redis persistence fully disabled; 143621 keys in memory only\"",
+  "recent_deploys": [
+    {
+      "sha": "c789fc89a688",
+      "timestamp": "2026-04-21T11:57:50Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "package-lock.json",
+        "package.json"
+      ]
+    },
+    {
+      "sha": "de201e875db5",
+      "timestamp": "2026-04-21T19:45:44Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 2 updates (#3284)",
+      "changed_files": [
+        "src/cartservice/cartservice.csproj",
+        "src/cartservice/packages.lock.json"
+      ]
+    },
+    {
+      "sha": "60d18e40e88c",
+      "timestamp": "2026-04-23T08:23:08Z",
+      "author": "Juliano Costa",
+      "message": "[frontend] fix: handle undefined product images across multiple components (#329",
+      "changed_files": [
+        "src/frontend/components/ProductCard.tsx",
+        "src/frontend/components/ProductList.tsx",
+        "src/frontend/utils/imageHelpers.ts"
+      ]
+    },
+    {
+      "sha": "7cdf4e6a5bb4",
+      "timestamp": "2026-04-27T06:41:57Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github.com/IBM/sarama (#3310)",
+      "changed_files": [
+        "src/kafka/go.mod",
+        "src/kafka/go.sum"
+      ]
+    },
+    {
+      "sha": "313728caeedd",
+      "timestamp": "2026-05-06T00:11:01Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "28ed8395ff76",
+      "timestamp": "2026-05-06T14:37:03Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/recommendationservice/requirements.txt",
+        "src/productcatalogservice/requirements.txt"
+      ]
+    },
+    {
+      "sha": "49a7631b1ddb",
+      "timestamp": "2026-05-16T12:04:07Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Profiling with firepit (#3333)",
+      "changed_files": [
+        "deploy/redis/redis.conf",
+        "deploy/redis/configmap.yaml",
+        "deploy/redis/statefulset.yaml"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha 49a7631b1ddb (2026-05-16T12:04:07Z) modified deploy/redis/redis.conf and deploy/redis/configmap.yaml, setting the Redis `save` config directive to an empty string (`save \"\"`). This was likely intended as a temporary workaround to silence a preceding RDB snapshot failure alert during profiling setup, but it fully disabled RDB persistence. With `appendonly` also set to `no`, neither RDB nor AOF persistence is active, leaving all 143,000+ keys in memory only and at risk of total loss on any pod restart or crash.",
+  "ground_truth_remediation": "1. Immediately run `CONFIG SET save \"3600 1 300 100 60 10000\"` on redis-primary-01 to re-enable RDB persistence without a restart, protecting the live key set. 2. Revert deploy/redis/redis.conf and deploy/redis/configmap.yaml in the 49a7631b1ddb commit to restore `save 3600 1\nsave 300 100\nsave 60 10000` and redeploy the configmap. 3. Trigger a manual `BGSAVE` to create an immediate on-disk snapshot. 4. Verify `redis_rdb_last_bgsave_status=ok` and `redis_rdb_last_save_timestamp_seconds > 0` in the redis-exporter metrics to confirm persistence is restored.",
+  "red_herring": null
+}

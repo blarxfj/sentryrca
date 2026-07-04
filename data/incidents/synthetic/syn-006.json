@@ -1,0 +1,88 @@
+{
+  "id": "syn-006",
+  "subset": "synthetic",
+  "category": "db_saturation",
+  "affected_service": "cart-service",
+  "severity": "high",
+  "alert_text": "ALERT: cart-service P99 latency exceeded 8s for 5 consecutive minutes; HTTP 503 error rate at 34% and rising. Connection pool exhaustion detected on postgres-cart replica.",
+  "log_window": "2026-05-13T15:08:12.101Z [cart-service] INFO  Starting cart-service v2.14.1 (sha=cf3ba5c857d1)\n2026-05-13T15:08:12.344Z [cart-service] INFO  DB pool initialized: min=5 max=20 host=postgres-cart:5432\n2026-05-13T15:08:13.002Z [cart-service] INFO  HTTP server listening on :8080\n2026-05-13T15:09:01.112Z [cart-service] INFO  GET /cart/user/10042 status=200 latency=42ms\n2026-05-13T15:09:01.455Z [cart-service] INFO  GET /cart/user/10091 status=200 latency=38ms\n2026-05-13T15:09:02.001Z [cart-service] DEBUG query=\"SELECT * FROM cart_items WHERE cart_id=$1\" rows=3 duration=4ms\n2026-05-13T15:09:02.400Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=3ms\n2026-05-13T15:09:02.402Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=3ms\n2026-05-13T15:09:02.403Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=3ms\n2026-05-13T15:09:03.210Z [cart-service] INFO  GET /cart/user/10099 status=200 latency=61ms\n2026-05-13T15:11:22.001Z [cart-service] INFO  GET /cart/user/10201 status=200 latency=88ms\n2026-05-13T15:12:05.440Z [cart-service] WARN  query=\"SELECT * FROM item_metadata WHERE item_id=$1\" duration=210ms threshold=100ms\n2026-05-13T15:12:05.441Z [cart-service] WARN  query=\"SELECT * FROM item_metadata WHERE item_id=$1\" duration=218ms threshold=100ms\n2026-05-13T15:12:05.443Z [cart-service] WARN  query=\"SELECT * FROM item_metadata WHERE item_id=$1\" duration=231ms threshold=100ms\n2026-05-13T15:12:05.480Z [cart-service] WARN  query=\"SELECT * FROM item_metadata WHERE item_id=$1\" duration=240ms threshold=100ms\n2026-05-13T15:12:06.001Z [postgres-cart] {\"level\":\"warn\",\"msg\":\"active connections approaching limit\",\"active\":15,\"max\":20,\"time\":\"2026-05-13T15:12:06.001Z\"}\n2026-05-13T15:12:06.512Z [cart-service] INFO  GET /cart/user/10342 status=200 latency=1240ms\n2026-05-13T15:12:07.100Z [cart-service] WARN  DB pool utilization=78% active=15 idle=5\n2026-05-13T15:13:11.002Z [cart-service] DEBUG query=\"SELECT * FROM cart_items WHERE cart_id=$1\" rows=14 duration=7ms\n2026-05-13T15:13:11.100Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=185ms\n2026-05-13T15:13:11.102Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=191ms\n2026-05-13T15:13:11.104Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=204ms\n2026-05-13T15:13:11.106Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=198ms\n2026-05-13T15:13:11.108Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=212ms\n2026-05-13T15:13:11.111Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=225ms\n2026-05-13T15:13:11.113Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=219ms\n2026-05-13T15:13:11.115Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=233ms\n2026-05-13T15:13:11.117Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=241ms\n2026-05-13T15:13:11.119Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=237ms\n2026-05-13T15:13:11.121Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=250ms\n2026-05-13T15:13:11.123Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=260ms\n2026-05-13T15:13:11.125Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=278ms\n2026-05-13T15:13:11.127Z [cart-service] DEBUG query=\"SELECT * FROM item_metadata WHERE item_id=$1\" rows=1 duration=291ms\n2026-05-13T15:13:14.400Z [postgres-cart] {\"level\":\"warn\",\"msg\":\"slow query detected\",\"query\":\"SELECT * FROM item_metadata WHERE item_id=$1\",\"duration_ms\":291,\"time\":\"2026-05-13T15:13:14.400Z\"}\n2026-05-13T15:13:15.001Z [cart-service] WARN  DB pool utilization=91% active=18 idle=2\n2026-05-13T15:13:16.200Z [cart-service] INFO  GET /cart/user/10502 status=200 latency=3412ms\n2026-05-13T15:13:17.010Z [cart-service] ERROR GET /cart/user/10510 status=503 latency=5001ms error=\"db pool timeout: no connection available after 5000ms\"\n2026-05-13T15:13:17.012Z [cart-service] ERROR context=CartRepository method=loadCartWithItems error=\"connection pool exhausted\" user_id=10510\n2026-05-13T15:13:18.400Z [postgres-cart] {\"level\":\"error\",\"msg\":\"max_connections reached\",\"active\":20,\"waiting\":7,\"time\":\"2026-05-13T15:13:18.400Z\"}\n2026-05-13T15:13:19.001Z [cart-service] ERROR GET /cart/user/10515 status=503 latency=5002ms error=\"db pool timeout: no connection available after 5000ms\"\n2026-05-13T15:13:19.101Z [cart-service] ERROR GET /cart/user/10516 status=503 latency=5001ms error=\"db pool timeout: no connection available after 5000ms\"\n2026-05-13T15:13:19.500Z [cart-service] WARN  N+1 query pattern detected: 14 sequential SELECTs on item_metadata for single cart load cart_id=10502\n2026-05-13T15:13:20.001Z [cart-service] ERROR GET /cart/user/10520 status=503 latency=5003ms error=\"db pool timeout: no connection available after 5000ms\"\n2026-05-13T15:13:20.400Z [checkout-service] WARN  upstream=cart-service GET /cart/user/10520 failed after 5100ms, retrying (1/3)\n2026-05-13T15:13:21.010Z [cart-service] FATAL DB pool exhausted; 9 requests queued waiting for connection\n2026-05-13T15:13:21.100Z [cart-service] ERROR at CartRepository.loadItemMetadata(CartRepository.java:87)\n2026-05-13T15:13:21.101Z [cart-service] ERROR at CartService.getCartDetails(CartService.java:134)\n2026-05-13T15:13:21.102Z [cart-service] ERROR at CartController.getCart(CartController.java:56)\n2026-05-13T15:13:22.001Z [checkout-service] ERROR upstream=cart-service all retries exhausted for user=10520, returning 503 to client\n2026-05-13T15:13:22.400Z [postgres-cart] {\"level\":\"error\",\"msg\":\"query queue depth critical\",\"queued\":12,\"time\":\"2026-05-13T15:13:22.400Z\"}\n2026-05-13T15:13:23.001Z [cart-service] ERROR GET /cart/user/10530 status=503 latency=5001ms error=\"db pool timeout: no connection available after 5000ms\"\n2026-05-13T15:13:24.001Z [cart-service] ERROR GET /cart/user/10535 status=503 latency=5001ms error=\"db pool timeout: no connection available after 5000ms\"\n2026-05-13T15:13:24.500Z [cart-service] WARN  DB pool utilization=100% active=20 idle=0 waiting=11\n2026-05-13T15:13:25.001Z [cart-service] ERROR GET /cart/user/10540 status=503 latency=5000ms error=\"db pool timeout: no connection available after 5000ms\"\n2026-05-13T15:13:25.600Z [checkout-service] WARN  upstream=cart-service error_rate=34% over last 60s\n2026-05-13T15:14:01.001Z [cart-service] ERROR GET /cart/user/10580 status=503 latency=5001ms error=\"db pool timeout: no connection available after 5000ms\"\n2026-05-13T15:14:01.400Z [postgres-cart] {\"level\":\"error\",\"msg\":\"pg_stat_activity: 20 active connections, 14 idle in transaction\",\"time\":\"2026-05-13T15:14:01.400Z\"}\n2026-05-13T15:14:02.100Z [cart-service] WARN  ORM lazy-loading enabled for CartItem->ItemMetadata association; consider eager loading or batch fetching\n2026-05-13T15:14:03.001Z [cart-service] ERROR GET /cart/user/10590 status=503 latency=5000ms error=\"db pool timeout: no connection available after 5000ms\"\n2026-05-13T15:14:04.200Z [cart-service] ERROR GET /cart/user/10595 status=503 latency=5002ms error=\"db pool timeout: no connection available after 5000ms\"\n2026-05-13T15:14:05.001Z [postgres-cart] {\"level\":\"warn\",\"msg\":\"autovacuum triggered on item_metadata\",\"table\":\"item_metadata\",\"dead_tuples\":48210,\"time\":\"2026-05-13T15:14:05.001Z\"}\n2026-05-13T15:14:06.001Z [cart-service] ERROR GET /cart/user/10601 status=503 latency=5001ms error=\"db pool timeout: no connection available after 5000ms\"\n2026-05-13T15:14:07.400Z [cart-service] WARN  DB pool utilization=100% active=20 idle=0 waiting=15\n2026-05-13T15:14:08.001Z [checkout-service] ERROR upstream=cart-service degraded; disabling cart enrichment for checkout flow\n2026-05-13T15:14:09.100Z [cart-service] ERROR GET /cart/user/10610 status=503 latency=5001ms error=\"db pool timeout: no connection available after 5000ms\"\n2026-05-13T15:14:10.500Z [cart-service] WARN  slow-request-log method=GET path=/cart/user/:id p50=3200ms p90=4800ms p99=5100ms window=60s\n2026-05-13T15:14:11.001Z [postgres-cart] {\"level\":\"error\",\"msg\":\"lock wait timeout exceeded\",\"pid\":18421,\"relation\":\"item_metadata\",\"time\":\"2026-05-13T15:14:11.001Z\"}\n2026-05-13T15:14:12.001Z [cart-service] ERROR GET /cart/user/10615 status=503 latency=5000ms error=\"db pool timeout: no connection available after 5000ms\"\n2026-05-13T15:14:13.700Z [cart-service] FATAL Sustained pool exhaustion for 60s; triggering circuit breaker on CartRepository\n2026-05-13T15:14:14.001Z [cart-service] ERROR at CartRepository.loadItemMetadata(CartRepository.java:87)\n2026-05-13T15:14:14.002Z [cart-service] ERROR at CartService.getCartDetails(CartService.java:134)\n2026-05-13T15:14:15.001Z [checkout-service] WARN  cart-service circuit breaker OPEN; cart data unavailable for all checkout requests\n2026-05-13T15:16:01.001Z [cart-service] ERROR GET /cart/user/10700 status=503 latency=5001ms error=\"circuit breaker open\"\n2026-05-13T15:16:02.001Z [cart-service] ERROR GET /cart/user/10702 status=503 latency=5000ms error=\"circuit breaker open\"\n2026-05-13T15:17:10.001Z [cart-service] WARN  circuit breaker half-open; allowing 1 probe request\n2026-05-13T15:17:10.500Z [cart-service] ERROR probe request failed: db pool still exhausted; circuit breaker returning to OPEN\n2026-05-13T15:18:01.001Z [cart-service] ERROR GET /cart/user/10800 status=503 latency=5001ms error=\"circuit breaker open\"\n2026-05-13T15:18:30.001Z [postgres-cart] {\"level\":\"error\",\"msg\":\"replication lag increasing\",\"lag_bytes\":1048576,\"time\":\"2026-05-13T15:18:30.001Z\"}",
+  "recent_deploys": [
+    {
+      "sha": "de201e875db5",
+      "timestamp": "2026-04-21T19:45:44Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 2 updates (#3284)",
+      "changed_files": [
+        "src/cart-service/packages.lock.json",
+        "src/cart-service/cart-service.csproj"
+      ]
+    },
+    {
+      "sha": "53f46ae9eb45",
+      "timestamp": "2026-04-22T13:56:23Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 6 updates (#3295)",
+      "changed_files": [
+        "src/cart-service/packages.lock.json",
+        "src/cart-service/cart-service.csproj",
+        "src/cart-service/Directory.Packages.props"
+      ]
+    },
+    {
+      "sha": "396eaec92110",
+      "timestamp": "2026-04-25T09:36:57Z",
+      "author": "Patrice Chalin",
+      "message": "Enable lychee cache for local checks too (#3315)",
+      "changed_files": [
+        ".lychee.toml",
+        ".github/workflows/links.yml"
+      ]
+    },
+    {
+      "sha": "313728caeedd",
+      "timestamp": "2026-05-06T00:11:01Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "src/cart-service/package-lock.json",
+        "src/cart-service/package.json"
+      ]
+    },
+    {
+      "sha": "94f8a915b080",
+      "timestamp": "2026-05-13T11:48:42Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "src/cart-service/package-lock.json",
+        "src/cart-service/package.json"
+      ]
+    },
+    {
+      "sha": "2b8ccac18a70",
+      "timestamp": "2026-05-13T12:00:40Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump swoosh (#3365)",
+      "changed_files": [
+        "src/cart-service/mix.lock",
+        "src/cart-service/mix.exs"
+      ]
+    },
+    {
+      "sha": "cf3ba5c857d1",
+      "timestamp": "2026-05-13T15:04:07Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the gradle-production-dependencies group across 2 directories ",
+      "changed_files": [
+        "src/cart-service/build.gradle",
+        "src/cart-service/gradle/libs.versions.toml",
+        "src/cart-service/src/main/java/com/otel/cart/repository/CartRepository.java",
+        "src/cart-service/src/main/java/com/otel/cart/model/CartItem.java",
+        "src/cart-service/src/main/resources/application.yml"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy cf3ba5c857d1 (2026-05-13T15:04:07Z) updated the Gradle ORM dependency (Hibernate) to a new major version and inadvertently changed the CartItem->ItemMetadata association fetch type from EAGER to LAZY in CartItem.java. This introduced an N+1 query pattern: loading a cart with N items now issues 1 query for cart_items followed by N individual SELECT queries against item_metadata (one per item, executed serially in a loop inside CartRepository.loadItemMetadata). Under normal load, carts with 10-15 items generate 11-16 DB queries per request instead of 2, rapidly saturating the 20-connection PostgreSQL pool and causing cascading HTTP 503 errors.",
+  "ground_truth_remediation": "1. Immediately roll back cart-service to the previous deploy (sha=2b8ccac18a70) to restore eager loading and relieve DB pool pressure. 2. Once service is restored, in CartItem.java revert the @ManyToOne fetch annotation from FetchType.LAZY back to FetchType.EAGER, or alternatively implement a JOIN FETCH query in CartRepository to load cart_items and item_metadata in a single query. 3. Add an index on item_metadata(item_id) if not present to reduce per-query latency. 4. Re-deploy the corrected version after verification in staging. Total estimated time: 30-60 minutes.",
+  "red_herring": null
+}
