@@ -1,0 +1,87 @@
+{
+  "id": "adv-002",
+  "subset": "adversarial",
+  "category": "db_saturation",
+  "affected_service": "frontend",
+  "severity": "high",
+  "alert_text": "P1 ALERT: frontend p99 latency exceeded 8000ms for 5 consecutive minutes (threshold: 2000ms). Error rate 34%. Impacted endpoints: /cart, /checkout, /orders. On-call: frontend-team.",
+  "log_window": "2024-03-15T02:00:01Z [frontend] INFO  GET /orders 200 142ms\n2024-03-15T02:00:02Z [frontend] INFO  GET /cart 200 98ms\n2024-03-15T02:00:03Z [frontend] INFO  POST /checkout 200 310ms\n2024-03-15T02:00:05Z [frontend] INFO  GET /orders 200 155ms\n2024-03-15T02:00:07Z [frontend] INFO  GET /cart 200 103ms\n2024-03-15T02:01:10Z [frontend] INFO  GET /orders 200 189ms\n2024-03-15T02:01:45Z [frontend] INFO  POST /checkout 200 412ms\n2024-03-15T02:02:01Z [frontend] WARN  GET /orders 200 1823ms db_query_time=1791ms\n2024-03-15T02:02:04Z [frontend] WARN  GET /cart 200 1654ms db_query_time=1621ms\n2024-03-15T02:02:09Z [frontend] WARN  POST /checkout 200 2201ms db_query_time=2168ms\n2024-03-15T02:02:15Z [db-proxy] WARN  Slow query detected: SELECT * FROM orders WHERE user_id=? ORDER BY created_at DESC duration=1789ms\n2024-03-15T02:02:18Z [db-proxy] WARN  Slow query detected: INSERT INTO cart_items duration=1654ms\n2024-03-15T02:02:21Z [db-host] WARN  iostat: await=284ms util=97% device=xvdb\n2024-03-15T02:02:22Z [db-host] WARN  fsync latency spike detected: 1240ms on /var/lib/mysql/data\n2024-03-15T02:02:23Z [db-host] ERROR kernel: blk_update_request: I/O error, dev xvdb, sector 48291840\n2024-03-15T02:02:25Z [db-host] WARN  iostat: await=391ms util=99% device=xvdb\n2024-03-15T02:02:26Z [db-host] WARN  fsync latency spike detected: 1890ms on /var/lib/mysql/data\n2024-03-15T02:02:30Z [frontend] ERROR GET /orders 500 5120ms db_query_time=5088ms error=context_deadline_exceeded\n2024-03-15T02:02:31Z [frontend] ERROR POST /checkout 500 5200ms db_query_time=5171ms error=context_deadline_exceeded\n2024-03-15T02:02:33Z [db-host] ERROR kernel: blk_update_request: I/O error, dev xvdb, sector 48293120\n2024-03-15T02:02:35Z [db-host] WARN  iostat: await=512ms util=100% device=xvdb\n2024-03-15T02:02:36Z [db-host] ERROR AWS EC2 instance-store I/O degradation event detected instanceId=i-0a3f7c9d2e1b4567 device=xvdb event=physical-host-degradation\n2024-03-15T02:02:38Z [db-host] WARN  fsync latency spike detected: 2340ms on /var/lib/mysql/data\n2024-03-15T02:02:40Z [db-proxy] ERROR Query timeout after 5000ms: SELECT * FROM orders USE INDEX idx_orders_user_created\n2024-03-15T02:02:41Z [db-proxy] WARN  Connection pool utilization: 94/100 connections active\n2024-03-15T02:02:43Z [db-proxy] ERROR Query timeout after 5000ms: UPDATE orders SET status=? WHERE order_id=?\n2024-03-15T02:02:45Z [frontend] ERROR GET /cart 500 5301ms error=context_deadline_exceeded\n2024-03-15T02:02:46Z [frontend] ERROR GET /orders 500 5100ms error=context_deadline_exceeded\n2024-03-15T02:02:47Z [db-host] ERROR kernel: blk_update_request: I/O error, dev xvdb, sector 48294400\n2024-03-15T02:02:48Z [db-host] WARN  iostat: await=678ms util=100% device=xvdb\n2024-03-15T02:02:49Z [db-host] WARN  fsync latency spike detected: 3100ms on /var/lib/mysql/data\n2024-03-15T02:02:50Z [db-proxy] ERROR Query timeout after 5000ms: INSERT INTO order_events duration=over5000ms\n2024-03-15T02:02:52Z [db-proxy] ERROR Connection pool exhausted: all 100 connections waiting on I/O\n2024-03-15T02:02:53Z [frontend] ERROR POST /checkout 503 101ms error=db_connection_pool_exhausted\n2024-03-15T02:02:54Z [frontend] ERROR GET /orders 503 98ms error=db_connection_pool_exhausted\n2024-03-15T02:02:55Z [frontend] ERROR GET /cart 503 95ms error=db_connection_pool_exhausted\n2024-03-15T02:03:00Z [db-host] ERROR AWS EC2 instance-store physical media degradation: sustained I/O errors on xvdb instanceId=i-0a3f7c9d2e1b4567\n2024-03-15T02:03:01Z [db-host] WARN  iostat: await=891ms util=100% device=xvdb read_iops=3 write_iops=1 baseline: await=4ms read_iops=3200 write_iops=1800\n2024-03-15T02:03:02Z [frontend] ERROR GET /orders 503 97ms error=db_connection_pool_exhausted\n2024-03-15T02:03:03Z [frontend] ERROR POST /checkout 503 102ms error=db_connection_pool_exhausted\n2024-03-15T02:03:05Z [db-proxy] ERROR Replication lag on replica-1: 47 seconds and climbing\n2024-03-15T02:03:07Z [frontend] ERROR GET /cart 503 99ms error=db_connection_pool_exhausted\n2024-03-15T02:03:10Z [alertmanager] FIRING: frontend p99 latency=8923ms threshold=2000ms\n2024-03-15T02:03:10Z [alertmanager] FIRING: frontend error_rate=34.2% threshold=5%\n2024-03-15T02:03:10Z [alertmanager] FIRING: db-host xvdb await=891ms threshold=50ms\n2024-03-15T02:03:12Z [db-host] WARN  fsync latency spike detected: 4210ms on /var/lib/mysql/data\n2024-03-15T02:03:15Z [frontend] ERROR GET /orders 503 98ms error=db_connection_pool_exhausted\n2024-03-15T02:03:18Z [db-proxy] ERROR Connection pool exhausted: 100/100 connections blocked on fsync\n2024-03-15T02:03:20Z [db-host] ERROR kernel: EXT4-fs error device xvdb: ext4_find_entry:1455: inode #7340038: comm mysqld: reading directory lblock 0\n2024-03-15T02:03:25Z [migration-runner] INFO  Migration v20240315_add_composite_index completed successfully at 01:44:32Z. Index idx_orders_user_created created in 48.3s with 0 errors. Table locks released. Replication lag post-migration: 0.3s normal.\n2024-03-15T02:03:26Z [db-host] WARN  iostat: await=1024ms util=100% device=xvdb\n2024-03-15T02:03:30Z [frontend] ERROR GET /orders 503 101ms error=db_connection_pool_exhausted\n2024-03-15T02:03:35Z [db-host] ERROR AWS EC2: instance-store health check FAILED for i-0a3f7c9d2e1b4567 physical host hardware degradation\n2024-03-15T02:03:40Z [db-proxy] WARN  Slow query detected: SHOW ENGINE INNODB STATUS duration=3892ms index scans normal bottleneck is I/O wait not query plan\n2024-03-15T02:03:45Z [db-host] WARN  fsync latency spike detected: 5100ms on /var/lib/mysql/data\n2024-03-15T02:03:50Z [frontend] ERROR POST /checkout 503 99ms error=db_connection_pool_exhausted\n2024-03-15T02:04:00Z [db-host] ERROR iostat: await=1341ms util=100% device=xvdb I/O throughput near zero\n2024-03-15T02:04:05Z [db-host] INFO  AWS health dashboard: us-east-1 EC2 instance-store degradation event active since 02:01:58Z affecting physical host ph-use1-rack42-node07\n2024-03-15T02:04:10Z [frontend] ERROR GET /cart 503 97ms error=db_connection_pool_exhausted\n2024-03-15T02:04:15Z [db-proxy] ERROR All read replicas also degraded: replica-1 replication lag=312s replica-2 replication lag=298s both share same physical host\n2024-03-15T02:04:20Z [db-host] WARN  fsync latency spike detected: 6200ms on /var/lib/mysql/data\n2024-03-15T02:04:30Z [frontend] ERROR GET /orders 503 98ms error=db_connection_pool_exhausted",
+  "recent_deploys": [
+    {
+      "sha": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0",
+      "timestamp": "2024-03-14T18:22:00Z",
+      "author": "sarah.chen",
+      "message": "feat: add order status badge to order history page",
+      "changed_files": [
+        "frontend/src/components/OrderHistory.tsx",
+        "frontend/src/components/StatusBadge.tsx",
+        "frontend/src/styles/badges.css"
+      ]
+    },
+    {
+      "sha": "b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1",
+      "timestamp": "2024-03-14T20:05:00Z",
+      "author": "marcus.patel",
+      "message": "fix: resolve cart item quantity overflow on mobile viewport",
+      "changed_files": [
+        "frontend/src/components/CartItem.tsx",
+        "frontend/src/styles/cart.css"
+      ]
+    },
+    {
+      "sha": "c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2",
+      "timestamp": "2024-03-14T21:30:00Z",
+      "author": "jenna.wu",
+      "message": "chore: upgrade react-query from 4.28 to 4.29",
+      "changed_files": [
+        "frontend/package.json",
+        "frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3",
+      "timestamp": "2024-03-14T23:15:00Z",
+      "author": "tomasz.kowalski",
+      "message": "refactor: extract checkout form validation into shared hook",
+      "changed_files": [
+        "frontend/src/hooks/useCheckoutValidation.ts",
+        "frontend/src/components/CheckoutForm.tsx",
+        "frontend/src/utils/validators.ts"
+      ]
+    },
+    {
+      "sha": "e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4",
+      "timestamp": "2024-03-15T01:00:00Z",
+      "author": "db-migration-bot",
+      "message": "db: add composite index idx_orders_user_created on orders(user_id, created_at)",
+      "changed_files": [
+        "db/migrations/v20240315_add_composite_index.sql",
+        "db/schema/orders.sql",
+        "db/README.md"
+      ]
+    },
+    {
+      "sha": "f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5",
+      "timestamp": "2024-03-15T01:50:00Z",
+      "author": "priya.nair",
+      "message": "feat: prefetch order history on user login",
+      "changed_files": [
+        "frontend/src/hooks/useOrderPrefetch.ts",
+        "frontend/src/contexts/AuthContext.tsx"
+      ]
+    },
+    {
+      "sha": "a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6",
+      "timestamp": "2024-03-15T01:55:00Z",
+      "author": "lars.eriksson",
+      "message": "perf: enable gzip compression on static assets",
+      "changed_files": [
+        "frontend/nginx.conf",
+        "frontend/Dockerfile"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "AWS EC2 instance-store physical hardware degradation on the database host (instanceId=i-0a3f7c9d2e1b4567, device=xvdb, physical host ph-use1-rack42-node07) caused catastrophic I/O degradation starting at 02:01:58Z. fsync latency escalated from under 4ms baseline to over 6000ms, driving disk await above 1000ms and utilization to 100%. This caused all MySQL writes and reads to stall, exhausting the DB connection pool with 100/100 connections blocked on fsync and cascading into frontend 503 errors. The degradation is entirely unrelated to any application or schema deploy.",
+  "ground_truth_remediation": "1. Immediately initiate an EC2 instance stop/start (NOT reboot) on i-0a3f7c9d2e1b4567 to migrate to a healthy physical host since instance-store I/O degradation requires host migration to resolve. 2. Promote a read replica from a different physical host as the new primary if stop/start takes more than 15 minutes. 3. Monitor xvdb await and fsync latency post-migration to confirm restoration to baseline under 5ms. 4. Open AWS support case referencing the instance-store health event on ph-use1-rack42-node07. 5. Consider migrating database storage to EBS io2 to eliminate instance-store reliability risk going forward.",
+  "red_herring": "The database migration (SHA e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4) deploying a composite index on orders(user_id, created_at) is highly suspicious: it ran approximately 75 minutes before the incident, it directly touches the orders table that appears in slow query logs, and composite indexes on large tables can cause query plan changes, lock contention, or I/O pressure during index builds. The slow query log even references USE INDEX idx_orders_user_created, the exact index created by this migration, making it tempting to blame the new index for a regression. However, the logs contain clear exculpatory evidence: (1) the migration-runner log at 02:03:25Z explicitly states the migration completed successfully at 01:44:32Z with 0 errors and replication lag post-migration of 0.3s which is normal, confirming no issues at migration time; (2) the db-host logs show kernel I/O errors on device xvdb and fsync latency spikes beginning at 02:02:22Z, fully 18 minutes after the migration completed cleanly with no anomalies; (3) the AWS EC2 instance-store degradation event is explicitly logged at 02:02:36Z and again at 02:03:35Z attributing the failure to physical host hardware; (4) the db-proxy log at 02:03:40Z explicitly states index scans are normal and the bottleneck is I/O wait not query plan, directly ruling out index-related slowness; (5) the I/O metrics show await rising from a 4ms baseline to 1341ms with IOPS collapsing from thousands to single digits, a pattern consistent only with storage hardware failure and not any application or schema change."
+}

@@ -1,0 +1,90 @@
+{
+  "id": "syn-008",
+  "subset": "synthetic",
+  "category": "db_saturation",
+  "affected_service": "postgres",
+  "severity": "high",
+  "alert_text": "CRITICAL: PostgreSQL query latency p99 > 45s on orders table; connection pool exhaustion detected; HTTP 5xx rate >18% on checkout service",
+  "log_window": "2026-05-13T11:42:03.112Z [postgres] INFO  autovacuum: processing table \"public.order_events\"\n2026-05-13T11:42:03.889Z [postgres] WARN  autovacuum: skipping \"public.order_events\" --- lock not available\n2026-05-13T11:42:05.201Z [checkout-service] INFO  method=POST path=/api/v1/checkout status=200 latency=312ms\n2026-05-13T11:42:06.774Z [checkout-service] INFO  method=POST path=/api/v1/checkout status=200 latency=489ms\n2026-05-13T11:42:08.003Z [postgres] DEBUG pid=18421 query=\"UPDATE order_events SET status=$1 WHERE id=$2\" duration=54ms\n2026-05-13T11:42:09.332Z [postgres] DEBUG pid=18422 query=\"UPDATE order_events SET status=$1 WHERE id=$2\" duration=61ms\n2026-05-13T11:42:11.005Z [checkout-service] INFO  method=POST path=/api/v1/checkout status=200 latency=601ms\n2026-05-13T11:42:13.447Z [postgres] WARN  table=\"public.order_events\" n_dead_tup=4812033 n_live_tup=901244 bloat_ratio=0.84\n2026-05-13T11:42:14.112Z [postgres] DEBUG pid=18430 query=\"SELECT * FROM order_events WHERE order_id=$1\" duration=780ms seq_scan=true\n2026-05-13T11:42:15.889Z [checkout-service] WARN  db_pool_size=18/20 latency_p95=1230ms\n2026-05-13T11:42:17.003Z [postgres] WARN  autovacuum worker cannot start: too many autovacuum workers (3/3 busy)\n2026-05-13T11:42:18.221Z [postgres] WARN  table=\"public.order_events\" last_vacuum=NULL last_autovacuum=2026-05-12T04:11:03Z\n2026-05-13T11:42:19.445Z [checkout-service] INFO  method=POST path=/api/v1/checkout status=200 latency=1540ms\n2026-05-13T11:42:21.007Z [postgres] ERROR pid=18455 query=\"UPDATE order_events SET status=$1 WHERE id=$2\" duration=3201ms lock_wait=true\n2026-05-13T11:42:22.334Z [postgres] WARN  table_size table=\"public.order_events\" total_bytes=18274983936 bloat_bytes=15372001280 bloat_pct=84.1\n2026-05-13T11:42:23.780Z [checkout-service] WARN  db_pool_size=20/20 waiting_requests=4\n2026-05-13T11:42:25.112Z [checkout-service] ERROR method=POST path=/api/v1/checkout status=503 error=\"connection pool exhausted\" latency=5001ms\n2026-05-13T11:42:25.993Z [order-processor] WARN  msg=\"slow query detected\" query=\"INSERT INTO order_events\" duration=2900ms\n2026-05-13T11:42:27.003Z [postgres] ERROR pid=18471 query=\"SELECT count(*) FROM order_events WHERE created_at > $1\" duration=12400ms seq_scan=true rows_examined=5713277\n2026-05-13T11:42:28.441Z [checkout-service] ERROR method=POST path=/api/v1/checkout status=503 error=\"connection pool exhausted\" latency=5001ms\n2026-05-13T11:42:29.774Z [postgres] WARN  checkpoint_warning: checkpoints occurring too frequently (14 in last 300s)\n2026-05-13T11:42:31.002Z [order-processor] ERROR msg=\"db write failed\" error=\"ERROR: could not obtain lock on relation 16842\" attempt=1\n2026-05-13T11:42:31.883Z [order-processor] ERROR msg=\"db write failed\" error=\"ERROR: could not obtain lock on relation 16842\" attempt=2\n2026-05-13T11:42:32.991Z [postgres] FATAL pid=18501 msg=\"max_connections reached\" current=100 max=100\n2026-05-13T11:42:33.445Z [checkout-service] ERROR method=POST path=/api/v1/checkout status=500 error=\"FATAL: sorry, too many clients already\"\n2026-05-13T11:42:34.221Z [checkout-service] ERROR method=POST path=/api/v1/checkout status=500 error=\"FATAL: sorry, too many clients already\"\n2026-05-13T11:42:35.003Z [order-processor] FATAL msg=\"unable to connect to database\" error=\"FATAL: sorry, too many clients already\"\n  at pg.connect (pool.js:88)\n  at OrderProcessor.persist (order-processor.js:214)\n2026-05-13T11:42:35.889Z [postgres] ERROR pid=18502 msg=\"autovacuum: found xmin 921044812 from client 18430; cancelling\"\n2026-05-13T11:42:36.774Z [checkout-service] WARN  circuit_breaker=OPEN service=postgres\n2026-05-13T11:42:37.112Z [checkout-service] ERROR method=POST path=/api/v1/checkout status=503 error=\"circuit breaker open\" latency=2ms\n2026-05-13T11:42:38.003Z [checkout-service] ERROR method=POST path=/api/v1/checkout status=503 error=\"circuit breaker open\" latency=2ms\n2026-05-13T11:42:39.445Z [postgres] ERROR pid=18510 query=\"SELECT * FROM order_events WHERE status='pending' ORDER BY created_at\" duration=31200ms seq_scan=true\n  context: parallel worker for PID 18510\n2026-05-13T11:42:40.221Z [postgres] WARN  msg=\"dead tuple threshold exceeded\" table=\"order_events\" dead_tuples=5001234 threshold=200000\n2026-05-13T11:42:41.889Z [order-processor] ERROR msg=\"health check failed\" component=postgres consecutive_failures=5\n2026-05-13T11:42:43.003Z [checkout-service] ERROR method=GET path=/api/v1/orders status=503 error=\"circuit breaker open\"\n2026-05-13T11:42:44.331Z [postgres] WARN  msg=\"table bloat critical\" table=\"public.order_events\" dead_pct=84 recommendation=\"VACUUM FULL or pg_repack required\"\n2026-05-13T11:42:45.780Z [postgres] ERROR pid=18530 query=\"UPDATE order_events SET status=$1 WHERE id=$2\" duration=45100ms\n  ERROR:  canceling statement due to conflict with recovery\n2026-05-13T11:42:47.003Z [checkout-service] ERROR method=POST path=/api/v1/checkout status=503 error=\"circuit breaker open\"\n2026-05-13T11:42:48.445Z [postgres] WARN  msg=\"seq scan on large bloated table\" table=\"order_events\" pages_read=1891234 pages_expected=142000\n2026-05-13T11:42:49.889Z [order-processor] WARN  msg=\"retrying connection\" attempt=3 backoff_ms=4000\n2026-05-13T11:42:51.003Z [postgres] ERROR pid=18540 msg=\"lock timeout\" table=\"order_events\" wait_ms=30000\n  ERROR:  canceling statement due to lock timeout\n  CONTEXT: while updating tuple (1023,44) in relation \"order_events\"\n2026-05-13T11:42:52.221Z [checkout-service] ERROR method=POST path=/api/v1/checkout status=503 error=\"circuit breaker open\"\n2026-05-13T11:42:54.003Z [postgres] WARN  msg=\"fsm page fragmentation\" table=\"order_events\" fsm_pages=18892 expected=1400\n2026-05-13T11:42:55.441Z [order-processor] ERROR msg=\"connection pool exhausted after retry\" max_retries=3\n  at Pool.acquire (pool.js:104)\n  at OrderProcessor.saveEvent (order-processor.js:198)\n  at async processQueue (queue-worker.js:77)\n2026-05-13T11:42:57.003Z [postgres] ERROR autovacuum: \"public.order_events\": found 5001234 removable, 901244 nonremovable row versions; vacuum cancelled due to conflict\n2026-05-13T11:42:58.441Z [checkout-service] ERROR method=POST path=/api/v1/checkout status=503 error=\"circuit breaker open\"\n2026-05-13T11:43:00.003Z [postgres] WARN  msg=\"index scan avoided due to bloat\" table=\"order_events\" planner=seq_scan cost_estimate=9812344\n2026-05-13T11:43:01.445Z [order-processor] WARN  msg=\"queue backlog growing\" pending_events=18234 processing_rate=0\n2026-05-13T11:43:02.889Z [postgres] ERROR pid=18560 query=\"VACUUM order_events\" msg=\"lock not available\" duration=0ms\n2026-05-13T11:43:04.003Z [checkout-service] ERROR method=POST path=/api/v1/checkout status=503 error=\"circuit breaker open\"\n2026-05-13T11:43:05.441Z [postgres] FATAL msg=\"disk read throughput critical\" read_iops=98200 threshold=80000 table=\"order_events\"\n2026-05-13T11:43:07.003Z [order-processor] ERROR msg=\"shutting down: cannot reach database after 10 consecutive failures\"\n2026-05-13T11:43:08.445Z [checkout-service] WARN  msg=\"order-processor dependency DOWN; degraded mode active\"\n2026-05-13T11:43:10.001Z [postgres] WARN  msg=\"shared_buffers pollution\" table=\"order_events\" buffer_hits=2 buffer_reads=1891234\n2026-05-13T11:43:11.334Z [checkout-service] ERROR method=POST path=/api/v1/checkout status=503 error=\"order-processor unavailable\"\n2026-05-13T11:43:12.780Z [postgres] ERROR pid=18580 query=\"SELECT id FROM order_events WHERE status='pending' LIMIT 100\" duration=48900ms seq_scan=true\n2026-05-13T11:43:14.003Z [postgres] WARN  msg=\"autovacuum_vacuum_scale_factor too high\" current=0.2 suggested=0.01 for table=\"order_events\"\n2026-05-13T11:43:15.441Z [checkout-service] ERROR msg=\"SLO breach\" error_rate=0.92 threshold=0.01 window=5m\n2026-05-13T11:43:16.889Z [order-processor] ERROR msg=\"health endpoint returning 503\" reason=\"db unreachable\"\n2026-05-13T11:43:18.003Z [postgres] ERROR pid=18601 msg=\"out of shared memory\" context=\"while creating shared memory segment for table \\\"order_events\\\"\"\n2026-05-13T11:43:19.441Z [checkout-service] FATAL msg=\"dependency health check cascade failure\" services_down=[\"order-processor\",\"postgres\"]\n2026-05-13T11:43:20.780Z [postgres] WARN  msg=\"VACUUM FULL required immediately\" table=\"order_events\" dead_pct=84 bloat_bytes=15372001280\n2026-05-13T11:43:22.003Z [order-processor] WARN  msg=\"attempting emergency reconnect\" strategy=exponential_backoff\n2026-05-13T11:43:23.441Z [checkout-service] ERROR method=POST path=/api/v1/checkout status=503 error=\"downstream unavailable\"\n2026-05-13T11:43:25.003Z [postgres] ERROR pid=18622 query=\"BEGIN; UPDATE order_events ... COMMIT\" msg=\"transaction aborted due to lock timeout\" xact_age=00:01:28\n2026-05-13T11:43:26.445Z [postgres] WARN  msg=\"wraparound risk\" table=\"order_events\" age=1891244812 autovacuum_freeze_max_age=200000000",
+  "recent_deploys": [
+    {
+      "sha": "0982a0268aec",
+      "timestamp": "2026-04-16T14:12:23Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump eslint-config-next (#3270)",
+      "changed_files": [
+        "package.json",
+        "package-lock.json",
+        ".eslintrc.json"
+      ]
+    },
+    {
+      "sha": "7b1231238df3",
+      "timestamp": "2026-04-23T08:01:17Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] Fix dependabot configuration (#3298)",
+      "changed_files": [
+        ".github/dependabot.yml"
+      ]
+    },
+    {
+      "sha": "bade4db5c2e0",
+      "timestamp": "2026-04-28T14:14:11Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/checkoutservice/package.json",
+        "src/checkoutservice/package-lock.json",
+        "src/orderprocessor/package.json",
+        "src/orderprocessor/package-lock.json"
+      ]
+    },
+    {
+      "sha": "0e6ca5152176",
+      "timestamp": "2026-04-30T03:12:04Z",
+      "author": "Roman Dmytrenko",
+      "message": "fix(frontend): handle corrupted session data in localStorage (#3313)",
+      "changed_files": [
+        "src/frontend/utils/session.ts",
+        "src/frontend/hooks/useSession.ts",
+        "src/frontend/__tests__/session.test.ts"
+      ]
+    },
+    {
+      "sha": "2b9113d98e20",
+      "timestamp": "2026-04-30T06:51:57Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] execute dependabot every Tuesday 3:00am+ (#3330)",
+      "changed_files": [
+        ".github/dependabot.yml"
+      ]
+    },
+    {
+      "sha": "28ed8395ff76",
+      "timestamp": "2026-05-06T14:37:03Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/orderprocessor/requirements.txt",
+        "src/checkoutservice/requirements.txt",
+        "src/orderprocessor/Pipfile.lock",
+        "src/checkoutservice/Pipfile.lock"
+      ]
+    },
+    {
+      "sha": "2b8ccac18a70",
+      "timestamp": "2026-05-13T12:00:40Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump swoosh (#3365)",
+      "changed_files": [
+        "src/orderprocessor/mix.exs",
+        "src/orderprocessor/mix.lock",
+        "src/orderprocessor/lib/mailer.ex",
+        "src/orderprocessor/db/migrations/20260513_add_order_events_status_index.exs"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha 2b8ccac18a70 (2026-05-13T12:00:40Z) included a migration (20260513_add_order_events_status_index.exs) that added a new index on the high-churn `order_events` table but simultaneously disabled autovacuum on that table (set `autovacuum_enabled=false` as a migration side-effect to avoid lock contention during index creation) and never re-enabled it. The `order_events` table receives thousands of INSERT/UPDATE/DELETE operations per minute from the order-processor service. Without autovacuum running, dead tuples accumulated rapidly — within ~40 minutes of the deploy the table reached 84% bloat (15.3 GB dead out of 18.3 GB total), causing sequential scans to read 13x more pages than necessary, query latency to explode past 45 seconds, lock contention cascading into connection pool exhaustion (100/100 connections), and complete unavailability of the checkout and order-processor services.",
+  "ground_truth_remediation": "1. Immediately re-enable autovacuum on the bloated table: `ALTER TABLE order_events SET (autovacuum_enabled = true);` 2. Manually trigger a VACUUM to reclaim dead tuples (avoid VACUUM FULL during peak traffic as it takes an exclusive lock): `VACUUM ANALYZE order_events;` — if bloat is too severe for standard VACUUM to recover enough space, schedule `pg_repack -t order_events` which works without exclusive locks. 3. Kill long-running transactions blocking autovacuum: `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE wait_event_type='Lock' AND query ~ 'order_events' AND state='active' AND query_start < now() - interval '5 minutes';` 4. Restart order-processor pods to clear connection pool state once postgres latency normalises. 5. In the migration file `20260513_add_order_events_status_index.exs` in sha 2b8ccac18a70, add `ALTER TABLE order_events SET (autovacuum_enabled = true);` at the end of the migration and redeploy. 6. Long-term: lower `autovacuum_vacuum_scale_factor` for order_events to 0.01 and increase autovacuum worker count.",
+  "red_herring": null
+}

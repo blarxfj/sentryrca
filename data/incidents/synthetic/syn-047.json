@@ -1,0 +1,88 @@
+{
+  "id": "syn-047",
+  "subset": "synthetic",
+  "category": "resource_exhaustion",
+  "affected_service": "email-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: email-service heap usage at 94% (7.5GB / 8GB limit). OOM kill imminent. Pod email-service-7d9f8b-xkq2p restarted 3 times in last 30 minutes. P99 send latency > 45s.",
+  "log_window": "2026-05-13T12:03:11.042Z [email-service] INFO  Starting email-service v2.14.3 (sha=2b8ccac18a70) pid=1\n2026-05-13T12:03:11.198Z [email-service] INFO  SMTP pool initialized: maxConns=50 host=smtp.internal:587\n2026-05-13T12:03:11.344Z [email-service] INFO  Attachment processor loaded: maxSizeMB=25 inlineBuffering=true\n2026-05-13T12:03:12.001Z [email-service] INFO  HTTP listener started on :8080\n2026-05-13T12:03:14.210Z [email-service] INFO  msg=email_queued id=e-10041 recipients=3 attachments=2 totalBytes=4194304\n2026-05-13T12:03:14.887Z [email-service] INFO  msg=email_sent id=e-10041 duration_ms=673\n2026-05-13T12:03:15.002Z [email-service] DEBUG msg=attachment_buffer ref_count=2 bytes=4194304 freed=false\n2026-05-13T12:03:21.334Z [email-service] INFO  msg=email_queued id=e-10042 recipients=1 attachments=1 totalBytes=8388608\n2026-05-13T12:03:22.105Z [email-service] INFO  msg=email_sent id=e-10042 duration_ms=771\n2026-05-13T12:03:22.310Z [email-service] DEBUG msg=attachment_buffer ref_count=1 bytes=8388608 freed=false\n2026-05-13T12:04:05.812Z [smtp-relay] INFO  level=info component=smtp-relay connections_active=4 queue_depth=0\n2026-05-13T12:05:17.441Z [email-service] INFO  msg=email_queued id=e-10055 recipients=5 attachments=3 totalBytes=15728640\n2026-05-13T12:05:18.229Z [email-service] INFO  msg=email_sent id=e-10055 duration_ms=788\n2026-05-13T12:05:18.431Z [email-service] DEBUG msg=attachment_buffer ref_count=3 bytes=15728640 freed=false\n2026-05-13T12:06:00.001Z [email-service] INFO  gc_stats heap_alloc_mb=312 heap_sys_mb=400 num_gc=18 pause_total_ms=42\n2026-05-13T12:06:44.711Z [email-service] WARN  gc_stats heap_alloc_mb=589 heap_sys_mb=700 num_gc=34 pause_total_ms=201 msg=heap_growing_fast\n2026-05-13T12:07:01.900Z [attachment-store] {\"level\":\"info\",\"ts\":\"2026-05-13T12:07:01.900Z\",\"msg\":\"presign_ok\",\"key\":\"att/e-10055/report.pdf\",\"ttl\":3600}\n2026-05-13T12:07:22.003Z [email-service] INFO  msg=email_queued id=e-10071 recipients=2 attachments=4 totalBytes=20971520\n2026-05-13T12:07:22.891Z [email-service] INFO  msg=email_sent id=e-10071 duration_ms=888\n2026-05-13T12:07:23.104Z [email-service] DEBUG msg=attachment_buffer ref_count=4 bytes=20971520 freed=false\n2026-05-13T12:08:00.001Z [email-service] WARN  gc_stats heap_alloc_mb=1102 heap_sys_mb=1280 num_gc=61 pause_total_ms=890 msg=gc_pressure_high\n2026-05-13T12:08:33.441Z [email-service] WARN  msg=memory_warning threshold_mb=1024 current_mb=1102 live_attachment_buffers=28\n2026-05-13T12:09:14.002Z [smtp-relay] INFO  level=info component=smtp-relay connections_active=11 queue_depth=3\n2026-05-13T12:09:45.334Z [email-service] INFO  msg=email_queued id=e-10089 recipients=8 attachments=2 totalBytes=10485760\n2026-05-13T12:09:46.221Z [email-service] INFO  msg=email_sent id=e-10089 duration_ms=887\n2026-05-13T12:09:46.455Z [email-service] DEBUG msg=attachment_buffer ref_count=2 bytes=10485760 freed=false\n2026-05-13T12:10:00.001Z [email-service] WARN  gc_stats heap_alloc_mb=1891 heap_sys_mb=2100 num_gc=98 pause_total_ms=2341 msg=gc_pressure_critical\n2026-05-13T12:10:12.889Z [email-service] ERROR msg=send_latency_spike id=e-10090 latency_ms=12400 threshold_ms=5000\n2026-05-13T12:10:23.001Z [email-service] WARN  msg=memory_warning threshold_mb=1024 current_mb=1891 live_attachment_buffers=74\n2026-05-13T12:10:44.003Z [attachment-store] {\"level\":\"warn\",\"ts\":\"2026-05-13T12:10:44.003Z\",\"msg\":\"high_request_rate\",\"rps\":142,\"threshold\":100}\n2026-05-13T12:11:00.001Z [email-service] ERROR gc_stats heap_alloc_mb=2988 heap_sys_mb=3200 num_gc=147 pause_total_ms=5901 msg=gc_thrashing_attachment_buffers_not_released\n2026-05-13T12:11:19.448Z [email-service] ERROR msg=attachment_buffer_leak live_buffers=131 total_retained_bytes=1342177280\n2026-05-13T12:11:19.449Z [email-service] ERROR   goroutine 1 [running]:\n2026-05-13T12:11:19.449Z [email-service] ERROR   email-service/internal/attachment.(*Buffer).retain()\n2026-05-13T12:11:19.449Z [email-service] ERROR   email-service/internal/sender.SendWithAttachments() +0x2f4\n2026-05-13T12:11:34.001Z [email-service] ERROR msg=send_latency_spike id=e-10101 latency_ms=29800 threshold_ms=5000\n2026-05-13T12:11:55.221Z [smtp-relay] WARN  level=warn component=smtp-relay connections_active=38 queue_depth=49 msg=queue_backing_up\n2026-05-13T12:12:00.001Z [email-service] ERROR gc_stats heap_alloc_mb=4441 heap_sys_mb=4800 num_gc=201 pause_total_ms=11203 msg=oom_approaching\n2026-05-13T12:12:11.334Z [email-service] ERROR msg=attachment_buffer_leak live_buffers=204 total_retained_bytes=2281701376\n2026-05-13T12:12:11.335Z [email-service] ERROR   goroutine 1 [running]:\n2026-05-13T12:12:11.335Z [email-service] ERROR   email-service/internal/attachment.(*Buffer).retain()\n2026-05-13T12:12:11.335Z [email-service] ERROR   email-service/internal/sender.SendWithAttachments() +0x2f4\n2026-05-13T12:12:44.009Z [email-service] ERROR msg=request_timeout id=e-10108 elapsed_ms=45001\n2026-05-13T12:13:00.001Z [email-service] FATAL gc_stats heap_alloc_mb=6012 heap_sys_mb=6400 num_gc=278 pause_total_ms=19887 msg=heap_near_limit_imminent_oom\n2026-05-13T12:13:04.110Z [email-service] FATAL msg=oom_imminent heap_alloc_mb=6012 limit_mb=8192 live_attachment_buffers=289 retained_bytes=3867148288\n2026-05-13T12:13:04.112Z [email-service] FATAL   runtime: out of memory: cannot allocate 26214400-byte block\n2026-05-13T12:13:04.113Z [email-service] FATAL   goroutine 412 [running]:\n2026-05-13T12:13:04.113Z [email-service] FATAL   email-service/internal/attachment.(*Buffer).allocate()\n2026-05-13T12:13:08.002Z [smtp-relay] ERROR level=error component=smtp-relay msg=connection_refused target=email-service:8080 err=connection_reset_by_peer\n2026-05-13T12:13:09.441Z [attachment-store] {\"level\":\"error\",\"ts\":\"2026-05-13T12:13:09.441Z\",\"msg\":\"upstream_timeout\",\"service\":\"email-service\",\"elapsed_ms\":30001}\n2026-05-13T12:13:09.881Z [api-gateway] level=error ts=2026-05-13T12:13:09.881Z msg=upstream_error service=email-service status=503 path=/api/v1/email/send\n2026-05-13T12:13:10.001Z [api-gateway] level=error ts=2026-05-13T12:13:10.001Z msg=upstream_error service=email-service status=503 path=/api/v1/email/send\n2026-05-13T12:13:10.221Z [api-gateway] level=error ts=2026-05-13T12:13:10.221Z msg=upstream_error service=email-service status=503 path=/api/v1/email/send\n2026-05-13T12:13:11.002Z [api-gateway] level=warn ts=2026-05-13T12:13:11.002Z msg=circuit_breaker_open service=email-service failures=5 window_s=30\n2026-05-13T12:13:14.009Z [email-service] FATAL msg=process_killed signal=SIGKILL reason=OOMKilled heap_alloc_mb=7841\n2026-05-13T12:13:20.334Z [email-service] INFO  Restarting pod email-service-7d9f8b-xkq2p attempt=1\n2026-05-13T12:13:22.001Z [email-service] INFO  Starting email-service v2.14.3 (sha=2b8ccac18a70) pid=1\n2026-05-13T12:13:22.441Z [email-service] INFO  SMTP pool initialized: maxConns=50 host=smtp.internal:587\n2026-05-13T12:13:22.879Z [email-service] INFO  Attachment processor loaded: maxSizeMB=25 inlineBuffering=true\n2026-05-13T12:13:23.001Z [email-service] INFO  HTTP listener started on :8080\n2026-05-13T12:14:01.334Z [email-service] INFO  msg=email_queued id=e-10201 recipients=1 attachments=1 totalBytes=2097152\n2026-05-13T12:14:01.889Z [email-service] INFO  msg=email_sent id=e-10201 duration_ms=555\n2026-05-13T12:14:02.001Z [email-service] DEBUG msg=attachment_buffer ref_count=1 bytes=2097152 freed=false\n2026-05-13T12:15:00.001Z [email-service] WARN  gc_stats heap_alloc_mb=441 heap_sys_mb=512 num_gc=9 pause_total_ms=88 msg=heap_growing_fast\n2026-05-13T12:16:00.001Z [email-service] WARN  gc_stats heap_alloc_mb=987 heap_sys_mb=1100 num_gc=28 pause_total_ms=412 msg=gc_pressure_high\n2026-05-13T12:16:44.119Z [email-service] ERROR msg=attachment_buffer_leak live_buffers=52 total_retained_bytes=524288000\n2026-05-13T12:16:44.120Z [email-service] ERROR   goroutine 1 [running]:\n2026-05-13T12:16:44.120Z [email-service] ERROR   email-service/internal/attachment.(*Buffer).retain()\n2026-05-13T12:16:44.120Z [email-service] ERROR   email-service/internal/sender.SendWithAttachments() +0x2f4\n2026-05-13T12:17:09.002Z [smtp-relay] WARN  level=warn component=smtp-relay connections_active=22 queue_depth=18 msg=queue_backing_up\n2026-05-13T12:17:44.003Z [email-service] ERROR msg=send_latency_spike id=e-10219 latency_ms=18200 threshold_ms=5000\n2026-05-13T12:18:00.001Z [email-service] FATAL gc_stats heap_alloc_mb=3201 heap_sys_mb=3600 num_gc=89 pause_total_ms=9341 msg=oom_approaching_restart2\n2026-05-13T12:18:22.009Z [email-service] FATAL msg=process_killed signal=SIGKILL reason=OOMKilled heap_alloc_mb=7912\n2026-05-13T12:18:30.001Z [email-service] INFO  Restarting pod email-service-7d9f8b-xkq2p attempt=2\n2026-05-13T12:18:31.441Z [api-gateway] level=error ts=2026-05-13T12:18:31.441Z msg=upstream_error service=email-service status=503 path=/api/v1/email/send\n2026-05-13T12:18:32.001Z [api-gateway] level=error ts=2026-05-13T12:18:32.001Z msg=circuit_breaker_open service=email-service failures=5 window_s=30\n2026-05-13T12:19:00.001Z [email-service] INFO  Starting email-service v2.14.3 (sha=2b8ccac18a70) pid=1\n2026-05-13T12:19:01.334Z [email-service] WARN  gc_stats heap_alloc_mb=198 heap_sys_mb=256 num_gc=3 pause_total_ms=12 msg=fresh_start_heap_nominal\n2026-05-13T12:20:14.002Z [email-service] WARN  gc_stats heap_alloc_mb=712 heap_sys_mb=800 num_gc=21 pause_total_ms=199 msg=heap_growing_fast\n2026-05-13T12:20:44.441Z [email-service] ERROR msg=attachment_buffer_leak live_buffers=41 total_retained_bytes=399448064\n2026-05-13T12:20:44.442Z [email-service] ERROR   goroutine 1 [running]:\n2026-05-13T12:20:44.442Z [email-service] ERROR   email-service/internal/attachment.(*Buffer).retain()\n2026-05-13T12:20:44.443Z [email-service] ERROR   email-service/internal/sender.SendWithAttachments() +0x2f4\n2026-05-13T12:21:00.001Z [email-service] ERROR gc_stats heap_alloc_mb=1844 heap_sys_mb=2048 num_gc=67 pause_total_ms=4201 msg=gc_thrashing_imminent_third_oom",
+  "recent_deploys": [
+    {
+      "sha": "0c5e175889c2",
+      "timestamp": "2026-04-16T13:20:06Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump next (#3269)",
+      "changed_files": [
+        "package.json",
+        "package-lock.json"
+      ]
+    },
+    {
+      "sha": "310357e9b0b4",
+      "timestamp": "2026-04-28T02:25:29Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the cargo-production-dependencies group across 1 directory wit",
+      "changed_files": [
+        "Cargo.toml",
+        "Cargo.lock"
+      ]
+    },
+    {
+      "sha": "bade4db5c2e0",
+      "timestamp": "2026-04-28T14:14:11Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "email-service/package.json",
+        "email-service/package-lock.json",
+        "notification-service/package.json",
+        "notification-service/package-lock.json"
+      ]
+    },
+    {
+      "sha": "0e6ca5152176",
+      "timestamp": "2026-04-30T03:12:04Z",
+      "author": "Roman Dmytrenko",
+      "message": "fix(frontend): handle corrupted session data in localStorage (#3313)",
+      "changed_files": [
+        "frontend/src/utils/session.ts",
+        "frontend/src/hooks/useSession.ts"
+      ]
+    },
+    {
+      "sha": "974792d4cdda",
+      "timestamp": "2026-05-05T05:40:26Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with ",
+      "changed_files": [
+        "mix.exs",
+        "mix.lock"
+      ]
+    },
+    {
+      "sha": "30ba52fd9566",
+      "timestamp": "2026-05-05T06:33:05Z",
+      "author": "Jonathan Munz",
+      "message": "Update React Native example app dependencies (#3296)",
+      "changed_files": [
+        "examples/react-native/package.json",
+        "examples/react-native/package-lock.json"
+      ]
+    },
+    {
+      "sha": "2b8ccac18a70",
+      "timestamp": "2026-05-13T12:00:40Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump swoosh (#3365)",
+      "changed_files": [
+        "email-service/internal/attachment/buffer.go",
+        "email-service/internal/sender/send.go",
+        "email-service/go.mod",
+        "email-service/go.sum"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=2b8ccac18a70 (bumping swoosh) included a change to email-service/internal/attachment/buffer.go and email-service/internal/sender/send.go that introduced a retain() call on attachment byte slices inside SendWithAttachments() without a corresponding release() after SMTP transmission completes. As a result, every attachment buffer allocated per email send is held indefinitely in the sender's internal reference map, preventing the Go garbage collector from reclaiming the memory. Under normal send volume (~50-100 emails/min with multi-MB attachments), this causes unbounded heap growth (observed: ~250MB/min), leading to repeated OOMKill cycles (3 within 30 minutes). The stack trace consistently points to email-service/internal/attachment.(*Buffer).retain() called from email-service/internal/sender.SendWithAttachments().",
+  "ground_truth_remediation": "1. IMMEDIATE: Rolling-restart email-service pods to temporarily recover memory headroom (buys ~5-10 minutes per pod before leak re-accumulates). 2. Scale email-service horizontally to 4+ replicas and enable rate limiting to reduce per-pod send throughput while fix is prepared. 3. CODE FIX (within 2 hours): In email-service/internal/sender/send.go, add a deferred buf.Release() call immediately after buf.Retain() inside SendWithAttachments() so that each attachment buffer is freed upon function return regardless of send outcome. 4. Deploy the patched build and verify heap_alloc stabilizes below 200MB under normal load. 5. Add a unit test asserting that Buffer.refCount returns to 0 after SendWithAttachments completes to prevent regression.",
+  "red_herring": null
+}

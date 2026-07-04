@@ -1,0 +1,86 @@
+{
+  "id": "syn-042",
+  "subset": "synthetic",
+  "category": "resource_exhaustion",
+  "affected_service": "recommendation-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: recommendation-service heap usage at 94% (7.52GB/8GB), OOM kill imminent. Pod restarted 3 times in last 30 minutes. P99 latency degraded to 8.4s.",
+  "log_window": "2026-05-13T11:02:14.101Z [recommendation-service] INFO  Starting recommendation-service v2.11.4 (sha=47b7d39a4628)\n2026-05-13T11:02:14.388Z [recommendation-service] INFO  Loaded feature store client v3.8.1 with new embedding schema\n2026-05-13T11:02:14.901Z [recommendation-service] INFO  ML model cache initialized: max_entries=unlimited, eviction_policy=none\n2026-05-13T11:02:15.210Z [recommendation-service] INFO  gRPC server listening on :8080\n2026-05-13T11:02:15.412Z [feature-store] INFO  {\"event\":\"schema_migration\",\"version\":\"v4.2\",\"embedding_dim\":1536,\"prev_dim\":512,\"status\":\"complete\"}\n2026-05-13T11:03:01.009Z [recommendation-service] INFO  cache_op=miss user_id=u-10482 model=collaborative_filter latency_ms=42\n2026-05-13T11:03:01.211Z [recommendation-service] INFO  cache_op=miss user_id=u-29831 model=collaborative_filter latency_ms=39\n2026-05-13T11:03:02.774Z [feature-store] INFO  {\"event\":\"embedding_fetch\",\"user_id\":\"u-10482\",\"dim\":1536,\"bytes\":6144}\n2026-05-13T11:03:02.912Z [feature-store] INFO  {\"event\":\"embedding_fetch\",\"user_id\":\"u-29831\",\"dim\":1536,\"bytes\":6144}\n2026-05-13T11:04:15.003Z [recommendation-service] DEBUG heap_used_mb=812 heap_total_mb=8192 cache_entries=12840\n2026-05-13T11:04:45.118Z [recommendation-service] INFO  cache_op=miss user_id=u-88312 model=collaborative_filter latency_ms=41\n2026-05-13T11:05:00.441Z [recommendation-service] DEBUG heap_used_mb=1124 heap_total_mb=8192 cache_entries=18220\n2026-05-13T11:05:30.882Z [recommendation-service] DEBUG heap_used_mb=1502 heap_total_mb=8192 cache_entries=24311\n2026-05-13T11:06:00.003Z [recommendation-service] DEBUG heap_used_mb=1891 heap_total_mb=8192 cache_entries=30748\n2026-05-13T11:06:15.221Z [feature-store] INFO  {\"event\":\"schema_info\",\"note\":\"embedding vectors now 3x larger due to v4.2 migration\",\"bytes_per_vector\":6144}\n2026-05-13T11:06:30.117Z [recommendation-service] DEBUG heap_used_mb=2287 heap_total_mb=8192 cache_entries=37102\n2026-05-13T11:07:00.009Z [recommendation-service] DEBUG heap_used_mb=2801 heap_total_mb=8192 cache_entries=45514\n2026-05-13T11:07:15.334Z [recommendation-service] WARN  GC pause exceeded threshold: gc_pause_ms=312 threshold_ms=200\n2026-05-13T11:07:30.552Z [recommendation-service] DEBUG heap_used_mb=3412 heap_total_mb=8192 cache_entries=55401\n2026-05-13T11:07:45.891Z [recommendation-service] WARN  GC pause exceeded threshold: gc_pause_ms=489 threshold_ms=200\n2026-05-13T11:08:00.114Z [recommendation-service] DEBUG heap_used_mb=4018 heap_total_mb=8192 cache_entries=65240\n2026-05-13T11:08:15.003Z [recommendation-service] WARN  GC pressure high: num_gc=42 gc_cpu_fraction=0.18 heap_used_mb=4018\n2026-05-13T11:08:30.774Z [recommendation-service] INFO  cache_op=hit user_id=u-10482 model=collaborative_filter latency_ms=2\n2026-05-13T11:08:45.221Z [recommendation-service] WARN  GC pause exceeded threshold: gc_pause_ms=721 threshold_ms=200\n2026-05-13T11:09:00.334Z [recommendation-service] DEBUG heap_used_mb=4892 heap_total_mb=8192 cache_entries=79441\n2026-05-13T11:09:10.001Z [api-gateway] WARN  upstream=recommendation-service request_id=rq-9921 timeout=true latency_ms=5012 path=/v1/recommend\n2026-05-13T11:09:10.882Z [api-gateway] WARN  upstream=recommendation-service request_id=rq-9922 timeout=true latency_ms=5010 path=/v1/recommend\n2026-05-13T11:09:15.441Z [recommendation-service] WARN  Request latency elevated: p99_ms=1842 p50_ms=210 active_goroutines=1204\n2026-05-13T11:09:30.003Z [recommendation-service] DEBUG heap_used_mb=5541 heap_total_mb=8192 cache_entries=89921\n2026-05-13T11:09:45.112Z [recommendation-service] WARN  GC pause exceeded threshold: gc_pause_ms=1103 threshold_ms=200\n2026-05-13T11:09:50.334Z [api-gateway] ERROR upstream=recommendation-service circuit_breaker=open failure_rate=0.34 window=60s\n2026-05-13T11:10:00.009Z [recommendation-service] DEBUG heap_used_mb=6102 heap_total_mb=8192 cache_entries=99082\n2026-05-13T11:10:05.221Z [recommendation-service] ERROR  model_cache: eviction skipped — no eviction policy configured, cache_entries=99082 heap_used_mb=6102\n2026-05-13T11:10:05.334Z [recommendation-service] ERROR  model_cache: CacheEntry embedding size 6144 bytes exceeds expected 2048 bytes — feature store schema mismatch detected\n2026-05-13T11:10:10.881Z [recommendation-service] WARN  GC pause exceeded threshold: gc_pause_ms=1841 threshold_ms=200\n2026-05-13T11:10:15.003Z [recommendation-service] ERROR  OOM risk: heap_used_mb=6389 heap_total_mb=8192 (78%) — recommend cache flush\n2026-05-13T11:10:20.114Z [feature-store] ERROR {\"event\":\"client_error\",\"service\":\"recommendation-service\",\"error\":\"context deadline exceeded\",\"latency_ms\":5012}\n2026-05-13T11:10:30.441Z [recommendation-service] DEBUG heap_used_mb=6801 heap_total_mb=8192 cache_entries=110440\n2026-05-13T11:10:45.002Z [recommendation-service] ERROR  handler=/v1/recommend error=\"runtime: out of memory\" goroutine=1881\n    goroutine 1881 [running]:\n    runtime.throw(0x...)\n    recommendation-service/internal/cache/model_cache.go:214 +0x72\n2026-05-13T11:10:45.118Z [recommendation-service] FATAL  heap allocation failed: heap_used_mb=7611 heap_total_mb=8192\n2026-05-13T11:10:45.334Z [recommendation-service] FATAL  process terminating due to OOM — cache_entries=110440 embedding_bytes_cached=678MB\n2026-05-13T11:10:46.001Z [k8s] INFO  pod=recommendation-service-7d9f8b-xkp2q reason=OOMKilled restartCount=1\n2026-05-13T11:11:10.002Z [recommendation-service] INFO  Starting recommendation-service v2.11.4 (sha=47b7d39a4628)\n2026-05-13T11:11:10.441Z [recommendation-service] INFO  ML model cache initialized: max_entries=unlimited, eviction_policy=none\n2026-05-13T11:11:10.882Z [recommendation-service] INFO  gRPC server listening on :8080\n2026-05-13T11:11:30.003Z [recommendation-service] DEBUG heap_used_mb=934 heap_total_mb=8192 cache_entries=15201\n2026-05-13T11:12:00.118Z [recommendation-service] DEBUG heap_used_mb=1721 heap_total_mb=8192 cache_entries=27980\n2026-05-13T11:12:30.334Z [recommendation-service] WARN  GC pause exceeded threshold: gc_pause_ms=298 threshold_ms=200\n2026-05-13T11:13:00.009Z [recommendation-service] DEBUG heap_used_mb=2889 heap_total_mb=8192 cache_entries=46910\n2026-05-13T11:13:30.221Z [recommendation-service] WARN  GC pause exceeded threshold: gc_pause_ms=612 threshold_ms=200\n2026-05-13T11:14:00.003Z [recommendation-service] DEBUG heap_used_mb=4102 heap_total_mb=8192 cache_entries=66640\n2026-05-13T11:14:30.441Z [recommendation-service] ERROR  model_cache: eviction skipped — no eviction policy configured, cache_entries=66640 heap_used_mb=4102\n2026-05-13T11:14:45.882Z [recommendation-service] WARN  GC pause exceeded threshold: gc_pause_ms=1012 threshold_ms=200\n2026-05-13T11:15:00.114Z [recommendation-service] DEBUG heap_used_mb=5341 heap_total_mb=8192 cache_entries=86720\n2026-05-13T11:15:15.001Z [api-gateway] ERROR upstream=recommendation-service circuit_breaker=open failure_rate=0.61 window=60s\n2026-05-13T11:15:30.334Z [recommendation-service] ERROR  OOM risk: heap_used_mb=6201 heap_total_mb=8192 (76%)\n2026-05-13T11:16:00.009Z [recommendation-service] DEBUG heap_used_mb=7102 heap_total_mb=8192 cache_entries=115330\n2026-05-13T11:16:30.221Z [recommendation-service] FATAL  heap allocation failed: heap_used_mb=7720 heap_total_mb=8192\n2026-05-13T11:16:30.334Z [recommendation-service] FATAL  process terminating due to OOM — cache_entries=115330 embedding_bytes_cached=707MB\n2026-05-13T11:16:31.002Z [k8s] INFO  pod=recommendation-service-7d9f8b-xkp2q reason=OOMKilled restartCount=2\n2026-05-13T11:17:05.003Z [recommendation-service] INFO  Starting recommendation-service v2.11.4 (sha=47b7d39a4628)\n2026-05-13T11:17:05.441Z [recommendation-service] INFO  ML model cache initialized: max_entries=unlimited, eviction_policy=none\n2026-05-13T11:17:05.882Z [recommendation-service] INFO  gRPC server listening on :8080\n2026-05-13T11:17:30.002Z [recommendation-service] DEBUG heap_used_mb=1102 heap_total_mb=8192 cache_entries=17890\n2026-05-13T11:18:00.118Z [recommendation-service] WARN  GC pause exceeded threshold: gc_pause_ms=341 threshold_ms=200\n2026-05-13T11:18:30.334Z [recommendation-service] DEBUG heap_used_mb=2841 heap_total_mb=8192 cache_entries=46140\n2026-05-13T11:19:00.009Z [recommendation-service] ERROR  model_cache: eviction skipped — no eviction policy configured, cache_entries=46140 heap_used_mb=2841\n2026-05-13T11:19:30.221Z [recommendation-service] DEBUG heap_used_mb=4312 heap_total_mb=8192 cache_entries=70010\n2026-05-13T11:20:00.441Z [recommendation-service] WARN  GC pause exceeded threshold: gc_pause_ms=1219 threshold_ms=200\n2026-05-13T11:20:15.882Z [recommendation-service] ERROR  OOM risk: heap_used_mb=5901 heap_total_mb=8192 (72%)\n2026-05-13T11:20:30.003Z [recommendation-service] DEBUG heap_used_mb=6812 heap_total_mb=8192 cache_entries=110640\n2026-05-13T11:20:45.114Z [k8s] WARN  pod=recommendation-service-7d9f8b-xkp2q memory_usage=7521Mi memory_limit=8192Mi threshold=90%\n2026-05-13T11:20:50.001Z [recommendation-service] ERROR  handler=/v1/recommend error=\"runtime: out of memory\" goroutine=2041\n    goroutine 2041 [running]:\n    runtime.throw(0x...)\n    recommendation-service/internal/cache/model_cache.go:214 +0x72\n2026-05-13T11:20:55.334Z [recommendation-service] FATAL  heap allocation failed: heap_used_mb=7809 heap_total_mb=8192\n2026-05-13T11:20:55.441Z [k8s] INFO  pod=recommendation-service-7d9f8b-xkp2q reason=OOMKilled restartCount=3\n2026-05-13T11:21:00.002Z [alertmanager] CRITICAL alert=recommendation-service-oom-kill count=3 window=30m heap_pct=95 action=page_oncall",
+  "recent_deploys": [
+    {
+      "sha": "c789fc89a688",
+      "timestamp": "2026-04-21T11:57:50Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "package-lock.json",
+        "package.json"
+      ]
+    },
+    {
+      "sha": "1c521d91f664",
+      "timestamp": "2026-04-25T09:36:06Z",
+      "author": "Patrice Chalin",
+      "message": "ci: enable persisted lychee caching in checks workflow (#3314)",
+      "changed_files": [
+        ".github/workflows/checks.yml",
+        ".lycherc"
+      ]
+    },
+    {
+      "sha": "974792d4cdda",
+      "timestamp": "2026-05-05T05:40:26Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with ",
+      "changed_files": [
+        "recommendation-service/mix.lock",
+        "recommendation-service/mix.exs"
+      ]
+    },
+    {
+      "sha": "83dce9a815b2",
+      "timestamp": "2026-05-05T09:51:41Z",
+      "author": "Juliano Costa",
+      "message": "[chore] Promote Dónal to approver (#3336)",
+      "changed_files": [
+        "CODEOWNERS",
+        "docs/approvers.md"
+      ]
+    },
+    {
+      "sha": "5c20010b3f8a",
+      "timestamp": "2026-05-13T10:51:05Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 3 directories wit",
+      "changed_files": [
+        "recommendation-service/requirements.txt",
+        "recommendation-service/internal/feature_store/client.py",
+        "recommendation-service/internal/cache/model_cache.go"
+      ]
+    },
+    {
+      "sha": "47b7d39a4628",
+      "timestamp": "2026-05-13T10:59:26Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "recommendation-service/internal/cache/model_cache.go",
+        "recommendation-service/internal/feature_store/schema.go",
+        "recommendation-service/config/cache_config.yaml"
+      ]
+    },
+    {
+      "sha": "94f8a915b080",
+      "timestamp": "2026-05-13T11:48:42Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "recommendation-service/package-lock.json",
+        "recommendation-service/package.json"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=47b7d39a4628 (2026-05-13T10:59:26Z) modified recommendation-service/internal/cache/model_cache.go and recommendation-service/config/cache_config.yaml, inadvertently setting max_entries=unlimited and eviction_policy=none in the ML model cache. Concurrently, the feature store migrated embedding vectors from 512-dim (2048 bytes) to 1536-dim (6144 bytes) per vector (3x size increase). With no eviction policy and 3x larger embeddings being cached on every cache miss, heap consumption grows unbounded, exhausting the 8GB pod memory limit within ~8 minutes of startup and causing repeated OOMKills.",
+  "ground_truth_remediation": "1. Immediately restart the recommendation-service pod to restore temporary service, then apply a config hotfix to recommendation-service/config/cache_config.yaml setting max_entries=50000 and eviction_policy=lru before the next restart to prevent immediate re-OOM. 2. In model_cache.go, restore the prior cache configuration defaults (max_entries=50000, eviction_policy=lru) that were overwritten in sha=47b7d39a4628, and update the expected embedding byte size from 2048 to 6144 to match the feature store v4.2 schema. 3. Deploy the fix, verify heap stabilizes below 4GB under normal load, and reopen the api-gateway circuit breaker once p99 latency returns below 500ms.",
+  "red_herring": null
+}

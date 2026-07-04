@@ -1,0 +1,87 @@
+{
+  "id": "syn-017",
+  "subset": "synthetic",
+  "category": "deploy_regression",
+  "affected_service": "checkout-service",
+  "severity": "high",
+  "alert_text": "ALERT: checkout-service error rate exceeded 15% threshold (currently 23.4%) — P95 latency 4800ms, up from baseline 320ms. Multiple NullPointerException crashes in feature-flag evaluation path. PagerDuty incident #INC-20847.",
+  "log_window": "2026-05-16T12:04:22.011Z [checkout-service] INFO  Starting checkout-service v2.11.4 (sha=49a7631b1ddb)\n2026-05-16T12:04:22.089Z [checkout-service] INFO  Loading configuration from /etc/checkout/config.yaml\n2026-05-16T12:04:22.134Z [checkout-service] INFO  Connecting to feature-flag-service at flags.internal:9090\n2026-05-16T12:04:22.201Z [checkout-service] INFO  HTTP server listening on :8080\n2026-05-16T12:04:22.215Z [feature-flag-service] INFO  {\"level\":\"info\",\"ts\":1747397062.215,\"msg\":\"flag service ready\",\"flags_loaded\":42}\n2026-05-16T12:04:23.004Z [checkout-service] DEBUG req_id=a1b2c3 method=POST path=/checkout user_id=u-10023 started\n2026-05-16T12:04:23.019Z [checkout-service] DEBUG req_id=a1b2c3 evaluating feature flags for session\n2026-05-16T12:04:23.021Z [checkout-service] ERROR req_id=a1b2c3 NullPointerException: featureFlagClient is nil — flag evaluated before client initialization guard\n2026-05-16T12:04:23.021Z [checkout-service] ERROR   at checkout/flags.go:47 evaluateFlag()\n2026-05-16T12:04:23.022Z [checkout-service] ERROR   at checkout/handler.go:112 handleCheckout()\n2026-05-16T12:04:23.023Z [checkout-service] WARN  req_id=a1b2c3 returning 500 to client after flag evaluation panic\n2026-05-16T12:04:23.310Z [cart-service] INFO  {\"level\":\"info\",\"ts\":1747397063.310,\"msg\":\"cart fetch OK\",\"user_id\":\"u-10023\",\"items\":3}\n2026-05-16T12:04:24.118Z [checkout-service] DEBUG req_id=d4e5f6 method=POST path=/checkout user_id=u-10041 started\n2026-05-16T12:04:24.131Z [checkout-service] DEBUG req_id=d4e5f6 evaluating feature flags for session\n2026-05-16T12:04:24.133Z [checkout-service] ERROR req_id=d4e5f6 NullPointerException: featureFlagClient is nil — flag evaluated before client initialization guard\n2026-05-16T12:04:24.134Z [checkout-service] ERROR   at checkout/flags.go:47 evaluateFlag()\n2026-05-16T12:04:24.135Z [checkout-service] ERROR   at checkout/handler.go:112 handleCheckout()\n2026-05-16T12:04:24.136Z [checkout-service] WARN  req_id=d4e5f6 returning 500 to client after flag evaluation panic\n2026-05-16T12:04:25.003Z [checkout-service] INFO  metrics: requests_total=5 errors_total=2 error_rate=0.400\n2026-05-16T12:04:25.441Z [feature-flag-service] INFO  {\"level\":\"info\",\"ts\":1747397065.441,\"msg\":\"health check OK\",\"uptime_sec\":3}\n2026-05-16T12:04:26.002Z [checkout-service] DEBUG req_id=g7h8i9 method=POST path=/checkout user_id=u-10055 started\n2026-05-16T12:04:26.014Z [checkout-service] ERROR req_id=g7h8i9 NullPointerException: featureFlagClient is nil — flag evaluated before client initialization guard\n2026-05-16T12:04:26.015Z [checkout-service] ERROR   at checkout/flags.go:47 evaluateFlag()\n2026-05-16T12:04:26.016Z [checkout-service] ERROR   at checkout/handler.go:112 handleCheckout()\n2026-05-16T12:04:26.017Z [checkout-service] WARN  req_id=g7h8i9 returning 500 to client\n2026-05-16T12:04:27.200Z [payment-service] INFO  level=info msg=\"payment processor connected\" provider=stripe latency_ms=44\n2026-05-16T12:04:27.500Z [checkout-service] DEBUG req_id=j1k2l3 method=POST path=/checkout user_id=u-10062 started\n2026-05-16T12:04:27.512Z [checkout-service] ERROR req_id=j1k2l3 NullPointerException: featureFlagClient is nil — flag evaluated before client initialization guard\n2026-05-16T12:04:27.513Z [checkout-service] ERROR   at checkout/flags.go:47 evaluateFlag()\n2026-05-16T12:04:27.514Z [checkout-service] WARN  req_id=j1k2l3 returning 500 to client\n2026-05-16T12:04:28.001Z [checkout-service] INFO  metrics: requests_total=12 errors_total=8 error_rate=0.667\n2026-05-16T12:04:29.000Z [checkout-service] WARN  high error rate detected internally — alerting subsystem notified\n2026-05-16T12:04:29.788Z [feature-flag-service] INFO  {\"level\":\"info\",\"ts\":1747397069.788,\"msg\":\"serving flag evaluations\",\"rps\":0,\"connected_clients\":0}\n2026-05-16T12:04:30.001Z [checkout-service] DEBUG req_id=m4n5o6 method=POST path=/checkout user_id=u-10078 started\n2026-05-16T12:04:30.012Z [checkout-service] ERROR req_id=m4n5o6 NullPointerException: featureFlagClient is nil — flag evaluated before client initialization guard\n2026-05-16T12:04:30.013Z [checkout-service] ERROR   at checkout/flags.go:47 evaluateFlag()\n2026-05-16T12:04:30.014Z [checkout-service] ERROR   at checkout/handler.go:112 handleCheckout()\n2026-05-16T12:04:30.015Z [checkout-service] WARN  req_id=m4n5o6 returning 500 to client\n2026-05-16T12:04:31.100Z [cart-service] INFO  {\"level\":\"info\",\"ts\":1747397071.100,\"msg\":\"cart fetch OK\",\"user_id\":\"u-10078\",\"items\":1}\n2026-05-16T12:04:32.000Z [checkout-service] INFO  metrics: requests_total=18 errors_total=13 error_rate=0.722\n2026-05-16T12:04:33.500Z [checkout-service] DEBUG req_id=p7q8r9 method=POST path=/checkout user_id=u-10091 started\n2026-05-16T12:04:33.511Z [checkout-service] ERROR req_id=p7q8r9 NullPointerException: featureFlagClient is nil — flag evaluated before client initialization guard\n2026-05-16T12:04:33.512Z [checkout-service] ERROR   at checkout/flags.go:47 evaluateFlag()\n2026-05-16T12:04:33.513Z [checkout-service] WARN  req_id=p7q8r9 returning 500 to client\n2026-05-16T12:04:35.000Z [checkout-service] INFO  metrics: requests_total=24 errors_total=18 error_rate=0.750\n2026-05-16T12:04:35.201Z [feature-flag-service] WARN  {\"level\":\"warn\",\"ts\":1747397075.201,\"msg\":\"no incoming flag eval requests in 12s — is checkout-service connected?\"}\n2026-05-16T12:04:36.700Z [checkout-service] DEBUG req_id=s1t2u3 method=POST path=/checkout user_id=u-10104 started\n2026-05-16T12:04:36.710Z [checkout-service] ERROR req_id=s1t2u3 NullPointerException: featureFlagClient is nil — flag evaluated before client initialization guard\n2026-05-16T12:04:36.711Z [checkout-service] ERROR   at checkout/flags.go:47 evaluateFlag()\n2026-05-16T12:04:36.712Z [checkout-service] ERROR   at checkout/handler.go:112 handleCheckout()\n2026-05-16T12:04:36.713Z [checkout-service] WARN  req_id=s1t2u3 returning 500 to client\n2026-05-16T12:04:38.000Z [checkout-service] INFO  metrics: requests_total=30 errors_total=23 error_rate=0.767\n2026-05-16T12:04:39.300Z [payment-service] WARN  level=warn msg=\"no payment requests received in last 30s — upstream may be failing early\"\n2026-05-16T12:04:40.000Z [checkout-service] DEBUG req_id=v4w5x6 method=POST path=/checkout user_id=u-10117 started\n2026-05-16T12:04:40.011Z [checkout-service] ERROR req_id=v4w5x6 NullPointerException: featureFlagClient is nil — flag evaluated before client initialization guard\n2026-05-16T12:04:40.012Z [checkout-service] ERROR   at checkout/flags.go:47 evaluateFlag()\n2026-05-16T12:04:40.013Z [checkout-service] WARN  req_id=v4w5x6 returning 500 to client\n2026-05-16T12:04:41.000Z [checkout-service] INFO  metrics: requests_total=36 errors_total=28 error_rate=0.778\n2026-05-16T12:04:42.500Z [checkout-service] WARN  circuit breaker OPEN for downstream flag-client after 10 consecutive nil-client errors\n2026-05-16T12:04:43.100Z [feature-flag-service] ERROR {\"level\":\"error\",\"ts\":1747397083.100,\"msg\":\"checkout-service has not connected — gRPC channel idle timeout approaching\"}\n2026-05-16T12:04:44.000Z [checkout-service] DEBUG req_id=y7z8a1 method=POST path=/checkout user_id=u-10130 started\n2026-05-16T12:04:44.011Z [checkout-service] ERROR req_id=y7z8a1 NullPointerException: featureFlagClient is nil — flag evaluated before client initialization guard\n2026-05-16T12:04:44.012Z [checkout-service] ERROR   at checkout/flags.go:47 evaluateFlag()\n2026-05-16T12:04:44.013Z [checkout-service] WARN  req_id=y7z8a1 returning 500 to client\n2026-05-16T12:04:45.000Z [checkout-service] INFO  metrics: requests_total=43 errors_total=35 error_rate=0.814\n2026-05-16T12:04:46.000Z [checkout-service] WARN  ALERT THRESHOLD BREACHED: error_rate=0.814 > threshold=0.15 — firing PagerDuty INC-20847\n2026-05-16T12:05:10.000Z [checkout-service] INFO  on-call engineer ack'd alert INC-20847\n2026-05-16T12:05:11.200Z [checkout-service] DEBUG engineer querying recent deploy history\n2026-05-16T12:05:12.000Z [checkout-service] INFO  last deploy: sha=49a7631b1ddb at 2026-05-16T12:04:07Z by Dónal O'Sullivan msg='Profiling with firepit (#3333)'\n2026-05-16T12:05:12.100Z [checkout-service] INFO  prior deploy: sha=bb0e91424e8a at 2026-05-05T07:38:47Z by dependabot[bot] msg='Bump the nuget-production-dependencies group with 4 updates (#3341)'\n2026-05-16T12:05:13.000Z [checkout-service] WARN  flags.go:47 — featureFlagClient read with no nil-guard; introduced in sha=49a7631b1ddb\n2026-05-16T12:05:14.000Z [checkout-service] INFO  checkout-service goroutine count=412 (elevated — blocked goroutines piling up)\n2026-05-16T12:05:15.100Z [cart-service] INFO  {\"level\":\"info\",\"ts\":1747397115.100,\"msg\":\"cart service healthy\",\"requests\":120,\"errors\":0}\n2026-05-16T12:05:16.000Z [checkout-service] DEBUG req_id=b2c3d4 method=POST path=/checkout user_id=u-10143 started\n2026-05-16T12:05:16.010Z [checkout-service] ERROR req_id=b2c3d4 NullPointerException: featureFlagClient is nil — flag evaluated before client initialization guard\n2026-05-16T12:05:16.011Z [checkout-service] ERROR   at checkout/flags.go:47 evaluateFlag()\n2026-05-16T12:05:16.012Z [checkout-service] ERROR   at checkout/handler.go:112 handleCheckout()\n2026-05-16T12:05:16.013Z [checkout-service] WARN  req_id=b2c3d4 returning 500 to client\n2026-05-16T12:05:17.500Z [feature-flag-service] WARN  {\"level\":\"warn\",\"ts\":1747397117.500,\"msg\":\"0 flag evaluations served in last 60s\"}\n2026-05-16T12:05:18.000Z [checkout-service] INFO  metrics: requests_total=58 errors_total=49 error_rate=0.845\n2026-05-16T12:06:00.000Z [checkout-service] INFO  engineer initiating rollback to sha=bb0e91424e8a\n2026-05-16T12:06:45.000Z [checkout-service] INFO  rollback deploy complete — sha=bb0e91424e8a running\n2026-05-16T12:06:47.000Z [checkout-service] INFO  featureFlagClient initialized successfully with nil-guard active\n2026-05-16T12:06:48.000Z [checkout-service] DEBUG req_id=e5f6g7 method=POST path=/checkout user_id=u-10200 started\n2026-05-16T12:06:48.120Z [checkout-service] INFO  req_id=e5f6g7 flag 'new_checkout_flow' evaluated: false\n2026-05-16T12:06:48.140Z [checkout-service] INFO  req_id=e5f6g7 checkout completed successfully status=200\n2026-05-16T12:06:49.000Z [checkout-service] INFO  metrics: requests_total=3 errors_total=0 error_rate=0.000\n2026-05-16T12:06:50.000Z [checkout-service] INFO  error rate returning to normal — incident INC-20847 resolving",
+  "recent_deploys": [
+    {
+      "sha": "c789fc89a688",
+      "timestamp": "2026-04-21T11:57:50Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "package-lock.json",
+        "package.json"
+      ]
+    },
+    {
+      "sha": "7cdf4e6a5bb4",
+      "timestamp": "2026-04-27T06:41:57Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github.com/IBM/sarama (#3310)",
+      "changed_files": [
+        "go.mod",
+        "go.sum"
+      ]
+    },
+    {
+      "sha": "3c2af106dae8",
+      "timestamp": "2026-04-28T13:09:38Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the bundler-production-dependencies group across 1 directory w",
+      "changed_files": [
+        "Gemfile",
+        "Gemfile.lock"
+      ]
+    },
+    {
+      "sha": "5b738e5f6b1b",
+      "timestamp": "2026-05-05T05:40:48Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github/codeql-action (#3337)",
+      "changed_files": [
+        ".github/workflows/codeql.yml"
+      ]
+    },
+    {
+      "sha": "30ba52fd9566",
+      "timestamp": "2026-05-05T06:33:05Z",
+      "author": "Jonathan Munz",
+      "message": "Update React Native example app dependencies (#3296)",
+      "changed_files": [
+        "examples/react-native/package.json",
+        "examples/react-native/package-lock.json",
+        "examples/react-native/ios/Podfile.lock"
+      ]
+    },
+    {
+      "sha": "bb0e91424e8a",
+      "timestamp": "2026-05-05T07:38:47Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 4 updates (#3341)",
+      "changed_files": [
+        "src/checkout-service/checkout-service.csproj",
+        "src/checkout-service/flags.go",
+        "src/checkout-service/handler.go"
+      ]
+    },
+    {
+      "sha": "49a7631b1ddb",
+      "timestamp": "2026-05-16T12:04:07Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Profiling with firepit (#3333)",
+      "changed_files": [
+        "src/checkout-service/flags.go",
+        "src/checkout-service/handler.go",
+        "src/checkout-service/profiling.go",
+        "src/checkout-service/main.go"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=49a7631b1ddb ('Profiling with firepit') refactored checkout-service startup sequencing in main.go and profiling.go. As a side effect, the call to evaluateFlag() in handler.go:112 now executes before the featureFlagClient is assigned in the initialization routine (flags.go:47). The nil-guard that previously prevented early access was removed during the refactor, causing every inbound /checkout request to panic with NullPointerException: featureFlagClient is nil from the moment the service started accepting traffic.",
+  "ground_truth_remediation": "Roll back checkout-service to the prior stable deploy sha=bb0e91424e8a. This restores the initialization ordering where featureFlagClient is guaranteed non-nil before any request handler can invoke evaluateFlag(). After rollback, verify error rate returns below 1% and feature-flag-service logs show resumed evaluation requests. Before re-deploying 49a7631b1ddb, add an explicit nil-guard in flags.go evaluateFlag() and a startup integration test asserting client initialization completes before the HTTP server begins accepting requests.",
+  "red_herring": null
+}

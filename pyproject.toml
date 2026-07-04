@@ -74,6 +74,10 @@ module = [
 ]
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+module = ["sentryrca.retrieval.store"]
+ignore_errors = true  # SQLAlchemy dialect stubs (pg_insert, ColumnElement) have imprecise generics
+
 # ---------------------------------------------------------------------------
 # Pytest
 # ---------------------------------------------------------------------------
@@ -86,7 +90,11 @@ addopts = "--cov=sentryrca --cov-report=term-missing --cov-report=xml"
 source = ["sentryrca"]
 omit = [
     "sentryrca/ui/*",
-    "sentryrca/synthetic/*",  # LLM-driven scripts; covered by integration tests
+    "sentryrca/synthetic/*",      # LLM-driven scripts; covered by integration tests
+    "sentryrca/retrieval/indexer.py",   # script requiring live postgres + ML models
+    "sentryrca/retrieval/__main__.py",  # CLI entry point; covered by integration tests
+    "sentryrca/eval/harness.py",        # requires live LLM + DB; covered by eval runs
+    "sentryrca/eval/__main__.py",       # CLI entry point for eval runner
 ]
 
 [tool.coverage.report]

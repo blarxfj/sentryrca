@@ -1,0 +1,65 @@
+{
+  "id": "syn-019",
+  "subset": "synthetic",
+  "category": "deploy_regression",
+  "affected_service": "frontend",
+  "severity": "high",
+  "alert_text": "ALERT: Frontend JS error rate > 15% over 5 minutes — 'Refused to load script' CSP violations spiking. Checkout conversion rate dropped 34% since 15:08 UTC.",
+  "log_window": "2026-05-12T15:01:03.112Z [frontend] INFO  Server started on port 8080, env=production\n2026-05-12T15:01:04.220Z [frontend] INFO  Static assets served from /public, cache-control=max-age=3600\n2026-05-12T15:01:05.341Z [frontend] DEBUG Helmet middleware initialized, CSP policy loaded from config/security.js\n2026-05-12T15:01:06.005Z [nginx] INFO  upstream=frontend workers=4 status=healthy\n2026-05-12T15:01:12.887Z [frontend] INFO  GET /  200 45ms user_agent=\"Mozilla/5.0 Chrome/124\"\n2026-05-12T15:01:13.002Z [frontend] INFO  GET /checkout  200 52ms user_agent=\"Mozilla/5.0 Chrome/124\"\n2026-05-12T15:02:00.441Z [frontend] INFO  health check passed latency_ms=3\n2026-05-12T15:02:44.781Z [frontend] INFO  GET /product/OLJCESPC7Z  200 38ms\n2026-05-12T15:03:01.992Z [frontend] DEBUG session_id=a1b2c3 cart_items=2 checkout_step=1\n2026-05-12T15:03:22.115Z [frontend] INFO  GET /checkout  200 49ms\n2026-05-12T15:04:10.334Z [nginx] INFO  connections=142 active=18 requests_per_sec=44\n2026-05-12T15:05:00.883Z [frontend] INFO  health check passed latency_ms=4\n2026-05-12T15:05:47.229Z [frontend] INFO  GET /  200 41ms\n2026-05-12T15:06:30.004Z [frontend] INFO  GET /cart  200 33ms\n2026-05-12T15:07:00.117Z [frontend] INFO  health check passed latency_ms=3\n2026-05-12T15:07:55.512Z [frontend] INFO  Deploy e01faa1367fa applied — restarting workers\n2026-05-12T15:07:56.640Z [frontend] INFO  Worker 1 restarted pid=18821\n2026-05-12T15:07:56.701Z [frontend] INFO  Worker 2 restarted pid=18822\n2026-05-12T15:07:56.778Z [frontend] INFO  Worker 3 restarted pid=18823\n2026-05-12T15:07:56.841Z [frontend] INFO  Worker 4 restarted pid=18824\n2026-05-12T15:07:57.002Z [frontend] INFO  Helmet middleware initialized, CSP policy loaded from config/security.js\n2026-05-12T15:07:57.120Z [frontend] DEBUG CSP header value=\"default-src 'self'; script-src 'self' 'nonce-{nonce}'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.otel-demo.internal\"\n2026-05-12T15:07:58.334Z [nginx] INFO  upstream=frontend workers=4 status=healthy\n2026-05-12T15:08:01.441Z [frontend] INFO  GET /  200 44ms\n2026-05-12T15:08:02.118Z [frontend] WARN  CSP violation reported: blocked-uri=\"https://static.stripe.com/v3/stripe.js\" document-uri=\"/checkout\" violated-directive=\"script-src\"\n2026-05-12T15:08:02.334Z [frontend] WARN  CSP violation reported: blocked-uri=\"https://static.stripe.com/v3/stripe.js\" document-uri=\"/checkout\" violated-directive=\"script-src\"\n2026-05-12T15:08:03.009Z [frontend] WARN  CSP violation reported: blocked-uri=\"https://js.stripe.com/v3/\" document-uri=\"/checkout\" violated-directive=\"script-src\"\n2026-05-12T15:08:04.217Z [frontend] ERROR JS error received from client: {\"message\":\"Refused to load the script 'https://js.stripe.com/v3/' because it violates the following Content Security Policy directive: \\\"script-src 'self' 'nonce-...'\\\"\",\"source\":\"checkout.js\",\"lineno\":142}\n2026-05-12T15:08:04.880Z [frontend] ERROR JS error received from client: {\"message\":\"Stripe is not defined\",\"source\":\"checkout.js\",\"lineno\":198,\"colno\":12}\n2026-05-12T15:08:05.112Z [frontend] ERROR JS error received from client: {\"message\":\"Cannot read properties of undefined (reading 'createPaymentMethod')\",\"source\":\"checkout.js\",\"lineno\":202}\n2026-05-12T15:08:05.440Z [paymentservice] INFO  No payment initiation received for session_id=b3c4d5 — timeout waiting for stripe token\n2026-05-12T15:08:06.001Z [frontend] WARN  CSP violation reported: blocked-uri=\"https://static.stripe.com/v3/stripe.js\" document-uri=\"/checkout\" violated-directive=\"script-src\"\n2026-05-12T15:08:06.334Z [frontend] ERROR JS error received from client: {\"message\":\"Refused to load the script 'https://static.stripe.com/v3/stripe.js'\",\"source\":\"checkout.js\",\"lineno\":142}\n2026-05-12T15:08:07.221Z [frontend] ERROR checkout_error session_id=b3c4d5 reason=\"stripe_not_initialized\" step=payment\n2026-05-12T15:08:07.778Z [frontend] WARN  CSP violation rate high: 12 violations in last 10s uri_pattern=\"*.stripe.com\"\n2026-05-12T15:08:08.002Z [nginx] WARN  upstream=frontend 5xx_rate=0.0% 4xx_rate=1.2% — client-side errors not captured by upstream metrics\n2026-05-12T15:08:09.445Z [frontend] ERROR JS error received from client: {\"message\":\"Stripe is not defined\",\"source\":\"checkout.js\",\"lineno\":198}\n2026-05-12T15:08:10.112Z [frontend] ERROR checkout_failure session_id=c4d5e6 reason=\"payment_sdk_blocked\" elapsed_ms=3201\n2026-05-12T15:08:10.553Z [paymentservice] WARN  rpc_call=ChargeRequest status=no_request_received from=frontend — possible frontend failure\n2026-05-12T15:08:11.004Z [frontend] ERROR JS error received from client: {\"message\":\"Refused to load the script 'https://js.stripe.com/v3/'\",\"source\":\"checkout.js\",\"lineno\":142}\n2026-05-12T15:08:11.445Z [frontend] ERROR checkout_failure session_id=d5e6f7 reason=\"payment_sdk_blocked\" elapsed_ms=2988\n2026-05-12T15:08:12.001Z [frontend] INFO  GET /checkout  200 48ms — HTTP 200 but JS errors present\n2026-05-12T15:08:13.334Z [frontend] WARN  CSP violation rate high: 28 violations in last 30s uri_pattern=\"*.stripe.com\"\n2026-05-12T15:08:14.117Z [frontend] ERROR JS error received from client: {\"message\":\"Cannot read properties of undefined (reading 'elements')\",\"source\":\"checkout.js\",\"lineno\":210}\n2026-05-12T15:08:15.008Z [paymentservice] WARN  ChargeRequest queue depth=0 — no new requests for 45s, expected ~8/min\n2026-05-12T15:08:16.441Z [frontend] ERROR checkout_failure session_id=e6f7a8 reason=\"payment_sdk_blocked\" elapsed_ms=3115\n2026-05-12T15:08:17.223Z [frontend] DEBUG csp_report_uri_handler received=34 violations total since_restart\n2026-05-12T15:08:18.009Z [nginx] INFO  connections=138 active=21 requests_per_sec=41\n2026-05-12T15:08:20.334Z [frontend] ERROR checkout_failure session_id=f7a8b9 reason=\"payment_sdk_blocked\" elapsed_ms=2876\n2026-05-12T15:08:22.117Z [frontend] WARN  CSP violation: blocked-uri=\"https://m.stripe.network/inner.html\" violated-directive=\"frame-src 'self'\"\n2026-05-12T15:08:23.445Z [frontend] ERROR JS error received from client: {\"message\":\"Stripe.js failed to load.\",\"source\":\"https://js.stripe.com/v3/\",\"lineno\":1}\n2026-05-12T15:08:25.008Z [frontend] ERROR checkout_failure session_id=g8b9c0 reason=\"payment_sdk_blocked\"\n2026-05-12T15:08:27.334Z [paymentservice] ERROR ChargeRequest starvation detected — 0 requests in 60s, SLA breach imminent\n  at paymentservice/server.go:412\n  at paymentservice/charge.go:88\n2026-05-12T15:08:30.002Z [frontend] WARN  CSP violation rate critical: 61 violations in last 90s uri_pattern=\"*.stripe.com\"\n2026-05-12T15:08:31.117Z [frontend] ERROR checkout_failure session_id=h9c0d1 reason=\"payment_sdk_blocked\"\n2026-05-12T15:08:32.441Z [frontend] ERROR checkout_failure session_id=i0d1e2 reason=\"payment_sdk_blocked\"\n2026-05-12T15:08:34.008Z [frontend] DEBUG csp_config path=config/security.js script_src_allowlist=[\"'self'\",\"'nonce-{nonce}'\"]\n2026-05-12T15:08:34.559Z [frontend] ERROR stripe_domains_missing_from_csp expected=[\"https://js.stripe.com\",\"https://static.stripe.com\",\"https://m.stripe.network\"] found=[]\n2026-05-12T15:08:35.112Z [frontend] FATAL checkout_conversion_rate=0.03 baseline=0.47 — payment flow broken for 98% of users\n2026-05-12T15:09:00.334Z [frontend] INFO  health check passed latency_ms=5\n2026-05-12T15:09:01.223Z [nginx] WARN  upstream=frontend checkout_errors=high — alerting on-call\n2026-05-12T15:09:05.441Z [frontend] ERROR checkout_failure session_id=j1e2f3 reason=\"payment_sdk_blocked\"\n2026-05-12T15:09:10.008Z [frontend] ERROR checkout_failure session_id=k2f3a4 reason=\"payment_sdk_blocked\"\n2026-05-12T15:09:15.334Z [paymentservice] ERROR no_charge_requests_received duration_sec=90 — downstream frontend not sending payment tokens\n2026-05-12T15:09:20.117Z [frontend] WARN  CSP violation rate critical: 108 violations in last 150s uri_pattern=\"*.stripe.com\"\n2026-05-12T15:09:25.441Z [frontend] ERROR checkout_failure session_id=l3a4b5 reason=\"payment_sdk_blocked\"\n2026-05-12T15:09:30.008Z [frontend] ERROR checkout_failure session_id=m4b5c6 reason=\"payment_sdk_blocked\"\n2026-05-12T15:09:35.334Z [frontend] DEBUG deploy_sha=e01faa1367fa config_hash=9f3a21bc changed_files=[\"config/security.js\",\"src/middleware/helmet.config.js\"]\n2026-05-12T15:09:40.117Z [frontend] ERROR checkout_failure session_id=n5c6d7 reason=\"payment_sdk_blocked\"\n2026-05-12T15:10:00.441Z [frontend] INFO  health check passed latency_ms=4\n2026-05-12T15:10:05.008Z [nginx] INFO  connections=129 active=19 — traffic nominal but checkout conversions collapsed\n2026-05-12T15:10:10.334Z [frontend] WARN  CSP violation rate critical: 142 violations in last 2 minutes uri_pattern=\"*.stripe.com\"\n2026-05-12T15:10:15.117Z [frontend] ERROR checkout_failure session_id=o6d7e8 reason=\"payment_sdk_blocked\"\n2026-05-12T15:10:20.441Z [frontend] ERROR checkout_failure session_id=p7e8f9 reason=\"payment_sdk_blocked\"\n2026-05-12T15:10:25.008Z [paymentservice] ERROR revenue_impact estimated_lost_transactions=87 since=2026-05-12T15:08:02Z\n2026-05-12T15:10:30.334Z [frontend] ERROR stripe_domains_missing_from_csp expected=[\"https://js.stripe.com\",\"https://static.stripe.com\",\"https://m.stripe.network\"] found=[]\n2026-05-12T15:10:35.117Z [frontend] FATAL checkout_conversion_rate=0.02 baseline=0.47 drop=95.7pct — payment completely broken",
+  "recent_deploys": [
+    {
+      "sha": "974792d4cdda",
+      "timestamp": "2026-05-05T05:40:26Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with ",
+      "changed_files": [
+        "mix.lock",
+        "mix.exs"
+      ]
+    },
+    {
+      "sha": "5b738e5f6b1b",
+      "timestamp": "2026-05-05T05:40:48Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github/codeql-action (#3337)",
+      "changed_files": [
+        ".github/workflows/codeql-analysis.yml"
+      ]
+    },
+    {
+      "sha": "e01faa1367fa",
+      "timestamp": "2026-05-12T14:13:20Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github/codeql-action (#3359)",
+      "changed_files": [
+        "config/security.js",
+        "src/middleware/helmet.config.js",
+        ".github/workflows/codeql-analysis.yml"
+      ]
+    },
+    {
+      "sha": "7cdf4e6a5bb4",
+      "timestamp": "2026-04-27T06:41:57Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github.com/IBM/sarama (#3310)",
+      "changed_files": [
+        "src/kafka-consumer/go.mod",
+        "src/kafka-consumer/go.sum"
+      ]
+    },
+    {
+      "sha": "75dc5aa9b428",
+      "timestamp": "2026-04-23T15:05:28Z",
+      "author": "Ayooluwa Isaiah",
+      "message": "Fix charge span leak in the payment service (#3276)",
+      "changed_files": [
+        "src/paymentservice/charge.js",
+        "src/paymentservice/server.js",
+        "src/paymentservice/tracing.js"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy e01faa1367fa (2026-05-12T14:13:20Z) modified config/security.js and src/middleware/helmet.config.js, tightening the Content-Security-Policy script-src directive to only allow 'self' and nonce-based scripts. This removed the previously allowlisted Stripe domains (https://js.stripe.com, https://static.stripe.com, https://m.stripe.network) from the CSP header. After the deploy took effect at 15:07:57 UTC, every checkout page load blocked the Stripe.js SDK from loading, causing 'Refused to load script' CSP violations and making Stripe.createPaymentMethod undefined, which broke the entire payment flow.",
+  "ground_truth_remediation": "Immediately roll back deploy e01faa1367fa to restore the previous CSP configuration. This can be done by reverting config/security.js and src/middleware/helmet.config.js to the prior commit (5b738e5f6b1b) and deploying. Alternatively, hotfix by adding 'https://js.stripe.com https://static.stripe.com https://m.stripe.network' to the script-src and frame-src directives in config/security.js and redeploying within 30 minutes. Confirm fix by verifying CSP violation reports drop to zero and checkout conversion rate recovers to baseline ~0.47.",
+  "red_herring": null
+}

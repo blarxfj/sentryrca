@@ -22,7 +22,7 @@ from sentryrca.synthetic._prompts import SYNTHETIC_SYSTEM_PROMPT, synthetic_user
 log = structlog.get_logger()
 
 OUTPUT_DIR = Path("data/incidents/synthetic")
-CONCURRENCY = 5
+CONCURRENCY = 2
 
 # 5 categories x 10 scenarios = 50 incidents
 # Each entry: (affected_service, scenario_hint)

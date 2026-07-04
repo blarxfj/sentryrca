@@ -1,0 +1,111 @@
+{
+  "id": "adv-009",
+  "subset": "adversarial",
+  "category": "db_saturation",
+  "affected_service": "cart-service",
+  "severity": "high",
+  "alert_text": "ALERT: cart-service p99 read latency exceeded 8000ms for 5 consecutive minutes; error rate on /cart GET endpoints at 34%; replica lag on postgres-replica-1 and postgres-replica-2 exceeds 180 seconds.",
+  "log_window": "2024-03-14T11:00:01Z [cart-service] INFO  CartHandler - GET /cart?userId=usr_48821 -> 200 OK (42ms)\n2024-03-14T11:00:03Z [cart-service] INFO  CartHandler - GET /cart?userId=usr_91034 -> 200 OK (38ms)\n2024-03-14T11:00:07Z [cart-service] INFO  CartHandler - POST /cart/items -> 200 OK (55ms)\n2024-03-14T11:00:12Z [cart-service] INFO  CartHandler - GET /cart?userId=usr_20091 -> 200 OK (44ms)\n2024-03-14T11:02:15Z [cart-service] INFO  CartHandler - GET /cart?userId=usr_77341 -> 200 OK (39ms)\n2024-03-14T11:04:00Z [cart-service] INFO  db-pool - Replication lag monitor: replica=postgres-replica-1 lag=0.4s replica=postgres-replica-2 lag=0.3s [HEALTHY]\n2024-03-14T11:06:33Z [cart-service] WARN  db-pool - Replication lag monitor: replica=postgres-replica-1 lag=12.8s replica=postgres-replica-2 lag=11.1s [DEGRADED]\n2024-03-14T11:06:34Z [cart-service] WARN  db-pool - Read query routed to primary due to replica lag threshold exceeded\n2024-03-14T11:06:41Z [cart-service] WARN  db-pool - Replication lag monitor: replica=postgres-replica-1 lag=28.3s replica=postgres-replica-2 lag=26.9s [DEGRADED]\n2024-03-14T11:06:55Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_33109 -> 503 (db read timeout after 5000ms)\n2024-03-14T11:07:01Z [cart-service] ERROR db-pool - Connection attempt to postgres-primary timed out: host=pg-primary-01.internal port=5432 attempt=1/3\n2024-03-14T11:07:02Z [cart-service] ERROR db-pool - Connection attempt to postgres-primary timed out: host=pg-primary-01.internal port=5432 attempt=2/3\n2024-03-14T11:07:04Z [cart-service] ERROR db-pool - Connection attempt to postgres-primary timed out: host=pg-primary-01.internal port=5432 attempt=3/3 GIVING UP\n2024-03-14T11:07:04Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_55820 -> 503 (no available db connections)\n2024-03-14T11:07:08Z [cart-service] WARN  db-pool - Replication lag monitor: replica=postgres-replica-1 lag=61.4s replica=postgres-replica-2 lag=59.7s [CRITICAL]\n2024-03-14T11:07:09Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_10284 -> 503 (db read timeout after 5000ms)\n2024-03-14T11:07:11Z [cart-service] ERROR CartHandler - POST /cart/items -> 503 (db write timeout after 5000ms)\n2024-03-14T11:07:15Z [cart-service] ERROR db-pool - Packet loss detected on replication channel to postgres-primary: host=pg-primary-01.internal; intermittent TCP retransmits observed; possible NIC instability\n2024-03-14T11:07:16Z [cart-service] ERROR db-pool - Replication stream interrupted: WAL receiver on replica=postgres-replica-1 lost connection to primary; last_recv_lsn=3/A1F2B000\n2024-03-14T11:07:16Z [cart-service] ERROR db-pool - Replication stream interrupted: WAL receiver on replica=postgres-replica-2 lost connection to primary; last_recv_lsn=3/A1F2A800\n2024-03-14T11:07:18Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_98812 -> 503 (db read timeout after 5000ms)\n2024-03-14T11:07:22Z [cart-service] WARN  db-pool - Replication lag monitor: replica=postgres-replica-1 lag=89.2s replica=postgres-replica-2 lag=87.1s [CRITICAL]\n2024-03-14T11:07:25Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_40021 -> 503 (db read timeout after 5000ms)\n2024-03-14T11:07:30Z [infra-agent] ERROR pg-primary-01 - NIC eth0: TX errors=1482 RX errors=1491 dropped=874 overruns=12 (last 60s); hardware error counters rising; ethtool self-test FAIL\n2024-03-14T11:07:31Z [infra-agent] WARN  pg-primary-01 - kernel: e1000e 0000:00:19.0 eth0: Detected Hardware Unit Hang; resetting adapter\n2024-03-14T11:07:33Z [cart-service] ERROR CartHandler - POST /cart/items -> 503 (db write timeout after 5000ms)\n2024-03-14T11:07:35Z [cart-service] ERROR db-pool - Replication lag monitor: replica=postgres-replica-1 lag=118.7s replica=postgres-replica-2 lag=116.3s [CRITICAL]\n2024-03-14T11:07:40Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_62203 -> 503 (db read timeout after 5000ms)\n2024-03-14T11:07:44Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_71190 -> 503 (db read timeout after 5000ms)\n2024-03-14T11:07:48Z [cart-service] WARN  experiment-service - AB test assignment latency=14ms [OK]; experiment assignments returning normally for all user cohorts\n2024-03-14T11:07:50Z [cart-service] INFO  experiment-service - experiment=cart_checkout_v2 variant=control assigned to usr_80023 [OK]\n2024-03-14T11:07:51Z [cart-service] INFO  experiment-service - experiment=cart_upsell_banner variant=treatment assigned to usr_55712 [OK]\n2024-03-14T11:07:52Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_30091 -> 503 (db read timeout after 5000ms)\n2024-03-14T11:07:55Z [cart-service] ERROR db-pool - Replication lag monitor: replica=postgres-replica-1 lag=152.2s replica=postgres-replica-2 lag=149.8s [CRITICAL]\n2024-03-14T11:08:00Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_44190 -> 503 (db read timeout after 5000ms)\n2024-03-14T11:08:03Z [cart-service] ERROR CartHandler - POST /cart/items -> 503 (db write timeout after 5000ms)\n2024-03-14T11:08:07Z [cart-service] ERROR db-pool - Replication lag monitor: replica=postgres-replica-1 lag=181.5s replica=postgres-replica-2 lag=178.1s [CRITICAL]\n2024-03-14T11:08:10Z [infra-agent] ERROR pg-primary-01 - NIC eth0: TX errors=3104 RX errors=3099 dropped=1832 overruns=29 (last 120s); hardware degradation continuing\n2024-03-14T11:08:12Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_19020 -> 503 (db read timeout after 5000ms)\n2024-03-14T11:08:15Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_82911 -> 503 (db read timeout after 5000ms)\n2024-03-14T11:08:20Z [cart-service] ERROR CartHandler - POST /cart/checkout -> 503 (db write timeout after 5000ms)\n2024-03-14T11:08:22Z [cart-service] WARN  experiment-service - AB test framework reloaded experiment config; 0 errors; all 7 active experiments healthy\n2024-03-14T11:08:25Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_60041 -> 503 (db read timeout after 5000ms)\n2024-03-14T11:08:30Z [cart-service] ERROR db-pool - Primary node pg-primary-01.internal is unreachable; TCP connect ETIMEDOUT after 5000ms; all replicas in CRITICAL lag state; no healthy read targets available\n2024-03-14T11:08:33Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_37782 -> 503 (no healthy db targets)\n2024-03-14T11:08:35Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_91003 -> 503 (no healthy db targets)\n2024-03-14T11:08:38Z [cart-service] ERROR CartHandler - POST /cart/items -> 503 (no healthy db targets)\n2024-03-14T11:08:40Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_22894 -> 503 (no healthy db targets)\n2024-03-14T11:08:45Z [infra-agent] CRITICAL pg-primary-01 - NIC eth0 hardware failure confirmed: ethtool -t eth0 FAILED (offline test); recommend immediate NIC replacement or failover\n2024-03-14T11:08:48Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_51023 -> 503 (no healthy db targets)\n2024-03-14T11:08:50Z [cart-service] ERROR CartHandler - POST /cart/checkout -> 503 (no healthy db targets)\n2024-03-14T11:08:55Z [cart-service] ERROR db-pool - Circuit breaker OPEN on postgres-primary; consecutive_failures=47; all cart read/write operations failing\n2024-03-14T11:09:00Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_73311 -> 503 (circuit breaker open)\n2024-03-14T11:09:05Z [cart-service] ERROR CartHandler - POST /cart/items -> 503 (circuit breaker open)\n2024-03-14T11:09:10Z [cart-service] ERROR CartHandler - GET /cart?userId=usr_88842 -> 503 (circuit breaker open)",
+  "recent_deploys": [
+    {
+      "sha": "a1f3c9d2e84b7610",
+      "timestamp": "2024-03-13T09:15:00Z",
+      "author": "priya.nair",
+      "message": "chore: upgrade cart-service dependencies to latest patch versions",
+      "changed_files": [
+        "package.json",
+        "package-lock.json",
+        "go.sum",
+        "go.mod"
+      ]
+    },
+    {
+      "sha": "b7e2d4f1a93c8052",
+      "timestamp": "2024-03-13T13:40:00Z",
+      "author": "tom.whitfield",
+      "message": "feat: add TTL-based cache eviction for cart session store",
+      "changed_files": [
+        "internal/cache/session_cache.go",
+        "internal/cache/eviction_policy.go",
+        "config/cache.yaml",
+        "tests/cache_ttl_test.go"
+      ]
+    },
+    {
+      "sha": "c4a8e7b2f51d9630",
+      "timestamp": "2024-03-13T17:22:00Z",
+      "author": "lena.schmidt",
+      "message": "fix: correct stock availability check race condition in add-to-cart flow",
+      "changed_files": [
+        "internal/handlers/cart_handler.go",
+        "internal/services/inventory_client.go",
+        "tests/cart_handler_test.go"
+      ]
+    },
+    {
+      "sha": "d9f1b3a7e62c0481",
+      "timestamp": "2024-03-14T08:05:00Z",
+      "author": "marcos.delgado",
+      "message": "refactor: migrate ad-service A/B testing framework and update experiment assignment logic",
+      "changed_files": [
+        "ad-service/internal/experiments/assignment.go",
+        "ad-service/internal/experiments/framework.go",
+        "ad-service/internal/experiments/cohort_splitter.go",
+        "ad-service/internal/experiments/overrides.go",
+        "ad-service/internal/experiments/config_loader.go",
+        "ad-service/internal/experiments/metrics.go",
+        "ad-service/internal/experiments/logger.go",
+        "ad-service/internal/experiments/cache.go",
+        "ad-service/internal/experiments/ab_test.go",
+        "ad-service/internal/handlers/ad_handler.go",
+        "ad-service/internal/handlers/targeting_handler.go",
+        "ad-service/internal/models/experiment.go",
+        "ad-service/internal/models/variant.go",
+        "ad-service/internal/models/cohort.go",
+        "ad-service/config/experiments.yaml",
+        "ad-service/config/feature_flags.yaml",
+        "shared/experiment_sdk/client.go",
+        "shared/experiment_sdk/types.go",
+        "shared/experiment_sdk/hash.go",
+        "shared/experiment_sdk/bucketing.go",
+        "shared/experiment_sdk/telemetry.go",
+        "docs/ab-testing-framework.md"
+      ]
+    },
+    {
+      "sha": "e2c5d8f0b71a3946",
+      "timestamp": "2024-03-14T09:30:00Z",
+      "author": "yuki.tanaka",
+      "message": "feat: emit cart abandonment events to analytics pipeline",
+      "changed_files": [
+        "internal/events/abandonment_publisher.go",
+        "internal/events/event_types.go",
+        "config/analytics.yaml"
+      ]
+    },
+    {
+      "sha": "f3b0e9c1d48a7625",
+      "timestamp": "2024-03-14T10:10:00Z",
+      "author": "priya.nair",
+      "message": "chore: update Prometheus metrics labels for cart endpoint cardinality reduction",
+      "changed_files": [
+        "internal/telemetry/metrics.go",
+        "internal/telemetry/labels.go",
+        "config/prometheus.yaml"
+      ]
+    },
+    {
+      "sha": "a9d4f2b0c83e1750",
+      "timestamp": "2024-03-14T10:45:00Z",
+      "author": "tom.whitfield",
+      "message": "fix: increase db connection pool max_idle_connections from 10 to 20",
+      "changed_files": [
+        "config/database.yaml",
+        "internal/db/pool.go"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Hardware NIC failure on the Postgres primary node (pg-primary-01.internal, NIC eth0). Rising TX/RX hardware error counters and dropped packets beginning at 11:07:30Z caused intermittent packet loss on the database replication channel. This interrupted WAL streaming to both postgres-replica-1 and postgres-replica-2, producing cascading replica lag that exceeded 180 seconds and rendered all replicas unusable for reads. The primary itself became intermittently unreachable due to the same NIC instability, ultimately causing the cart-service db connection pool to exhaust and the circuit breaker to open, failing all cart read and write operations.",
+  "ground_truth_remediation": "1. Immediately initiate a controlled Postgres failover: promote the least-lagged replica (postgres-replica-2, lag=178s) to primary to restore write capability. 2. Isolate pg-primary-01 from traffic and replace the failed NIC (eth0, confirmed by ethtool offline test FAIL at 11:08:45Z). 3. Once the new primary is stable, reset the cart-service circuit breaker and restart the db connection pool. 4. Resync the demoted node as a new replica once the NIC is replaced. 5. Add hardware error counter alerts on all database nodes to detect NIC degradation before it causes outages.",
+  "red_herring": "The ad-service A/B testing framework refactor (SHA d9f1b3a7e62c0481, deployed at 08:05Z roughly 3 hours before the incident) is superficially suspicious: it touched 22 files including shared experiment SDK code consumed by cart-service, and the updated experiment assignment logic could plausibly be blamed for elevated DB load or broken cart code paths tied to variant routing. However, the logs directly exculpate this deploy. At 11:07:48Z the experiment-service logs show AB test assignment latency=14ms [OK] with experiment assignments returning normally for all user cohorts, and at 11:08:22Z the framework logs 0 errors with all 7 active experiments healthy — both log lines appear in the middle of the peak outage window, confirming the A/B framework is fully operational. The actual error chain in the logs is unambiguous and hardware-rooted: replication lag spiking from 0.4s to 181s within four minutes (11:04Z to 11:08Z), an explicit packet loss warning on the replication channel at 11:07:15Z, NIC hardware error counters showing TX errors=3104 and RX dropped=1832 at 11:08:10Z, a kernel-level Hardware Unit Hang and adapter reset on eth0 at 11:07:31Z, WAL receiver disconnections on both replicas, and a conclusive ethtool offline test FAIL at 11:08:45Z — none of which bear any relationship to experiment assignment logic."
+}

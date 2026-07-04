@@ -1,0 +1,87 @@
+{
+  "id": "syn-005",
+  "subset": "synthetic",
+  "category": "db_saturation",
+  "affected_service": "checkout-service",
+  "severity": "high",
+  "alert_text": "ALERT: checkout-service P95 latency > 8000ms for 5 consecutive minutes; HTTP 5xx error rate exceeding 15% on /api/checkout endpoint. Possible DB saturation detected.",
+  "log_window": "2026-05-13T11:50:02.114Z INFO  [checkout-service] Starting checkout-service v2.11.4 (sha=94f8a915b080)\n2026-05-13T11:50:02.431Z INFO  [checkout-service] Connected to PostgreSQL at postgres-primary:5432/orders db=orders pool_size=20\n2026-05-13T11:50:02.899Z INFO  [checkout-service] HTTP server listening on :8080\n2026-05-13T11:50:05.003Z DEBUG [checkout-service] {\"msg\":\"order placed\",\"order_id\":\"ord-88821\",\"user_id\":\"u-4421\",\"latency_ms\":42}\n2026-05-13T11:50:06.210Z DEBUG [checkout-service] {\"msg\":\"order placed\",\"order_id\":\"ord-88822\",\"user_id\":\"u-9913\",\"latency_ms\":39}\n2026-05-13T11:50:07.881Z DEBUG [checkout-service] {\"msg\":\"order placed\",\"order_id\":\"ord-88823\",\"user_id\":\"u-3302\",\"latency_ms\":45}\n2026-05-13T11:50:10.022Z INFO  [postgres-exporter] scrape_duration_seconds=0.012 connected=true slow_queries=0\n2026-05-13T11:51:03.441Z DEBUG [checkout-service] {\"msg\":\"order placed\",\"order_id\":\"ord-88901\",\"user_id\":\"u-7710\",\"latency_ms\":51}\n2026-05-13T11:51:45.882Z DEBUG [checkout-service] {\"msg\":\"order placed\",\"order_id\":\"ord-88955\",\"user_id\":\"u-1142\",\"latency_ms\":48}\n2026-05-13T11:52:01.003Z INFO  [postgres-exporter] scrape_duration_seconds=0.014 connected=true slow_queries=2\n2026-05-13T11:52:04.210Z WARN  [checkout-service] {\"msg\":\"slow query detected\",\"query\":\"SELECT * FROM order_items WHERE product_id=$1\",\"duration_ms\":820,\"threshold_ms\":500}\n2026-05-13T11:52:04.881Z WARN  [checkout-service] {\"msg\":\"slow query detected\",\"query\":\"SELECT * FROM order_items WHERE product_id=$1\",\"duration_ms\":954,\"threshold_ms\":500}\n2026-05-13T11:52:10.334Z DEBUG [checkout-service] {\"msg\":\"db pool status\",\"in_use\":4,\"idle\":16,\"max\":20}\n2026-05-13T11:52:22.991Z WARN  [checkout-service] {\"msg\":\"slow query detected\",\"query\":\"SELECT * FROM order_items WHERE product_id=$1\",\"duration_ms\":1204,\"threshold_ms\":500}\n2026-05-13T11:52:31.445Z INFO  [cart-service] GET /cart/u-4421 status=200 latency_ms=12\n2026-05-13T11:52:33.112Z INFO  [cart-service] GET /cart/u-9913 status=200 latency_ms=14\n2026-05-13T11:52:44.003Z WARN  [checkout-service] {\"msg\":\"slow query detected\",\"query\":\"SELECT * FROM order_items WHERE product_id=$1\",\"duration_ms\":1889,\"threshold_ms\":500}\n2026-05-13T11:52:50.771Z INFO  [postgres-exporter] scrape_duration_seconds=0.019 connected=true slow_queries=9 seq_scans_order_items=1482\n2026-05-13T11:53:01.334Z WARN  [checkout-service] {\"msg\":\"db pool pressure\",\"in_use\":11,\"idle\":9,\"max\":20,\"wait_count\":2}\n2026-05-13T11:53:08.211Z WARN  [checkout-service] {\"msg\":\"slow query detected\",\"query\":\"SELECT * FROM order_items WHERE product_id=$1\",\"duration_ms\":2541,\"threshold_ms\":500}\n2026-05-13T11:53:09.002Z WARN  [checkout-service] {\"msg\":\"slow query detected\",\"query\":\"SELECT * FROM order_items WHERE product_id=$1\",\"duration_ms\":2703,\"threshold_ms\":500}\n2026-05-13T11:53:14.009Z INFO  [cart-service] GET /cart/u-3302 status=200 latency_ms=18\n2026-05-13T11:53:21.881Z WARN  [checkout-service] {\"msg\":\"db pool pressure\",\"in_use\":15,\"idle\":5,\"max\":20,\"wait_count\":7}\n2026-05-13T11:53:29.004Z ERROR [checkout-service] {\"msg\":\"query execution failed\",\"query\":\"SELECT * FROM order_items WHERE product_id=$1\",\"error\":\"context deadline exceeded\",\"duration_ms\":5000}\n2026-05-13T11:53:29.441Z ERROR [checkout-service] POST /api/checkout status=500 order_id=ord-89012 user_id=u-5530 latency_ms=5001\n2026-05-13T11:53:31.771Z WARN  [checkout-service] {\"msg\":\"db pool pressure\",\"in_use\":18,\"idle\":2,\"max\":20,\"wait_count\":12}\n2026-05-13T11:53:35.220Z INFO  [postgres-exporter] scrape_duration_seconds=0.031 connected=true slow_queries=24 seq_scans_order_items=3891 blk_read_time_ms=18422\n2026-05-13T11:53:38.002Z ERROR [checkout-service] {\"msg\":\"query execution failed\",\"query\":\"SELECT * FROM order_items WHERE product_id=$1\",\"error\":\"context deadline exceeded\",\"duration_ms\":5000}\n2026-05-13T11:53:38.441Z ERROR [checkout-service] POST /api/checkout status=500 order_id=ord-89019 user_id=u-6612 latency_ms=5001\n2026-05-13T11:53:40.882Z ERROR [checkout-service] {\"msg\":\"query execution failed\",\"query\":\"SELECT * FROM order_items WHERE product_id=$1\",\"error\":\"context deadline exceeded\",\"duration_ms\":5000}\n2026-05-13T11:53:40.993Z ERROR [checkout-service] POST /api/checkout status=500 order_id=ord-89021 user_id=u-7743 latency_ms=5002\n2026-05-13T11:53:42.334Z WARN  [checkout-service] {\"msg\":\"db pool pressure\",\"in_use\":20,\"idle\":0,\"max\":20,\"wait_count\":18}\n2026-05-13T11:53:43.001Z ERROR [checkout-service] {\"msg\":\"db pool exhausted\",\"in_use\":20,\"idle\":0,\"max\":20,\"wait_count\":21,\"error\":\"connection pool timeout after 1000ms\"}\n2026-05-13T11:53:43.112Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89025 user_id=u-8821 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:53:44.002Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89026 user_id=u-2201 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:53:44.334Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89027 user_id=u-9932 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:53:44.771Z FATAL [checkout-service] db connection pool exhausted; all 20 connections in use; 24 requests waiting\n  at github.com/otel-demo/checkout-service/db.(*Pool).Acquire (pool.go:142)\n  at github.com/otel-demo/checkout-service/handlers.(*CheckoutHandler).PlaceOrder (checkout.go:89)\n2026-05-13T11:53:45.003Z INFO  [cart-service] GET /cart/u-5530 status=200 latency_ms=15\n2026-05-13T11:53:45.220Z INFO  [cart-service] GET /cart/u-6612 status=200 latency_ms=13\n2026-05-13T11:53:46.882Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89030 user_id=u-1102 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:53:47.003Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89031 user_id=u-4450 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:53:48.114Z INFO  [postgres-exporter] scrape_duration_seconds=0.052 connected=true slow_queries=41 seq_scans_order_items=7204 blk_read_time_ms=41093 active_connections=20 waiting_connections=24\n2026-05-13T11:53:50.002Z ERROR [checkout-service] {\"msg\":\"db pool exhausted\",\"in_use\":20,\"idle\":0,\"max\":20,\"wait_count\":27,\"error\":\"connection pool timeout after 1000ms\"}\n2026-05-13T11:53:50.441Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89035 user_id=u-3311 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:53:51.003Z WARN  [payment-service] upstream checkout-service returned 503; order_id=ord-89035 retrying=true attempt=1\n2026-05-13T11:53:52.334Z WARN  [payment-service] upstream checkout-service returned 503; order_id=ord-89035 retrying=true attempt=2\n2026-05-13T11:53:53.771Z ERROR [payment-service] upstream checkout-service returned 503; order_id=ord-89035 retrying=false attempt=3 giving_up=true\n2026-05-13T11:53:55.002Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89042 user_id=u-7721 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:53:55.441Z INFO  [postgres-exporter] pg_stat_user_tables table=order_items seq_scan=8991 idx_scan=0 n_live_tup=4823091\n2026-05-13T11:53:56.002Z WARN  [checkout-service] {\"msg\":\"query plan warning\",\"table\":\"order_items\",\"plan_type\":\"SeqScan\",\"estimated_rows\":4823091,\"filter\":\"product_id=$1\",\"note\":\"no index found for filter column\"}\n2026-05-13T11:53:56.884Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89044 user_id=u-8812 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:53:57.112Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89045 user_id=u-2231 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:53:58.334Z INFO  [postgres-exporter] scrape_duration_seconds=0.071 connected=true slow_queries=58 seq_scans_order_items=9103 blk_read_time_ms=62441 active_connections=20 waiting_connections=31\n2026-05-13T11:54:00.003Z ERROR [checkout-service] {\"msg\":\"db pool exhausted\",\"in_use\":20,\"idle\":0,\"max\":20,\"wait_count\":33,\"error\":\"connection pool timeout after 1000ms\"}\n2026-05-13T11:54:00.441Z WARN  [payment-service] checkout-service health check failed status=503\n2026-05-13T11:54:01.002Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89050 user_id=u-5541 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:54:01.334Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89051 user_id=u-3320 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:54:02.881Z ERROR [checkout-service] {\"msg\":\"db pool exhausted\",\"in_use\":20,\"idle\":0,\"max\":20,\"wait_count\":38}\n  at github.com/otel-demo/checkout-service/db.(*Pool).Acquire (pool.go:142)\n  at github.com/otel-demo/checkout-service/handlers.(*CheckoutHandler).PlaceOrder (checkout.go:89)\n2026-05-13T11:54:04.002Z INFO  [postgres-exporter] pg_stat_activity state=active count=20 wait_event_type=IO wait_event=DataFileRead query_preview=\"SELECT * FROM order_items WHERE product_id\"\n2026-05-13T11:54:05.441Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89057 user_id=u-6630 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:54:06.002Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89058 user_id=u-1123 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:54:08.334Z INFO  [postgres-exporter] scrape_duration_seconds=0.089 connected=true slow_queries=74 seq_scans_order_items=10891 blk_read_time_ms=88103 active_connections=20 waiting_connections=39\n2026-05-13T11:54:10.002Z WARN  [checkout-service] {\"msg\":\"health check degraded\",\"status\":\"unhealthy\",\"reason\":\"db pool exhausted\",\"uptime_s\":1448}\n2026-05-13T11:54:10.441Z ERROR [payment-service] circuit breaker OPEN for checkout-service after 10 consecutive 503 responses\n2026-05-13T11:54:12.002Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89064 user_id=u-9901 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:54:14.334Z INFO  [postgres-exporter] scrape_duration_seconds=0.094 connected=true slow_queries=81 seq_scans_order_items=11742 blk_read_time_ms=101882 active_connections=20 waiting_connections=44\n2026-05-13T11:54:15.002Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89070 user_id=u-4412 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:54:16.441Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89071 user_id=u-7730 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:54:18.002Z WARN  [checkout-service] {\"msg\":\"query plan warning\",\"table\":\"order_items\",\"plan_type\":\"SeqScan\",\"estimated_rows\":4823091,\"filter\":\"product_id=$1\",\"note\":\"no index found for filter column; consider CREATE INDEX idx_order_items_product_id ON order_items(product_id)\"}\n2026-05-13T11:54:20.334Z INFO  [postgres-exporter] pg_stat_bgwriter buffers_alloc=98821 maxwritten_clean=142 note=\"high buffer pressure indicating heavy seq scans\"\n2026-05-13T11:54:21.441Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89078 user_id=u-2201 error=\"service unavailable: db pool exhausted\"\n2026-05-13T11:54:22.002Z ERROR [checkout-service] POST /api/checkout status=503 order_id=ord-89079 user_id=u-5512 error=\"service unavailable: db pool exhausted\"",
+  "recent_deploys": [
+    {
+      "sha": "0410576889f7",
+      "timestamp": "2026-04-21T12:05:34Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "requirements.txt",
+        "src/frontendproxy/requirements.txt"
+      ]
+    },
+    {
+      "sha": "c92f3bc755e8",
+      "timestamp": "2026-04-24T03:26:57Z",
+      "author": "Timur Olzhabayev",
+      "message": "chore(grafana): bump image to 13.0.1 and provision default-email receiver (#3288",
+      "changed_files": [
+        "src/grafana/grafana.ini",
+        "src/grafana/provisioning/alerting/receivers.yaml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "sha": "7cdf4e6a5bb4",
+      "timestamp": "2026-04-27T06:41:57Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github.com/IBM/sarama (#3310)",
+      "changed_files": [
+        "src/kafka-consumer/go.mod",
+        "src/kafka-consumer/go.sum"
+      ]
+    },
+    {
+      "sha": "dc4785b348ba",
+      "timestamp": "2026-04-30T02:23:16Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump swoosh (#3323)",
+      "changed_files": [
+        "src/emailservice/mix.exs",
+        "src/emailservice/mix.lock"
+      ]
+    },
+    {
+      "sha": "781c571cc008",
+      "timestamp": "2026-05-05T05:40:16Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump bytestring (#3345)",
+      "changed_files": [
+        "src/shippingservice/package.yaml",
+        "src/shippingservice/stack.yaml"
+      ]
+    },
+    {
+      "sha": "30ba52fd9566",
+      "timestamp": "2026-05-05T06:33:05Z",
+      "author": "Jonathan Munz",
+      "message": "Update React Native example app dependencies (#3296)",
+      "changed_files": [
+        "src/checkout-service/db/migrations/20260505_add_product_id_to_order_items.sql",
+        "src/checkout-service/db/schema.go",
+        "src/checkout-service/handlers/checkout.go",
+        "src/checkout-service/queries/order_items.sql"
+      ]
+    },
+    {
+      "sha": "94f8a915b080",
+      "timestamp": "2026-05-13T11:48:42Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=30ba52fd9566 added a new foreign key column `product_id` to the `order_items` table (migration: 20260505_add_product_id_to_order_items.sql) and introduced a query `SELECT * FROM order_items WHERE product_id=$1` in the checkout handler. However, the migration did not include a corresponding index on `order_items(product_id)`. With 4,823,091 rows in `order_items`, every checkout lookup performs a full sequential scan, driving CPU/IO saturation on PostgreSQL, exhausting the 20-connection pool, and causing cascading HTTP 503s on /api/checkout.",
+  "ground_truth_remediation": "1. Immediately apply a concurrent index creation on the affected table to avoid locking production traffic: `CREATE INDEX CONCURRENTLY idx_order_items_product_id ON order_items(product_id);` — this should complete within 5-20 minutes on the current dataset size. 2. Monitor `pg_stat_user_tables` to confirm `idx_scan` count rises and `seq_scan` drops for `order_items`. 3. Verify checkout-service connection pool drains (idle connections recover) and P95 latency returns below 500ms. 4. As a follow-up, add a schema validation CI check that enforces indexes on all foreign key columns before migration approval.",
+  "red_herring": null
+}

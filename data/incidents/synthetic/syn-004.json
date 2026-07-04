@@ -1,0 +1,86 @@
+{
+  "id": "syn-004",
+  "subset": "synthetic",
+  "category": "db_saturation",
+  "affected_service": "postgres",
+  "severity": "high",
+  "alert_text": "ALERT: PostgreSQL connection pool exhaustion — active connections at 98% capacity; p99 query latency > 30s; HTTP 5xx error rate on productcatalogservice rising above 15%",
+  "log_window": "2026-05-13T11:42:03.112Z [postgres] LOG:  autovacuum: processing table \"public.order_items\"\n2026-05-13T11:42:03.887Z [postgres] LOG:  autovacuum: found lock conflict on \"public.order_items\" — waiting\n2026-05-13T11:42:05.001Z [productcatalogservice] INFO  msg=\"catalog query executed\" latency_ms=42 query=\"SELECT * FROM products WHERE category_id=$1\"\n2026-05-13T11:42:07.334Z [postgres] LOG:  autovacuum: still waiting for lock on \"public.order_items\" held by pid=3817\n2026-05-13T11:42:08.220Z [analyticsservice] INFO  msg=\"starting nightly aggregation job\" job_id=agg-20260513 table=order_items\n2026-05-13T11:42:08.334Z [postgres] LOG:  statement: SELECT date_trunc('day', created_at), product_id, SUM(quantity), SUM(unit_price*quantity) FROM order_items GROUP BY 1, 2 ORDER BY 1 DESC  -- pid=3817\n2026-05-13T11:42:10.005Z [productcatalogservice] INFO  msg=\"catalog query executed\" latency_ms=48 query=\"SELECT * FROM products WHERE category_id=$1\"\n2026-05-13T11:42:15.442Z [postgres] LOG:  autovacuum: still waiting for lock on \"public.order_items\" held by pid=3817 (waited 12s)\n2026-05-13T11:42:18.771Z [postgres] LOG:  checkpoint starting: xlog\n2026-05-13T11:42:20.103Z [productcatalogservice] WARN  msg=\"slow query detected\" latency_ms=310 query=\"SELECT * FROM products JOIN order_items oi ON oi.product_id=products.id WHERE oi.created_at > $1\"\n2026-05-13T11:42:22.009Z [postgres] LOG:  autovacuum: still waiting for lock on \"public.order_items\" held by pid=3817 (waited 19s)\n2026-05-13T11:42:23.558Z [analyticsservice] DEBUG msg=\"aggregation query running\" pid=3817 rows_scanned=4200000\n2026-05-13T11:42:25.114Z [postgres] WARN:  table \"public.order_items\" has dead tuple ratio 0.23, autovacuum needed\n2026-05-13T11:42:27.882Z [productcatalogservice] WARN  msg=\"slow query detected\" latency_ms=780 query=\"SELECT * FROM products JOIN order_items oi ON oi.product_id=products.id WHERE oi.created_at > $1\"\n2026-05-13T11:42:30.007Z [postgres] LOG:  autovacuum: still waiting for lock on \"public.order_items\" held by pid=3817 (waited 27s)\n2026-05-13T11:42:31.661Z [connectionpool] INFO  pool_size=95 max_size=100 idle=5 waiting=2\n2026-05-13T11:42:35.220Z [analyticsservice] DEBUG msg=\"aggregation query running\" pid=3817 rows_scanned=9800000\n2026-05-13T11:42:38.004Z [postgres] LOG:  autovacuum: still waiting for lock on \"public.order_items\" held by pid=3817 (waited 35s)\n2026-05-13T11:42:40.331Z [productcatalogservice] ERROR msg=\"query timeout\" latency_ms=5002 error=\"context deadline exceeded\" query=\"SELECT * FROM products JOIN order_items oi ON oi.product_id=products.id WHERE oi.created_at > $1\"\n2026-05-13T11:42:40.445Z [productcatalogservice] ERROR msg=\"request failed\" status=500 path=\"/api/v1/products\" trace_id=abc12300\n2026-05-13T11:42:41.112Z [connectionpool] WARN  pool_size=98 max_size=100 idle=2 waiting=7 msg=\"pool near capacity\"\n2026-05-13T11:42:42.003Z [postgres] LOG:  autovacuum: still waiting for lock on \"public.order_items\" held by pid=3817 (waited 39s)\n2026-05-13T11:42:43.889Z [analyticsservice] DEBUG msg=\"aggregation query running\" pid=3817 rows_scanned=15600000\n2026-05-13T11:42:45.002Z [productcatalogservice] ERROR msg=\"query timeout\" latency_ms=5001 error=\"context deadline exceeded\" query=\"SELECT * FROM products JOIN order_items oi ON oi.product_id=products.id WHERE oi.created_at > $1\"\n2026-05-13T11:42:45.103Z [productcatalogservice] ERROR msg=\"request failed\" status=500 path=\"/api/v1/products\" trace_id=abc12301\n2026-05-13T11:42:46.774Z [connectionpool] WARN  pool_size=99 max_size=100 idle=1 waiting=12 msg=\"pool critically low\"\n2026-05-13T11:42:47.334Z [postgres] LOG:  autovacuum: still waiting for lock on \"public.order_items\" held by pid=3817 (waited 44s)\n2026-05-13T11:42:48.221Z [postgres] WARN:  bloat ratio on \"public.order_items\" increasing: dead_tuples=2847193 live_tuples=12003441\n2026-05-13T11:42:49.882Z [productcatalogservice] ERROR msg=\"query timeout\" latency_ms=5003 error=\"context deadline exceeded\" query=\"SELECT * FROM products JOIN order_items oi ON oi.product_id=products.id WHERE oi.created_at > $1\"\n2026-05-13T11:42:50.009Z [productcatalogservice] ERROR msg=\"request failed\" status=500 path=\"/api/v1/products\" trace_id=abc12302\n2026-05-13T11:42:51.443Z [connectionpool] ERROR pool_size=100 max_size=100 idle=0 waiting=19 msg=\"connection pool exhausted\"\n2026-05-13T11:42:52.005Z [productcatalogservice] ERROR msg=\"failed to acquire db connection\" error=\"connection pool exhausted\" path=\"/api/v1/products\" trace_id=abc12303\n2026-05-13T11:42:52.118Z [productcatalogservice] ERROR msg=\"request failed\" status=500 path=\"/api/v1/products\" trace_id=abc12303\n2026-05-13T11:42:53.007Z [postgres] LOG:  autovacuum: still waiting for lock on \"public.order_items\" held by pid=3817 (waited 50s)\n2026-05-13T11:42:54.331Z [analyticsservice] DEBUG msg=\"aggregation query running\" pid=3817 rows_scanned=22100000\n2026-05-13T11:42:55.009Z [connectionpool] ERROR pool_size=100 max_size=100 idle=0 waiting=24 msg=\"connection pool exhausted — new requests rejected\"\n2026-05-13T11:42:56.003Z [productcatalogservice] FATAL msg=\"database unavailable — circuit breaker opened\" component=db_client\n2026-05-13T11:42:56.114Z [productcatalogservice] ERROR msg=\"request failed\" status=503 path=\"/api/v1/products\" trace_id=abc12310\n2026-05-13T11:42:57.884Z [productcatalogservice] ERROR msg=\"request failed\" status=503 path=\"/api/v1/products\" trace_id=abc12311\n2026-05-13T11:42:58.002Z [postgres] LOG:  autovacuum: still waiting for lock on \"public.order_items\" held by pid=3817 (waited 55s)\n2026-05-13T11:43:00.334Z [productcatalogservice] ERROR msg=\"request failed\" status=503 path=\"/api/v1/products\" trace_id=abc12312\n2026-05-13T11:43:01.445Z [postgres] LOG:  checkpoint complete: wrote 1842 buffers\n2026-05-13T11:43:02.009Z [postgres] WARN:  pg_stat_activity shows 31 queries waiting on lock held by pid=3817\n2026-05-13T11:43:03.112Z [analyticsservice] DEBUG msg=\"aggregation query running\" pid=3817 rows_scanned=28900000\n2026-05-13T11:43:05.003Z [connectionpool] ERROR pool_size=100 max_size=100 idle=0 waiting=31\n2026-05-13T11:43:07.882Z [productcatalogservice] ERROR msg=\"request failed\" status=503 path=\"/api/v1/checkout\" trace_id=abc12320\n2026-05-13T11:43:09.003Z [postgres] LOG:  autovacuum: still waiting for lock on \"public.order_items\" held by pid=3817 (waited 66s)\n2026-05-13T11:43:10.221Z [postgres] ERROR:  could not obtain lock on relation \"public.order_items\" for autovacuum; skipping\n2026-05-13T11:43:10.334Z [postgres] WARN:  skipping autovacuum for \"public.order_items\" — will retry in 60s\n2026-05-13T11:43:11.005Z [analyticsservice] INFO  msg=\"aggregation query running\" pid=3817 rows_scanned=35000000 eta_seconds=480\n2026-05-13T11:43:12.443Z [connectionpool] ERROR pool_size=100 max_size=100 idle=0 waiting=38 msg=\"upstream timeouts cascading\"\n2026-05-13T11:43:14.003Z [productcatalogservice] ERROR msg=\"request failed\" status=503 path=\"/api/v1/products\" trace_id=abc12330\n2026-05-13T11:43:15.884Z [postgres] WARN:  dead tuple accumulation on \"public.order_items\" will cause sequential scan slowdown\n2026-05-13T11:43:17.002Z [postgres] LOG:  pg_stat_activity: pid=3817 state=active wait_event_type=Lock wait_event=relation query_start=2026-05-13T11:42:08Z\n2026-05-13T11:43:18.331Z [connectionpool] ERROR pool_size=100 max_size=100 idle=0 waiting=42\n2026-05-13T11:43:20.009Z [analyticsservice] DEBUG msg=\"aggregation query running\" pid=3817 rows_scanned=41200000\n2026-05-13T11:43:22.003Z [productcatalogservice] ERROR msg=\"request failed\" status=503 path=\"/api/v1/products\" trace_id=abc12340\n2026-05-13T11:43:25.112Z [postgres] WARN:  autovacuum worker for \"public.order_items\" has been blocked for 77s — table bloat risk HIGH\n2026-05-13T11:43:27.334Z [connectionpool] ERROR pool_size=100 max_size=100 idle=0 waiting=49 msg=\"queue depth critical\"\n2026-05-13T11:43:29.003Z [postgres] LOG:  autovacuum: will retry \"public.order_items\" in 60s (blocked by pid=3817 since 2026-05-13T11:42:08Z)\n2026-05-13T11:43:30.221Z [analyticsservice] WARN  msg=\"long-running query detected\" pid=3817 duration_s=82 query_hash=0xfa3d11c2\n2026-05-13T11:43:32.005Z [productcatalogservice] ERROR msg=\"request failed\" status=503 path=\"/api/v1/orders\" trace_id=abc12350\n2026-05-13T11:43:34.882Z [connectionpool] ERROR pool_size=100 max_size=100 idle=0 waiting=55 msg=\"all connections held; new requests dropping\"\n2026-05-13T11:43:36.003Z [postgres] FATAL:  remaining connection slots reserved for replication and superusers\n2026-05-13T11:43:36.112Z [productcatalogservice] FATAL msg=\"cannot connect to postgres\" error=\"FATAL: remaining connection slots reserved for replication and superusers\"\n  at db.connect (db/client.go:88)\n  at productcatalog.handler (service/catalog.go:143)\n2026-05-13T11:43:37.334Z [analyticsservice] DEBUG msg=\"aggregation query running\" pid=3817 rows_scanned=47800000 eta_seconds=390\n2026-05-13T11:43:38.005Z [connectionpool] FATAL msg=\"connection pool permanently exhausted — service degraded\"\n2026-05-13T11:43:40.003Z [productcatalogservice] ERROR msg=\"request failed\" status=503 path=\"/api/v1/products\" trace_id=abc12360\n2026-05-13T11:43:42.221Z [postgres] WARN:  dead_tuples=3102847 on \"public.order_items\" — sequential scan performance degraded by estimated 40%\n2026-05-13T11:43:45.334Z [postgres] LOG:  pg_stat_activity: 100 total connections, 0 idle, 87 active, 13 idle-in-transaction\n2026-05-13T11:43:47.003Z [analyticsservice] WARN  msg=\"query has been running for 99s without yielding lock\" pid=3817 table=order_items\n2026-05-13T11:43:49.882Z [productcatalogservice] ERROR msg=\"request failed\" status=503 path=\"/api/v1/checkout\" trace_id=abc12370\n2026-05-13T11:43:52.003Z [postgres] WARN:  autovacuum for \"public.order_items\" cannot proceed — blocked by analytics aggregation query (pid=3817) started at 2026-05-13T11:42:08Z\n2026-05-13T11:43:55.221Z [connectionpool] FATAL pool_size=100 max_size=100 idle=0 waiting=63 msg=\"circuit breaker OPEN — refusing new connections\"\n2026-05-13T11:43:57.009Z [analyticsservice] INFO  msg=\"aggregation query still in progress\" pid=3817 rows_scanned=54100000 elapsed_s=109\n2026-05-13T11:44:00.334Z [productcatalogservice] ERROR msg=\"request failed\" status=503 path=\"/api/v1/products\" trace_id=abc12380\n2026-05-13T11:44:03.003Z [postgres] WARN:  lock contention summary: 63 queries waiting; oldest wait = 102s; blocker = pid=3817 (analyticsservice aggregation)\n2026-05-13T11:44:05.882Z [analyticsservice] WARN  msg=\"analytics aggregation job scheduled outside maintenance window — introduced in deploy 2b8ccac18a70\" job_id=agg-20260513\n2026-05-13T11:44:08.003Z [postgres] LOG:  pg_stat_activity: 100 total connections, 0 idle, 91 active, 9 idle-in-transaction\n2026-05-13T11:44:10.221Z [productcatalogservice] ERROR msg=\"request failed\" status=503 path=\"/api/v1/products\" trace_id=abc12390\n2026-05-13T11:44:12.334Z [connectionpool] FATAL pool_size=100 max_size=100 idle=0 waiting=68",
+  "recent_deploys": [
+    {
+      "sha": "7b1231238df3",
+      "timestamp": "2026-04-23T08:01:17Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] Fix dependabot configuration (#3298)",
+      "changed_files": [
+        ".github/dependabot.yml"
+      ]
+    },
+    {
+      "sha": "81528af3e3be",
+      "timestamp": "2026-04-28T14:09:01Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump idna_adapter (#3320)",
+      "changed_files": [
+        "Cargo.lock",
+        "Cargo.toml"
+      ]
+    },
+    {
+      "sha": "5b738e5f6b1b",
+      "timestamp": "2026-05-05T05:40:48Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github/codeql-action (#3337)",
+      "changed_files": [
+        ".github/workflows/codeql.yml"
+      ]
+    },
+    {
+      "sha": "9c4ca95ea6e8",
+      "timestamp": "2026-05-05T09:51:18Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "fix(deps): resolve npm security advisories (#3347)",
+      "changed_files": [
+        "package.json",
+        "package-lock.json",
+        "src/frontend/package.json"
+      ]
+    },
+    {
+      "sha": "6302e2c10e48",
+      "timestamp": "2026-05-05T10:28:04Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "fix(deps): resolve Ruby security advisories (#3349)",
+      "changed_files": [
+        "Gemfile",
+        "Gemfile.lock"
+      ]
+    },
+    {
+      "sha": "05fab63b804f",
+      "timestamp": "2026-05-06T14:43:41Z",
+      "author": "Shenoy Pratik",
+      "message": "fix: collector otelcol.signal scope attribute conflict in logs pipeline (#3321)",
+      "changed_files": [
+        "collector/config.yaml",
+        "collector/pipelines/logs.yaml",
+        "collector/processors/attributes.go"
+      ]
+    },
+    {
+      "sha": "2b8ccac18a70",
+      "timestamp": "2026-05-13T12:00:40Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump swoosh (#3365)",
+      "changed_files": [
+        "analyticsservice/mix.exs",
+        "analyticsservice/mix.lock",
+        "analyticsservice/lib/analytics/jobs/order_aggregation.ex",
+        "analyticsservice/config/scheduler.exs"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy 2b8ccac18a70 (2026-05-13T12:00:40Z) bumped the swoosh dependency and incidentally updated analyticsservice/config/scheduler.exs, which rescheduled the nightly order_items aggregation job to run at 11:42 UTC (mid-day production peak) instead of the previously configured 02:00 UTC maintenance window. The aggregation job issues a long-running full-table scan with a ShareLock on public.order_items (pid=3817), blocking autovacuum from reclaiming dead tuples. As dead tuple bloat accumulated (dead_tuples exceeded 3.1M), sequential scan performance degraded ~40%, causing query latency to spike. Combined with the lock queue depth growing to 63+ waiting queries, the PostgreSQL connection pool (max=100) became fully exhausted, triggering HTTP 503 responses across productcatalogservice and checkoutservice.",
+  "ground_truth_remediation": "1. Immediately terminate the blocking analytics query: SELECT pg_terminate_backend(3817); — this will unblock autovacuum and drain the lock wait queue within seconds. 2. Revert analyticsservice/config/scheduler.exs from deploy 2b8ccac18a70 to restore the 02:00 UTC schedule, or hot-patch the scheduler config to move the job outside peak hours. 3. Once autovacuum runs and the connection pool drains, verify dead tuple counts return to normal with: SELECT relname, n_dead_tup FROM pg_stat_user_tables WHERE relname='order_items'; 4. Add a statement_timeout of 300s for the analytics role to prevent future unbounded queries from blocking autovacuum indefinitely: ALTER ROLE analytics_user SET statement_timeout = '300s';",
+  "red_herring": null
+}

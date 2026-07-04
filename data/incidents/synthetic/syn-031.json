@@ -1,0 +1,85 @@
+{
+  "id": "syn-031",
+  "subset": "synthetic",
+  "category": "config_error",
+  "affected_service": "currency-service",
+  "severity": "high",
+  "alert_text": "ALERT: currency-service error rate 94% over last 5 minutes - HTTP 500s spiking, downstream checkout-service reporting currency conversion failures. PagerDuty incident #PD-88421.",
+  "log_window": "2026-05-16T12:06:01.112Z INFO  [currency-service] Starting currency-service v2.7.4 (commit=49a7631b1ddb)\n2026-05-16T12:06:01.198Z INFO  [currency-service] Loading configuration from environment\n2026-05-16T12:06:01.201Z DEBUG [currency-service] CONFIG: CURRENCY_API_ENDPOINT=https://api.exchangerates.internal/v2\n2026-05-16T12:06:01.203Z DEBUG [currency-service] CONFIG: CACHE_TTL_SECONDS=60\n2026-05-16T12:06:01.204Z WARN  [currency-service] CONFIG: RATE_LIMIT_RPS not set - expected integer, got empty string\n2026-05-16T12:06:01.205Z ERROR [currency-service] ConfigurationError: required env var RATE_LIMIT_RPS is absent or invalid (value='')\n2026-05-16T12:06:01.206Z WARN  [currency-service] Falling back to default rate limit: 0 (UNLIMITED) - this may be unsafe\n2026-05-16T12:06:01.310Z INFO  [currency-service] gRPC server listening on :7001\n2026-05-16T12:06:01.315Z INFO  [currency-service] HTTP server listening on :8080\n2026-05-16T12:06:02.004Z INFO  [api-gateway] Upstream currency-service registered at 10.0.4.22:8080\n2026-05-16T12:06:03.771Z DEBUG [currency-service] rate_limiter=none mode=passthrough - all requests will be forwarded without throttling\n2026-05-16T12:06:04.112Z INFO  [currency-service] msg=request_received method=Convert from=USD to=EUR req_id=r-00001\n2026-05-16T12:06:04.115Z DEBUG [currency-service] Forwarding to upstream: GET https://api.exchangerates.internal/v2/latest?base=USD\n2026-05-16T12:06:04.312Z INFO  [currency-service] msg=upstream_response status=200 latency_ms=197 req_id=r-00001\n2026-05-16T12:06:05.001Z INFO  [currency-service] msg=request_received method=Convert from=GBP to=JPY req_id=r-00002\n2026-05-16T12:06:05.003Z DEBUG [currency-service] Forwarding to upstream: GET https://api.exchangerates.internal/v2/latest?base=GBP\n2026-05-16T12:06:05.190Z INFO  [currency-service] msg=upstream_response status=200 latency_ms=187 req_id=r-00002\n2026-05-16T12:06:06.440Z INFO  [checkout-service] currency conversion OK for order ord-9921\n2026-05-16T12:06:09.001Z DEBUG [currency-service] active_connections=4 queue_depth=0\n2026-05-16T12:06:14.882Z INFO  [currency-service] msg=request_received method=Convert from=USD to=EUR req_id=r-00041\n2026-05-16T12:06:14.884Z DEBUG [currency-service] Forwarding to upstream: GET https://api.exchangerates.internal/v2/latest?base=USD\n2026-05-16T12:06:19.001Z WARN  [currency-service] Upstream response time elevated: latency_ms=4812 req_id=r-00041\n2026-05-16T12:06:20.003Z WARN  [currency-service] active_connections=88 queue_depth=47 - connection pool pressure rising\n2026-05-16T12:06:20.110Z WARN  [api-gateway] currency-service p99 latency=4900ms threshold=2000ms\n2026-05-16T12:06:21.334Z ERROR [currency-service] msg=upstream_timeout req_id=r-00041 elapsed_ms=6002 error=context_deadline_exceeded\n2026-05-16T12:06:21.335Z ERROR [currency-service] HTTP 504 returned to caller req_id=r-00041\n2026-05-16T12:06:21.400Z WARN  [checkout-service] currency-service timeout for order ord-9987 - retrying (attempt 1/3)\n2026-05-16T12:06:22.100Z ERROR [currency-service] msg=upstream_timeout req_id=r-00042 elapsed_ms=6001 error=context_deadline_exceeded\n2026-05-16T12:06:22.101Z ERROR [currency-service] HTTP 504 returned to caller req_id=r-00042\n2026-05-16T12:06:22.550Z WARN  [api-gateway] currency-service error_rate=0.34 window=10s\n2026-05-16T12:06:23.002Z WARN  [currency-service] active_connections=201 queue_depth=183 - RATE LIMITER DISABLED, upstream flooded\n2026-05-16T12:06:23.005Z ERROR [exchangerates-api] level=error msg=rate_limit_exceeded client=10.0.4.22 requests_per_second=387 limit=50 action=throttle\n2026-05-16T12:06:23.006Z ERROR [exchangerates-api] level=error msg=circuit_breaker_open origin=10.0.4.22 reason=sustained_overload\n2026-05-16T12:06:23.110Z ERROR [currency-service] msg=upstream_error status=429 body=Too_Many_Requests req_id=r-00058\n2026-05-16T12:06:23.111Z ERROR [currency-service] HTTP 500 returned to caller req_id=r-00058\n2026-05-16T12:06:23.330Z ERROR [currency-service] msg=upstream_error status=429 body=Too_Many_Requests req_id=r-00059\n2026-05-16T12:06:23.332Z ERROR [currency-service] HTTP 500 returned to caller req_id=r-00059\n2026-05-16T12:06:23.500Z ERROR [checkout-service] currency-service returned 500 for order ord-9989 - all retries exhausted\n2026-05-16T12:06:23.502Z ERROR [checkout-service] Order ord-9989 FAILED - unable to convert currency\n2026-05-16T12:06:24.001Z WARN  [api-gateway] currency-service error_rate=0.71 window=10s - circuit breaker evaluating\n2026-05-16T12:06:24.330Z ERROR [currency-service] msg=upstream_error status=429 req_id=r-00063\n2026-05-16T12:06:24.331Z ERROR [currency-service] HTTP 500 returned to caller req_id=r-00063\n2026-05-16T12:06:24.780Z ERROR [currency-service] msg=upstream_error status=429 req_id=r-00064\n2026-05-16T12:06:24.781Z ERROR [currency-service] HTTP 500 returned to caller req_id=r-00064\n2026-05-16T12:06:25.002Z FATAL [currency-service] active_connections=412 queue_depth=401 - upstream 10.0.5.9 responding 429 to ALL requests\n2026-05-16T12:06:25.003Z ERROR [currency-service] error_rate=0.94 - SLO breach imminent\n2026-05-16T12:06:25.110Z ERROR [api-gateway] currency-service error_rate=0.94 - triggering PagerDuty alert PD-88421\n2026-05-16T12:06:25.210Z ERROR [checkout-service] DEGRADED: currency-service unavailable, blocking checkout for 8 active sessions\n2026-05-16T12:06:26.001Z ERROR [currency-service] msg=upstream_error status=429 req_id=r-00081\n2026-05-16T12:06:26.002Z ERROR [currency-service] HTTP 500 returned to caller req_id=r-00081\n2026-05-16T12:06:26.450Z ERROR [currency-service] msg=upstream_error status=429 req_id=r-00082\n2026-05-16T12:06:26.451Z ERROR [currency-service] HTTP 500 returned to caller req_id=r-00082\n2026-05-16T12:06:27.001Z WARN  [currency-service] Retry backoff engaged for upstream 10.0.5.9 - waiting 30s before retry\n2026-05-16T12:06:27.200Z ERROR [checkout-service] currency-service 500s continuing - order pipeline stalled\n2026-05-16T12:06:30.001Z ERROR [currency-service] msg=upstream_error status=429 req_id=r-00099\n2026-05-16T12:06:30.002Z ERROR [currency-service] HTTP 500 returned to caller req_id=r-00099\n2026-05-16T12:06:30.100Z WARN  [api-gateway] Downstream degradation: checkout-service reporting currency failures at rate 0.88\n2026-05-16T12:06:33.004Z ERROR [currency-service] msg=upstream_error status=429 req_id=r-00117\n2026-05-16T12:06:33.005Z ERROR [currency-service] HTTP 500 returned to caller req_id=r-00117\n2026-05-16T12:06:35.110Z ERROR [currency-service] Upstream circuit breaker OPEN - all new requests will fail fast\n2026-05-16T12:06:35.115Z ERROR [currency-service] HTTP 503 returned to caller - upstream unavailable\n2026-05-16T12:06:35.330Z ERROR [checkout-service] currency-service 503 - Service Unavailable, halting currency conversion\n2026-05-16T12:06:35.440Z FATAL [checkout-service] checkout pipeline HALTED: dependency currency-service is DOWN\n  at CurrencyClient.convert (checkout/src/currency_client.go:88)\n  at CheckoutService.processOrder (checkout/src/checkout.go:214)\n2026-05-16T12:06:36.001Z INFO  [currency-service] Dumping effective config for diagnostics:\n2026-05-16T12:06:36.002Z INFO  [currency-service]   CURRENCY_API_ENDPOINT = https://api.exchangerates.internal/v2\n2026-05-16T12:06:36.003Z INFO  [currency-service]   CACHE_TTL_SECONDS      = 60\n2026-05-16T12:06:36.004Z WARN  [currency-service]   RATE_LIMIT_RPS         = (NOT SET - defaulting to unlimited)\n2026-05-16T12:06:36.005Z INFO  [currency-service]   UPSTREAM_TIMEOUT_MS    = 6000\n2026-05-16T12:06:36.006Z INFO  [currency-service]   MAX_CONNECTIONS        = 500\n2026-05-16T12:06:36.100Z WARN  [currency-service] WARNING: RATE_LIMIT_RPS was expected from Kubernetes ConfigMap currency-service-config key rate_limit_rps - value missing after rollout\n2026-05-16T12:06:36.102Z ERROR [currency-service] Upstream API enforces 50 RPS per client; no client-side limit applied - overload condition is self-inflicted\n2026-05-16T12:06:36.440Z INFO  [api-gateway] Incident PD-88421 acknowledged by on-call engineer\n2026-05-16T12:06:37.001Z DEBUG [currency-service] active_connections=412 queue_depth=401 upstream_status=OPEN\n2026-05-16T12:06:40.001Z ERROR [currency-service] All upstream requests failing - circuit breaker OPEN, no recovery yet\n2026-05-16T12:12:00.001Z INFO  [currency-service] Engineer applied kubectl patch: ConfigMap currency-service-config updated with rate_limit_rps=45\n2026-05-16T12:12:01.100Z INFO  [currency-service] Reloading configuration from environment after rollout restart\n2026-05-16T12:12:01.204Z INFO  [currency-service] CONFIG: RATE_LIMIT_RPS=45 loaded successfully\n2026-05-16T12:12:01.210Z INFO  [currency-service] Rate limiter initialized: 45 RPS (token bucket)\n2026-05-16T12:12:01.500Z INFO  [currency-service] Upstream circuit breaker reset - recovery mode active\n2026-05-16T12:12:03.001Z INFO  [currency-service] msg=request_received method=Convert from=USD to=EUR req_id=r-00500\n2026-05-16T12:12:03.220Z INFO  [currency-service] msg=upstream_response status=200 latency_ms=189 req_id=r-00500\n2026-05-16T12:12:05.001Z INFO  [api-gateway] currency-service error_rate=0.02 - recovery confirmed",
+  "recent_deploys": [
+    {
+      "sha": "38a9074919f6",
+      "timestamp": "2026-04-21T15:32:48Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "currency-service/requirements.txt",
+        "fx-ingest/requirements.txt"
+      ]
+    },
+    {
+      "sha": "d8fd7bba8052",
+      "timestamp": "2026-04-23T08:11:22Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 1 update (#3300)",
+      "changed_files": [
+        "shared-libs/dotnet/Packages.props",
+        "shared-libs/dotnet/Directory.Build.props"
+      ]
+    },
+    {
+      "sha": "310357e9b0b4",
+      "timestamp": "2026-04-28T02:25:29Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the cargo-production-dependencies group across 1 directory wit",
+      "changed_files": [
+        "currency-service/Cargo.toml",
+        "currency-service/Cargo.lock"
+      ]
+    },
+    {
+      "sha": "9487d3f5eb14",
+      "timestamp": "2026-04-30T02:23:48Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 1 update (#3326)",
+      "changed_files": [
+        "shared-libs/dotnet/Packages.props"
+      ]
+    },
+    {
+      "sha": "781c571cc008",
+      "timestamp": "2026-05-05T05:40:16Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump bytestring (#3345)",
+      "changed_files": [
+        "currency-service/Cargo.toml",
+        "currency-service/Cargo.lock"
+      ]
+    },
+    {
+      "sha": "974792d4cdda",
+      "timestamp": "2026-05-05T05:40:26Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with ",
+      "changed_files": [
+        "currency-service/mix.exs",
+        "currency-service/mix.lock"
+      ]
+    },
+    {
+      "sha": "49a7631b1ddb",
+      "timestamp": "2026-05-16T12:04:07Z",
+      "author": "Donal O'Sullivan",
+      "message": "Profiling with firepit (#3333)",
+      "changed_files": [
+        "currency-service/k8s/configmap.yaml",
+        "currency-service/k8s/deployment.yaml",
+        "currency-service/src/config.go",
+        "currency-service/scripts/profile.sh"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy 49a7631b1ddb (Profiling with firepit) modified currency-service/k8s/configmap.yaml and removed the key rate_limit_rps from the Kubernetes ConfigMap currency-service-config. After the rollout, the environment variable RATE_LIMIT_RPS was absent from the running pod. The service fell back to an unlimited (0 RPS) rate limit, causing it to flood the upstream exchangerates API which enforces a 50 RPS per-client limit. The upstream responded with HTTP 429 and opened its circuit breaker against the currency-service IP, making all currency conversion requests fail with HTTP 500/503.",
+  "ground_truth_remediation": "1. Patch the Kubernetes ConfigMap: kubectl patch configmap currency-service-config -n production --type merge -p with data.rate_limit_rps set to 45. 2. Trigger a rolling restart: kubectl rollout restart deployment/currency-service -n production. 3. Confirm RATE_LIMIT_RPS=45 appears in pod logs on startup and upstream error rate drops below 1%. 4. Long-term: add a startup probe or init container that validates required env vars including RATE_LIMIT_RPS are present and non-empty before the main process starts, to prevent silent fallback to unlimited mode.",
+  "red_herring": null
+}

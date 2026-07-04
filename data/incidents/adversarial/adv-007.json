@@ -1,0 +1,94 @@
+{
+  "id": "adv-007",
+  "subset": "adversarial",
+  "category": "resource_exhaustion",
+  "affected_service": "checkout-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: checkout-service p99 latency > 30s for 5 minutes; error rate 94%; Redis connection pool exhausted — all 200 connections in WAIT state",
+  "log_window": "2024-03-14T02:03:11Z [checkout-service] INFO  Payment idempotency key generated: idem_4f8a2c1d for order ord_9981\n2024-03-14T02:03:11Z [checkout-service] INFO  Stripe charge initiated with idempotency key idem_4f8a2c1d\n2024-03-14T02:03:11Z [checkout-service] INFO  Stripe charge succeeded: ch_3OxKp2LkZvGmP9 amount=4999\n2024-03-14T02:03:12Z [checkout-service] DEBUG Redis SET session:usr_7712 EX 3600 OK (1ms)\n2024-03-14T02:03:12Z [checkout-service] DEBUG Redis GET cart:usr_7712 OK (2ms)\n2024-03-14T02:03:14Z [checkout-service] INFO  Payment idempotency key generated: idem_9b3e7f2a for order ord_9982\n2024-03-14T02:03:15Z [checkout-service] INFO  Stripe charge succeeded: ch_3OxKp4LkZvGmQ2 amount=12050\n2024-03-14T02:03:17Z [checkout-service] DEBUG Redis SET session:usr_4431 EX 3600 OK (3ms)\n2024-03-14T02:04:01Z [checkout-service] DEBUG Redis GET cart:usr_4431 latency=188ms (degraded)\n2024-03-14T02:04:03Z [checkout-service] WARN  Redis response time elevated: GET cart:usr_9201 took 412ms\n2024-03-14T02:04:04Z [checkout-service] WARN  Redis response time elevated: SET session:usr_3301 took 389ms\n2024-03-14T02:04:06Z [checkout-service] WARN  Redis response time elevated: HGETALL order:ord_9983 took 601ms\n2024-03-14T02:04:08Z [checkout-service] ERROR Redis command timeout after 1000ms: GET cart:usr_1122\n2024-03-14T02:04:09Z [checkout-service] ERROR Redis command timeout after 1000ms: SET session:usr_5541\n2024-03-14T02:04:09Z [checkout-service] ERROR Redis command timeout after 1000ms: HGETALL order:ord_9984\n2024-03-14T02:04:10Z [checkout-service] ERROR Checkout pipeline stalled: Redis unavailable order ord_9984 queued for retry\n2024-03-14T02:04:11Z [checkout-service] ERROR Redis command timeout after 1000ms: GET cart:usr_8871\n2024-03-14T02:04:11Z [checkout-service] ERROR Redis command timeout after 1000ms: HGETALL order:ord_9985\n2024-03-14T02:04:12Z [redis-proxy] ERROR Redis primary redis-primary-01:6379 memory usage critical: used_memory=29.8GB maxmemory=30GB (99.3% utilized)\n2024-03-14T02:04:12Z [redis-proxy] WARN  Redis eviction policy=noeviction: writes will begin failing\n2024-03-14T02:04:13Z [checkout-service] ERROR Redis OOM: command not allowed when used memory > maxmemory: SET session:usr_2291\n2024-03-14T02:04:13Z [checkout-service] ERROR Redis OOM: command not allowed when used memory > maxmemory: SET session:usr_4412\n2024-03-14T02:04:14Z [checkout-service] ERROR Redis OOM: command not allowed when used memory > maxmemory: HSET order:ord_9986\n2024-03-14T02:04:14Z [checkout-service] ERROR Checkout failed for order ord_9986: unable to persist order state\n2024-03-14T02:04:15Z [checkout-service] ERROR Checkout failed for order ord_9987: unable to persist order state\n2024-03-14T02:04:15Z [checkout-service] ERROR Checkout failed for order ord_9988: unable to persist order state\n2024-03-14T02:04:16Z [checkout-service] ERROR Redis OOM: command not allowed when used memory > maxmemory: SET session:usr_7723\n2024-03-14T02:04:16Z [redis-proxy] ERROR Redis primary OOM all write commands rejected\n2024-03-14T02:04:17Z [checkout-service] ERROR Connection pool exhausted: all 200 Redis connections in WAIT state\n2024-03-14T02:04:17Z [checkout-service] ERROR Request timeout: checkout for usr_3312 exceeded 30s SLA\n2024-03-14T02:04:18Z [checkout-service] ERROR Request timeout: checkout for usr_9901 exceeded 30s SLA\n2024-03-14T02:04:18Z [checkout-service] ERROR Request timeout: checkout for usr_1144 exceeded 30s SLA\n2024-03-14T02:04:19Z [redis-exporter] WARN  redis_memory_used_bytes=32004505600 redis_memory_max_bytes=32212254720\n2024-03-14T02:04:19Z [redis-exporter] WARN  redis_connected_clients=214 redis_blocked_clients=198\n2024-03-14T02:04:19Z [redis-exporter] ERROR redis_keyspace_hits_total stalled server unresponsive to INFO commands\n2024-03-14T02:04:20Z [redis-exporter] CRIT  redis_used_memory_rss_bytes exceeds maxmemory OOM condition confirmed\n2024-03-14T02:04:20Z [redis-exporter] INFO  redis_connected_clients breakdown: normal=16 monitor=1 pubsub=0 replica=2\n2024-03-14T02:04:21Z [redis-exporter] WARN  Single MONITOR client detected on connection id=client_conn_00089 from ip=10.44.12.55; MONITOR output rate: ~180GB/hr estimated\n2024-03-14T02:04:22Z [redis-proxy] ERROR Redis primary heap fragmentation ratio=3.41 consistent with MONITOR output buffer accumulation\n2024-03-14T02:04:22Z [redis-proxy] INFO  Client output buffer for client_conn_00089: 28.1GB (limit=0 unlimited)\n2024-03-14T02:04:23Z [redis-proxy] WARN  client_conn_00089 connected since 2024-03-14T01:51:09Z (13 minutes); MONITOR session never terminated\n2024-03-14T02:04:23Z [checkout-service] ERROR 47 checkout requests dropped in last 10s circuit breaker OPEN\n2024-03-14T02:04:24Z [checkout-service] ERROR Circuit breaker OPEN for redis-primary; fallback: none configured\n2024-03-14T02:04:25Z [checkout-service] ERROR All checkout requests failing Redis write path unavailable\n2024-03-14T02:04:26Z [payment-service] INFO  Stripe retry logic active: idempotency key reuse confirmed for idem_4f8a2c1d no duplicate charges\n2024-03-14T02:04:26Z [payment-service] INFO  Stripe retry logic active: idempotency key reuse confirmed for idem_9b3e7f2a no duplicate charges\n2024-03-14T02:04:27Z [payment-service] INFO  Payment idempotency layer functioning correctly no payment errors detected\n2024-03-14T02:04:28Z [checkout-service] ERROR Unable to write cart:usr_6612 to Redis: OOM\n2024-03-14T02:04:28Z [checkout-service] ERROR Unable to write cart:usr_8823 to Redis: OOM\n2024-03-14T02:04:29Z [checkout-service] ERROR Redis primary node unresponsive health check failed\n2024-03-14T02:04:30Z [checkout-service] CRIT  Service degradation: 94% error rate over last 60 seconds\n2024-03-14T02:04:31Z [alertmanager] FIRED: checkout-service p99_latency > 30s (value=38.2s)\n2024-03-14T02:04:31Z [alertmanager] FIRED: checkout-service error_rate > 90% (value=94.1%)\n2024-03-14T02:04:31Z [alertmanager] FIRED: redis-primary-01 memory_utilization > 99% (value=99.3%)\n2024-03-14T02:04:32Z [checkout-service] ERROR Checkout pipeline fully stalled awaiting Redis recovery\n2024-03-14T02:04:33Z [redis-proxy] INFO  Attempting graceful CLIENT KILL of client_conn_00089 (MONITOR session)\n2024-03-14T02:04:33Z [redis-proxy] ERROR CLIENT KILL failed Redis server unresponsive to management commands\n2024-03-14T02:04:35Z [checkout-service] ERROR Request timeout: checkout for usr_5534 exceeded 30s SLA\n2024-03-14T02:04:36Z [checkout-service] ERROR Request timeout: checkout for usr_7712 exceeded 30s SLA\n2024-03-14T02:04:38Z [checkout-service] ERROR Connection pool queue depth: 847 pending requests\n2024-03-14T02:04:40Z [redis-exporter] CRIT  Redis primary non-responsive failover threshold reached\n2024-03-14T02:04:41Z [checkout-service] ERROR Checkout service fully unavailable manual intervention required",
+  "recent_deploys": [
+    {
+      "sha": "a1f3c87d2e904b5",
+      "timestamp": "2024-03-13T09:15:00Z",
+      "author": "diana.okonkwo",
+      "message": "frontend: update cart UI to show estimated delivery dates",
+      "changed_files": [
+        "frontend/src/components/Cart.tsx",
+        "frontend/src/components/DeliveryEstimate.tsx",
+        "frontend/src/styles/cart.css"
+      ]
+    },
+    {
+      "sha": "b82e14fa73c0d91",
+      "timestamp": "2024-03-13T11:42:00Z",
+      "author": "marcus.trevino",
+      "message": "checkout-service: add structured logging for order lifecycle events",
+      "changed_files": [
+        "checkout-service/internal/logging/order_logger.go",
+        "checkout-service/internal/checkout/pipeline.go",
+        "checkout-service/config/logging.yaml"
+      ]
+    },
+    {
+      "sha": "c94a2bd81e67f03",
+      "timestamp": "2024-03-13T14:20:00Z",
+      "author": "priya.sundaram",
+      "message": "product-service: cache product catalog responses in Redis with 5m TTL",
+      "changed_files": [
+        "product-service/internal/cache/redis_cache.go",
+        "product-service/internal/handlers/catalog_handler.go",
+        "product-service/config/cache.yaml"
+      ]
+    },
+    {
+      "sha": "d07f59e24b1ac88",
+      "timestamp": "2024-03-13T16:55:00Z",
+      "author": "leon.fischer",
+      "message": "infra: bump Redis client library ioredis to 5.3.2 across all services",
+      "changed_files": [
+        "package.json",
+        "package-lock.json",
+        "checkout-service/package.json",
+        "cart-service/package.json"
+      ]
+    },
+    {
+      "sha": "e23b71dc40f8a16",
+      "timestamp": "2024-03-14T01:10:00Z",
+      "author": "amara.ngozi",
+      "message": "payment-service: add idempotency keys to Stripe charge API calls to prevent duplicate charges on retry",
+      "changed_files": [
+        "payment-service/internal/stripe/charge_client.go",
+        "payment-service/internal/stripe/idempotency.go",
+        "payment-service/internal/transaction/logger.go",
+        "payment-service/internal/retry/retry_policy.go",
+        "payment-service/proto/payment.proto",
+        "payment-service/tests/charge_idempotency_test.go"
+      ]
+    },
+    {
+      "sha": "f45d08c93e2b174",
+      "timestamp": "2024-03-14T01:38:00Z",
+      "author": "tomasz.wierzbicki",
+      "message": "checkout-service: surface payment idempotency key in order confirmation response",
+      "changed_files": [
+        "checkout-service/internal/checkout/confirmation.go",
+        "checkout-service/internal/models/order.go",
+        "checkout-service/api/openapi.yaml"
+      ]
+    },
+    {
+      "sha": "07a1e6b52f9cd30",
+      "timestamp": "2024-03-14T01:55:00Z",
+      "author": "sasha.korolev",
+      "message": "monitoring: add Grafana dashboard panels for Stripe idempotency key hit rate",
+      "changed_files": [
+        "monitoring/dashboards/payments.json",
+        "monitoring/alerts/stripe_rules.yaml"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Redis primary node redis-primary-01 ran out of memory (OOM) due to a rogue client (client_conn_00089 from 10.44.12.55) that left a MONITOR session running since 01:51:09 UTC. Redis MONITOR streams every command processed by the server to the subscribed client; at the observed traffic volume this produced approximately 180 GB/hr of output buffered in the client output buffer. Because the client output buffer limit was set to 0 (unlimited), Redis allocated unbounded heap until used_memory hit the 30 GB maxmemory ceiling. With eviction policy=noeviction, all subsequent write commands were rejected with OOM errors, rendering checkout-service unable to persist session or order state and causing a full service outage. This MONITOR session predates all recent deploys and is unrelated to the payment-service idempotency key changes.",
+  "ground_truth_remediation": "1. Immediately kill the MONITOR client: connect to Redis via redis-cli and run CLIENT KILL ID 00089 or CLIENT KILL ADDR 10.44.12.55. If Redis is unresponsive to management commands, force-restart the Redis primary so the replica is promoted or the primary recovers after restart. 2. After restart, verify memory reclamation via INFO memory and confirm used_memory drops below maxmemory. 3. Set client output buffer limits in redis.conf: client-output-buffer-limit normal 256mb 64mb 60 to prevent recurrence. 4. Identify and remediate the process on 10.44.12.55 that initiated the MONITOR session, likely a debug script left running unattended. 5. Add a monitoring alert for any connected client running MONITOR to detect future occurrences within seconds.",
+  "red_herring": "The payment-service deploy (SHA e23b71dc40f8a16, deployed at 01:10 UTC, approximately 54 minutes before the incident) is highly suspicious: it modifies the Stripe charge client, introduces new retry logic, and alters transaction logging, all in the critical payment flow that checkout-service depends on. A follow-up checkout-service deploy (SHA f45d08c93e2b174) was pushed only 28 minutes before the incident to surface the new idempotency key, and a third deploy (SHA 07a1e6b52f9cd30) landed just 11 minutes before the outage. Together these form a cluster of payment-flow changes immediately preceding the failure. However, the logs contain multiple pieces of exculpatory evidence: (a) payment-service logs at 02:04:26 and 02:04:27 explicitly confirm the idempotency layer is functioning correctly with no payment errors detected; (b) Stripe charges succeed normally at 02:03:11 through 02:03:15, well after all deploys, with zero payment-layer errors anywhere in the log window; (c) the Redis degradation is definitively attributed to a MONITOR client (client_conn_00089) connected since 01:51:09 UTC, which is 19 minutes before the incident and predates no deploy activity; (d) redis-proxy explicitly logs that the single MONITOR client is producing approximately 180 GB/hr of output buffer accumulation with client output buffer reaching 28.1 GB against an unlimited limit; (e) Redis OOM errors affect all write paths uniformly including sessions, carts, and orders, which is inconsistent with a retry storm from the payment path and entirely consistent with a memory ceiling being hit due to output buffer exhaustion."
+}

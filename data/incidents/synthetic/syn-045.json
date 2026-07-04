@@ -1,0 +1,86 @@
+{
+  "id": "syn-045",
+  "subset": "synthetic",
+  "category": "resource_exhaustion",
+  "affected_service": "recommendation-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: recommendation-service goroutine count exceeded 50000 (current: 87432). Service OOM kill imminent. P99 latency > 30s. PagerDuty alert #INC-20482.",
+  "log_window": "2026-05-05T08:14:02.011Z [recommendation-service] INFO  server=recommendation-service version=bb0e91424e8a env=production starting batch scorer workers=32\n2026-05-05T08:14:02.187Z [recommendation-service] INFO  connected to feature-store addr=feature-store:6379 pool_size=50\n2026-05-05T08:14:02.203Z [recommendation-service] INFO  connected to model-registry addr=model-registry:8080\n2026-05-05T08:14:03.451Z [recommendation-service] INFO  batch scorer initialized batch_size=256 timeout=30s\n2026-05-05T08:14:05.882Z [recommendation-service] INFO  goroutines=34 heap_alloc_mb=112 gc_pause_ms=1.2\n2026-05-05T08:15:01.003Z [recommendation-service] INFO  scored batch request_id=req-00441 user_count=256 duration_ms=142\n2026-05-05T08:15:01.944Z [recommendation-service] INFO  scored batch request_id=req-00442 user_count=256 duration_ms=139\n2026-05-05T08:15:03.210Z [recommendation-service] INFO  goroutines=41 heap_alloc_mb=118 gc_pause_ms=1.4\n2026-05-05T08:16:01.004Z [recommendation-service] INFO  scored batch request_id=req-00501 user_count=256 duration_ms=145\n2026-05-05T08:16:14.881Z [feature-store] level=info msg=\"cache hit\" key=\"user_features:batch\" hit_rate=0.94\n2026-05-05T08:16:33.002Z [recommendation-service] INFO  goroutines=89 heap_alloc_mb=131 gc_pause_ms=1.8\n2026-05-05T08:17:01.221Z [recommendation-service] WARN  goroutine count rising goroutines=201 heap_alloc_mb=145 gc_pause_ms=2.1\n2026-05-05T08:17:14.003Z [recommendation-service] INFO  scored batch request_id=req-00601 user_count=256 duration_ms=198\n2026-05-05T08:17:29.114Z [model-registry] level=info msg=\"model fetch\" model_id=rec-v3 latency_ms=12 status=200\n2026-05-05T08:17:45.882Z [recommendation-service] WARN  context cancellation detected but scorer goroutine still running request_id=req-00588 goroutine_id=1842\n2026-05-05T08:17:46.003Z [recommendation-service] WARN  context cancellation detected but scorer goroutine still running request_id=req-00589 goroutine_id=1843\n2026-05-05T08:17:46.441Z [recommendation-service] WARN  context cancellation detected but scorer goroutine still running request_id=req-00590 goroutine_id=1844\n2026-05-05T08:17:47.002Z [recommendation-service] WARN  goroutines=489 heap_alloc_mb=178 gc_pause_ms=3.9\n2026-05-05T08:17:59.003Z [recommendation-service] WARN  context cancellation detected but scorer goroutine still running request_id=req-00591 goroutine_id=1901\n2026-05-05T08:18:01.553Z [recommendation-service] WARN  context cancellation detected but scorer goroutine still running request_id=req-00592 goroutine_id=1955\n2026-05-05T08:18:03.882Z [recommendation-service] WARN  goroutines=1204 heap_alloc_mb=224 gc_pause_ms=6.7\n2026-05-05T08:18:10.001Z [recommendation-service] ERROR leaked goroutine pool accumulating: goroutines_leaked=892 still_running_scorers=892\n2026-05-05T08:18:10.441Z [recommendation-service] ERROR batch scorer not selecting on ctx.Done() channel — goroutines will not exit on cancellation\n2026-05-05T08:18:11.001Z [recommendation-service] WARN  heap pressure increasing heap_alloc_mb=312 gc_pause_ms=14.2 next_gc_mb=400\n2026-05-05T08:18:20.003Z [feature-store] level=warn msg=\"high connection count\" active_conns=847 max_conns=1000\n2026-05-05T08:18:23.114Z [recommendation-service] ERROR goroutines=3891 heap_alloc_mb=401 gc_pause_ms=22.1\n2026-05-05T08:18:23.881Z [recommendation-service] ERROR request latency degraded p50_ms=1820 p99_ms=8442 timeout_rate=0.12\n2026-05-05T08:18:30.002Z [recommendation-service] ERROR scored batch request_id=req-00720 duration_ms=9884 status=timeout\n2026-05-05T08:18:30.443Z [recommendation-service] ERROR scored batch request_id=req-00721 duration_ms=10021 status=timeout\n2026-05-05T08:18:31.002Z [recommendation-service] ERROR scored batch request_id=req-00722 duration_ms=10104 status=timeout\n2026-05-05T08:18:32.881Z [model-registry] level=warn msg=\"upstream connection pool exhausted\" waiting_requests=34 pool_size=100\n2026-05-05T08:18:40.003Z [recommendation-service] ERROR goroutines=8124 heap_alloc_mb=788 gc_pause_ms=48.3\n2026-05-05T08:18:40.551Z [recommendation-service] ERROR GC thrashing detected: gc_cpu_fraction=0.31 — application throughput severely degraded\n2026-05-05T08:18:41.002Z [recommendation-service] ERROR failed to score batch request_id=req-00731 error=\"context deadline exceeded\" stack:\n2026-05-05T08:18:41.003Z [recommendation-service] ERROR   goroutine 9841 [running]: recommendation/scorer.(*BatchScorer).ScoreUsers(0xc000489820, ...)\n2026-05-05T08:18:41.004Z [recommendation-service] ERROR   recommendation/scorer/batch.go:187 +0x2f4\n2026-05-05T08:18:41.005Z [recommendation-service] ERROR   recommendation/api.(*Handler).HandleBatchScore(0xc000312a00, ...)\n2026-05-05T08:18:50.003Z [recommendation-service] ERROR goroutines=14088 heap_alloc_mb=1124 gc_pause_ms=91.2\n2026-05-05T08:18:51.441Z [recommendation-service] FATAL OOM threshold approaching heap_alloc_mb=1124 limit_mb=1536 goroutines=14088\n2026-05-05T08:18:52.002Z [feature-store] level=error msg=\"connection refused\" err=\"too many open connections\" active_conns=1000\n2026-05-05T08:18:53.003Z [recommendation-service] FATAL goroutine leak confirmed: leaked_goroutines=13201 all blocked on feature-store I/O select missing ctx.Done case\n2026-05-05T08:18:53.441Z [recommendation-service] FATAL goroutines=18992 heap_alloc_mb=1389 gc_pause_ms=212.8\n2026-05-05T08:18:54.001Z [recommendation-service] ERROR request latency critical p50_ms=14220 p99_ms=31004 error_rate=0.78\n2026-05-05T08:18:55.003Z [model-registry] level=error msg=\"health check timeout\" downstream=recommendation-service timeout_ms=5000\n2026-05-05T08:18:58.002Z [recommendation-service] FATAL runtime: out of memory: cannot allocate goroutine stack\n2026-05-05T08:18:58.221Z [recommendation-service] FATAL goroutine 19004 [running]:\n2026-05-05T08:18:58.222Z [recommendation-service] FATAL runtime.throw2({0x1a2f4b0?, 0x0?})\n2026-05-05T08:18:58.223Z [recommendation-service] FATAL   runtime/panic.go:1023 +0x57\n2026-05-05T08:18:59.001Z [recommendation-service] FATAL signal: killed (OOM)\n2026-05-05T08:19:00.112Z [recommendation-service] INFO  process restarted by supervisor attempt=1\n2026-05-05T08:19:01.441Z [recommendation-service] INFO  server starting post-restart version=bb0e91424e8a\n2026-05-05T08:19:01.882Z [recommendation-service] INFO  goroutines=34 heap_alloc_mb=109 gc_pause_ms=1.1\n2026-05-05T08:19:05.003Z [recommendation-service] INFO  scored batch request_id=req-00900 user_count=256 duration_ms=141\n2026-05-05T08:19:33.002Z [recommendation-service] WARN  goroutine count rising goroutines=198 heap_alloc_mb=144 gc_pause_ms=2.0\n2026-05-05T08:19:45.881Z [recommendation-service] WARN  context cancellation detected but scorer goroutine still running request_id=req-00921 goroutine_id=2001\n2026-05-05T08:19:46.002Z [recommendation-service] WARN  context cancellation detected but scorer goroutine still running request_id=req-00922 goroutine_id=2002\n2026-05-05T08:19:47.441Z [recommendation-service] WARN  goroutines=412 heap_alloc_mb=171 gc_pause_ms=3.4\n2026-05-05T08:20:01.003Z [recommendation-service] ERROR goroutines=2108 heap_alloc_mb=389 gc_pause_ms=19.8\n2026-05-05T08:20:01.441Z [recommendation-service] ERROR leaked goroutine pool accumulating again post-restart: goroutines_leaked=1921\n2026-05-05T08:20:10.002Z [recommendation-service] ERROR batch scorer not selecting on ctx.Done() channel — goroutines will not exit on cancellation\n2026-05-05T08:20:10.881Z [recommendation-service] ERROR failed to score batch request_id=req-00998 error=\"context deadline exceeded\" stack:\n2026-05-05T08:20:10.882Z [recommendation-service] ERROR   goroutine 2109 [running]: recommendation/scorer.(*BatchScorer).ScoreUsers(0xc000489820, ...)\n2026-05-05T08:20:10.883Z [recommendation-service] ERROR   recommendation/scorer/batch.go:187 +0x2f4\n2026-05-05T08:20:20.003Z [recommendation-service] FATAL OOM threshold approaching heap_alloc_mb=1098 limit_mb=1536 goroutines=11042\n2026-05-05T08:20:21.441Z [recommendation-service] FATAL goroutine leak confirmed (restart did not fix): leaked_goroutines=10881\n2026-05-05T08:20:22.001Z [feature-store] level=error msg=\"connection refused\" err=\"too many open connections\" active_conns=1000\n2026-05-05T08:20:23.003Z [recommendation-service] FATAL signal: killed (OOM)\n2026-05-05T08:20:24.112Z [recommendation-service] INFO  process restarted by supervisor attempt=2\n2026-05-05T08:20:25.003Z [recommendation-service] WARN  repeated OOM restarts detected: restart_count=2 within 5min — alerting on-call",
+  "recent_deploys": [
+    {
+      "sha": "c789fc89a688",
+      "timestamp": "2026-04-21T11:57:50Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "package-lock.json",
+        "package.json"
+      ]
+    },
+    {
+      "sha": "b6de548594c2",
+      "timestamp": "2026-04-21T15:46:42Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the cargo-production-dependencies group across 1 directory wit",
+      "changed_files": [
+        "Cargo.lock",
+        "Cargo.toml"
+      ]
+    },
+    {
+      "sha": "de201e875db5",
+      "timestamp": "2026-04-21T19:45:44Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 2 updates (#3284)",
+      "changed_files": [
+        "recommendation-service/go.sum",
+        "recommendation-service/go.mod"
+      ]
+    },
+    {
+      "sha": "1c521d91f664",
+      "timestamp": "2026-04-25T09:36:06Z",
+      "author": "Patrice Chalin",
+      "message": "ci: enable persisted lychee caching in checks workflow (#3314)",
+      "changed_files": [
+        ".github/workflows/checks.yml",
+        ".lycheeignore"
+      ]
+    },
+    {
+      "sha": "310357e9b0b4",
+      "timestamp": "2026-04-28T02:25:29Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the cargo-production-dependencies group across 1 directory wit",
+      "changed_files": [
+        "Cargo.lock",
+        "Cargo.toml"
+      ]
+    },
+    {
+      "sha": "6bb672061d65",
+      "timestamp": "2026-04-30T02:22:28Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump @tanstack/react-query (#3322)",
+      "changed_files": [
+        "recommendation-service/scorer/batch.go",
+        "recommendation-service/scorer/batch_test.go",
+        "recommendation-service/api/handler.go"
+      ]
+    },
+    {
+      "sha": "bb0e91424e8a",
+      "timestamp": "2026-05-05T07:38:47Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 4 updates (#3341)",
+      "changed_files": [
+        "recommendation-service/go.sum",
+        "recommendation-service/go.mod",
+        "recommendation-service/scorer/model_client.go"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha 6bb672061d65 introduced a refactor to recommendation-service/scorer/batch.go that rewrote the inner scoring loop in BatchScorer.ScoreUsers(). The new implementation launches a goroutine per user in each batch but uses a bare channel select that does not include a case for ctx.Done(). When the parent request context is cancelled (e.g., due to client timeout or upstream deadline), the spawned goroutines continue blocking on feature-store I/O indefinitely instead of exiting. Under sustained load with any client-side or upstream timeouts, goroutines accumulate unboundedly, exhausting heap memory and triggering OOM kills. The bug is on line 187 of recommendation/scorer/batch.go where the select statement omits the `case <-ctx.Done(): return` branch.",
+  "ground_truth_remediation": "1. Immediately restart recommendation-service pods to temporarily reduce goroutine count (buys ~3-5 minutes before leak recurs). 2. Roll back deploy 6bb672061d65 by reverting recommendation-service/scorer/batch.go to the prior version from sha 310357e9b0b4, re-deploying — this eliminates the leak. 3. As a permanent fix, add `case <-ctx.Done(): return ctx.Err()` to the select block in BatchScorer.ScoreUsers() at batch.go:187, and add a unit test that cancels the context mid-batch and asserts all goroutines exit within 1 second. 4. Add a goroutine count metric alert at threshold 5000 to catch future leaks earlier.",
+  "red_herring": null
+}

@@ -1,0 +1,74 @@
+{
+  "id": "real-004",
+  "subset": "real_derived",
+  "category": "config_error",
+  "affected_service": "frontend",
+  "severity": "critical",
+  "alert_text": "CRITICAL: All edge routing nodes unreachable — frontend error rate 100%, health checks failing across all regions. Incident declared P0.",
+  "log_window": "2024-03-12T14:00:01Z [edge-router-01] INFO  Loading routing rule config version=4.17.3 config_id=rt-cfg-20240312-001\n2024-03-12T14:00:01Z [edge-router-02] INFO  Loading routing rule config version=4.17.3 config_id=rt-cfg-20240312-001\n2024-03-12T14:00:01Z [edge-router-03] INFO  Loading routing rule config version=4.17.3 config_id=rt-cfg-20240312-001\n2024-03-12T14:00:02Z [edge-router-01] INFO  Validating routing rules: 4821 rules loaded\n2024-03-12T14:00:02Z [edge-router-02] INFO  Validating routing rules: 4821 rules loaded\n2024-03-12T14:00:02Z [edge-router-03] INFO  Validating routing rules: 4821 rules loaded\n2024-03-12T14:00:03Z [edge-router-01] WARN  Rule #4819 contains wildcard match on header X-Forwarded-For with depth=unlimited consider limiting recursion\n2024-03-12T14:00:03Z [edge-router-02] WARN  Rule #4819 contains wildcard match on header X-Forwarded-For with depth=unlimited consider limiting recursion\n2024-03-12T14:00:03Z [edge-router-03] WARN  Rule #4819 contains wildcard match on header X-Forwarded-For with depth=unlimited consider limiting recursion\n2024-03-12T14:00:04Z [edge-router-01] INFO  Applying new routing config swapping active ruleset\n2024-03-12T14:00:04Z [edge-router-02] INFO  Applying new routing config swapping active ruleset\n2024-03-12T14:00:04Z [edge-router-03] INFO  Applying new routing config swapping active ruleset\n2024-03-12T14:00:05Z [edge-router-01] ERROR Panic in rule evaluator: runtime: goroutine stack exceeds 1000000000-byte limit\n2024-03-12T14:00:05Z [edge-router-01] ERROR runtime: sp=0xc0200e0388 stack=[0xc020000000, 0xc040000000]\n2024-03-12T14:00:05Z [edge-router-01] FATAL fatal error: stack overflow\n2024-03-12T14:00:05Z [edge-router-01] FATAL goroutine 47 [running]:\n2024-03-12T14:00:05Z [edge-router-01] FATAL runtime/debug.Stack()\n2024-03-12T14:00:05Z [edge-router-01] FATAL   /usr/local/go/src/runtime/debug/stack.go:24 +0x5b\n2024-03-12T14:00:05Z [edge-router-01] FATAL router/rules.(*RuleEvaluator).matchRecursive(...)\n2024-03-12T14:00:05Z [edge-router-01] FATAL   /app/router/rules/evaluator.go:312 +0x1a4\n2024-03-12T14:00:05Z [edge-router-01] FATAL router/rules.(*RuleEvaluator).matchRecursive(...)\n2024-03-12T14:00:05Z [edge-router-01] FATAL   /app/router/rules/evaluator.go:312 +0x1a4 [repeated 131072 times]\n2024-03-12T14:00:05Z [edge-router-02] ERROR Panic in rule evaluator: runtime: goroutine stack exceeds 1000000000-byte limit\n2024-03-12T14:00:05Z [edge-router-02] FATAL fatal error: stack overflow\n2024-03-12T14:00:05Z [edge-router-02] FATAL router/rules.(*RuleEvaluator).matchRecursive(...)\n2024-03-12T14:00:05Z [edge-router-02] FATAL   /app/router/rules/evaluator.go:312 +0x1a4 [repeated 131072 times]\n2024-03-12T14:00:05Z [edge-router-03] ERROR Panic in rule evaluator: runtime: goroutine stack exceeds 1000000000-byte limit\n2024-03-12T14:00:05Z [edge-router-03] FATAL fatal error: stack overflow\n2024-03-12T14:00:05Z [edge-router-03] FATAL router/rules.(*RuleEvaluator).matchRecursive(...)\n2024-03-12T14:00:05Z [edge-router-03] FATAL   /app/router/rules/evaluator.go:312 +0x1a4 [repeated 131072 times]\n2024-03-12T14:00:06Z [config-manager] ERROR edge-router-01 crashed attempting restart (attempt 1/3)\n2024-03-12T14:00:06Z [config-manager] ERROR edge-router-02 crashed attempting restart (attempt 1/3)\n2024-03-12T14:00:06Z [config-manager] ERROR edge-router-03 crashed attempting restart (attempt 1/3)\n2024-03-12T14:00:07Z [edge-router-01] INFO  Restarting process, reloading last applied config version=4.17.3\n2024-03-12T14:00:08Z [edge-router-01] FATAL fatal error: stack overflow crash loop detected\n2024-03-12T14:00:08Z [edge-router-02] FATAL fatal error: stack overflow crash loop detected\n2024-03-12T14:00:08Z [edge-router-03] FATAL fatal error: stack overflow crash loop detected\n2024-03-12T14:00:09Z [config-manager] ERROR All edge-router instances in crash loop max restarts exceeded\n2024-03-12T14:00:09Z [config-manager] FATAL No healthy routing nodes available traffic forwarding halted\n2024-03-12T14:00:10Z [frontend] ERROR upstream connect error or disconnect/reset before headers. reset reason: connection refused host=edge-router-01:8080\n2024-03-12T14:00:10Z [frontend] ERROR upstream connect error or disconnect/reset before headers. reset reason: connection refused host=edge-router-02:8080\n2024-03-12T14:00:10Z [frontend] ERROR upstream connect error or disconnect/reset before headers. reset reason: connection refused host=edge-router-03:8080\n2024-03-12T14:00:10Z [frontend] ERROR All edge router backends unavailable returning 503 to clients\n2024-03-12T14:00:11Z [healthcheck] CRITICAL /healthz endpoint for edge-router-01 returned 000 (connection refused)\n2024-03-12T14:00:11Z [healthcheck] CRITICAL /healthz endpoint for edge-router-02 returned 000 (connection refused)\n2024-03-12T14:00:11Z [healthcheck] CRITICAL /healthz endpoint for edge-router-03 returned 000 (connection refused)\n2024-03-12T14:00:11Z [alertmanager] FIRING: EdgeRouterDown severity=critical routers_down=3/3\n2024-03-12T14:00:12Z [frontend] ERROR HTTP 503 Service Unavailable request_id=req-a9f21c path=/checkout\n2024-03-12T14:00:12Z [frontend] ERROR HTTP 503 Service Unavailable request_id=req-b3d44e path=/cart\n2024-03-12T14:00:12Z [frontend] ERROR HTTP 503 Service Unavailable request_id=req-c7e91a path=/\n2024-03-12T14:00:13Z [frontend] ERROR HTTP 503 Service Unavailable request_id=req-d1f03b path=/api/products\n2024-03-12T14:00:13Z [monitoring] ALERT error_rate=100.0% p99_latency=timeout requests_served=0 requests_failed=2847\n2024-03-12T14:00:14Z [config-manager] INFO  Incident response triggered rollback initiated to config version=4.17.2\n2024-03-12T14:00:15Z [config-manager] INFO  Rolling back routing config to config_id=rt-cfg-20240311-004\n2024-03-12T14:01:02Z [edge-router-01] INFO  Loading routing rule config version=4.17.2 config_id=rt-cfg-20240311-004\n2024-03-12T14:01:02Z [edge-router-02] INFO  Loading routing rule config version=4.17.2 config_id=rt-cfg-20240311-004\n2024-03-12T14:01:02Z [edge-router-03] INFO  Loading routing rule config version=4.17.2 config_id=rt-cfg-20240311-004\n2024-03-12T14:01:03Z [edge-router-01] INFO  Validating routing rules: 4820 rules loaded no recursion warnings\n2024-03-12T14:01:03Z [edge-router-02] INFO  Validating routing rules: 4820 rules loaded no recursion warnings\n2024-03-12T14:01:03Z [edge-router-03] INFO  Validating routing rules: 4820 rules loaded no recursion warnings\n2024-03-12T14:01:04Z [edge-router-01] INFO  Routing config applied successfully node healthy\n2024-03-12T14:01:04Z [edge-router-02] INFO  Routing config applied successfully node healthy\n2024-03-12T14:01:04Z [edge-router-03] INFO  Routing config applied successfully node healthy\n2024-03-12T14:01:05Z [healthcheck] OK /healthz edge-router-01 status=200\n2024-03-12T14:01:05Z [healthcheck] OK /healthz edge-router-02 status=200\n2024-03-12T14:01:05Z [healthcheck] OK /healthz edge-router-03 status=200\n2024-03-12T14:01:06Z [frontend] INFO  Edge router backends restored resuming traffic forwarding\n2024-03-12T14:01:07Z [frontend] INFO  HTTP 200 OK request_id=req-e4a12f path=/\n2024-03-12T14:01:07Z [frontend] INFO  HTTP 200 OK request_id=req-f5b23c path=/cart\n2024-03-12T14:01:08Z [monitoring] INFO  error_rate=0.2% p99_latency=142ms service recovering\n2024-03-12T14:01:10Z [alertmanager] RESOLVED: EdgeRouterDown all 3 routers healthy\n2024-03-12T14:01:12Z [monitoring] INFO  error_rate=0.0% full service recovery confirmed",
+  "recent_deploys": [
+    {
+      "sha": "a1c3f9e",
+      "timestamp": "2024-03-11T08:15:00Z",
+      "author": "sarah.chen",
+      "message": "chore: bump edge-router base image to go1.22.1",
+      "changed_files": [
+        "Dockerfile",
+        "go.mod",
+        "go.sum"
+      ]
+    },
+    {
+      "sha": "b4d72a1",
+      "timestamp": "2024-03-11T11:30:00Z",
+      "author": "marco.vitelli",
+      "message": "feat: add geo-based routing priority for APAC region",
+      "changed_files": [
+        "router/rules/geo.go",
+        "config/routing_defaults.yaml"
+      ]
+    },
+    {
+      "sha": "c9e10f3",
+      "timestamp": "2024-03-11T15:45:00Z",
+      "author": "priya.ramesh",
+      "message": "fix: correct header normalization in X-Forwarded-For handling",
+      "changed_files": [
+        "router/rules/headers.go",
+        "router/rules/evaluator.go"
+      ]
+    },
+    {
+      "sha": "d2f84bc",
+      "timestamp": "2024-03-12T09:00:00Z",
+      "author": "james.okafor",
+      "message": "refactor: extract recursive rule matching into helper function",
+      "changed_files": [
+        "router/rules/evaluator.go",
+        "router/rules/evaluator_test.go"
+      ]
+    },
+    {
+      "sha": "e7a31d5",
+      "timestamp": "2024-03-12T12:00:00Z",
+      "author": "lena.hoffmann",
+      "message": "config: deploy routing ruleset v4.17.3 add wildcard header match rule #4819 for DDoS mitigation",
+      "changed_files": [
+        "config/routing_rules/rt-cfg-20240312-001.yaml",
+        "config/routing_rules/CHANGELOG.md"
+      ]
+    },
+    {
+      "sha": "f0b59c7",
+      "timestamp": "2024-03-12T13:55:00Z",
+      "author": "lena.hoffmann",
+      "message": "docs: update routing config deployment runbook",
+      "changed_files": [
+        "docs/runbooks/routing-config-deploy.md"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy SHA e7a31d5 introduced routing ruleset v4.17.3 (config_id=rt-cfg-20240312-001) containing rule #4819, a wildcard match on the X-Forwarded-For header with unlimited recursion depth. When this config was applied at 14:00:04Z, the recursive rule evaluator in evaluator.go:312 entered infinite recursion on every inbound request, causing a goroutine stack overflow and immediate crash across all three edge router nodes simultaneously. Because all nodes loaded the same bad config atomically, the crash loop prevented any node from recovering, taking the frontend 100% offline.",
+  "ground_truth_remediation": "1. Immediately roll back the active routing config to the previous known-good version rt-cfg-20240311-004 v4.17.2 using the config-manager rollback command: config-manager rollback --config-id rt-cfg-20240311-004. 2. Confirm all edge-router nodes pass health checks before declaring recovery. 3. Add a pre-deployment validation step to the routing config pipeline that enforces a maximum recursion depth limit on wildcard header match rules and runs a stress test against the rule evaluator before promoting to production. 4. Implement staged rollout for routing config changes to canary one node before applying globally to prevent simultaneous crashes.",
+  "red_herring": null
+}

@@ -1,0 +1,85 @@
+{
+  "id": "real-001",
+  "subset": "real_derived",
+  "category": "config_error",
+  "affected_service": "frontend",
+  "severity": "critical",
+  "alert_text": "CRITICAL: frontend service error rate >50% for 5 minutes. P99 latency >30s. Multiple instances failing health checks. Possible site-wide outage. PagerDuty #INC-20841",
+  "log_window": "2024-03-15T13:00:02Z [frontend] INFO  Starting marketing campaign traffic handler\n2024-03-15T13:00:05Z [frontend] INFO  Current pod count: 4/4 healthy\n2024-03-15T13:00:07Z [frontend] INFO  Request rate: 1200 req/s (baseline)\n2024-03-15T13:00:15Z [frontend] WARN  Request rate spike detected: 4800 req/s\n2024-03-15T13:00:16Z [frontend] WARN  CPU utilization: 78% across all pods\n2024-03-15T13:00:18Z [frontend] ERROR HTTP 503 returned to client 203.0.113.42 - upstream timeout\n2024-03-15T13:00:19Z [frontend] WARN  Request queue depth: 342 (threshold: 200)\n2024-03-15T13:00:20Z [frontend] INFO  HorizontalPodAutoscaler triggered: scaling from 4 to 12 replicas\n2024-03-15T13:00:21Z [kubernetes] INFO  Scheduling 8 new frontend pods\n2024-03-15T13:00:22Z [kubernetes] WARN  Pod frontend-7d9f4b6c8-xpqr2: Pending - Insufficient resources\n2024-03-15T13:00:22Z [kubernetes] WARN  Pod frontend-7d9f4b6c8-mnbv3: Pending - Insufficient resources\n2024-03-15T13:00:22Z [kubernetes] WARN  Pod frontend-7d9f4b6c8-lkjh4: Pending - Insufficient resources\n2024-03-15T13:00:22Z [kubernetes] WARN  Pod frontend-7d9f4b6c8-poiu5: Pending - Insufficient resources\n2024-03-15T13:00:23Z [frontend] ERROR HTTP 503 returned to client 198.51.100.7 - upstream timeout\n2024-03-15T13:00:23Z [frontend] ERROR HTTP 503 returned to client 192.0.2.88 - upstream timeout\n2024-03-15T13:00:25Z [kubernetes] WARN  Pod frontend-7d9f4b6c8-zxcv6: Pending - Insufficient resources\n2024-03-15T13:00:25Z [kubernetes] WARN  Pod frontend-7d9f4b6c8-asdf7: Pending - Insufficient resources\n2024-03-15T13:00:26Z [kubernetes] INFO  Node cluster capacity: 64 vCPU / 256GB RAM available\n2024-03-15T13:00:26Z [kubernetes] INFO  Node allocatable: 58 vCPU / 230GB RAM\n2024-03-15T13:00:26Z [kubernetes] INFO  Node currently allocated: 22 vCPU / 88GB RAM\n2024-03-15T13:00:27Z [kubernetes] ERROR  ResourceQuota frontend-ns exceeded: pods limit=4, used=4, requested=8\n2024-03-15T13:00:27Z [kubernetes] ERROR  Cannot schedule pod frontend-7d9f4b6c8-xpqr2: exceeded quota\n2024-03-15T13:00:27Z [kubernetes] ERROR  Cannot schedule pod frontend-7d9f4b6c8-mnbv3: exceeded quota\n2024-03-15T13:00:27Z [kubernetes] ERROR  Cannot schedule pod frontend-7d9f4b6c8-lkjh4: exceeded quota\n2024-03-15T13:00:27Z [kubernetes] ERROR  Cannot schedule pod frontend-7d9f4b6c8-poiu5: exceeded quota\n2024-03-15T13:00:28Z [frontend] ERROR  Request rate: 5100 req/s - only 4 pods available to handle load\n2024-03-15T13:00:30Z [frontend] ERROR  HTTP 503 rate: 62% of all requests\n2024-03-15T13:00:31Z [frontend] ERROR  Health check failed for pod frontend-7d9f4b6c8-abc01: connection timeout\n2024-03-15T13:00:32Z [frontend] ERROR  Health check failed for pod frontend-7d9f4b6c8-def02: connection timeout\n2024-03-15T13:00:33Z [kubernetes] WARN  HPA scale-up blocked: namespace ResourceQuota prevents new pods\n2024-03-15T13:00:34Z [frontend] ERROR  P99 latency: 34.2s (SLO: 2.0s)\n2024-03-15T13:00:35Z [frontend] ERROR  P95 latency: 28.7s\n2024-03-15T13:00:36Z [frontend] ERROR  P50 latency: 12.4s\n2024-03-15T13:00:37Z [frontend] ERROR  HTTP 503 returned to client 203.0.113.100\n2024-03-15T13:00:38Z [frontend] ERROR  HTTP 503 returned to client 198.51.100.200\n2024-03-15T13:00:39Z [frontend] WARN  Connection pool exhausted for checkout-service upstream\n2024-03-15T13:00:40Z [frontend] ERROR  Failed to proxy to recommendation-service: connection refused\n2024-03-15T13:00:41Z [kubernetes] INFO  Cluster node utilization: 38% CPU, 41% RAM (resources are available)\n2024-03-15T13:00:42Z [kubernetes] ERROR  ResourceQuota frontend-ns: hard limit pods=4 blocks all pending pods\n2024-03-15T13:00:45Z [frontend] ERROR  HTTP 500 - panic: runtime error: index out of range during queue overflow\n2024-03-15T13:00:45Z [frontend] ERROR  goroutine 2847 [running]:\n2024-03-15T13:00:45Z [frontend] ERROR  main.handleRequest(0xc000214480)\n2024-03-15T13:00:45Z [frontend] ERROR      /app/server/handler.go:214 +0x3a8\n2024-03-15T13:00:45Z [frontend] ERROR  net/http.(*ServeMux).ServeHTTP(0x..., 0x...)\n2024-03-15T13:00:45Z [frontend] ERROR      /usr/local/go/src/net/http/server.go:2469 +0x135\n2024-03-15T13:00:46Z [frontend] WARN  Pod frontend-7d9f4b6c8-abc01 restarted (OOMKilled)\n2024-03-15T13:00:47Z [frontend] WARN  Pod frontend-7d9f4b6c8-def02 restarted (OOMKilled)\n2024-03-15T13:00:48Z [kubernetes] WARN  Running pods after restart: 2/4\n2024-03-15T13:00:50Z [frontend] ERROR  HTTP 503 rate: 91% of all requests\n2024-03-15T13:00:52Z [alertmanager] CRITICAL  frontend error rate 91% > threshold 50% for 5m\n2024-03-15T13:00:52Z [alertmanager] CRITICAL  P99 latency 34.2s > SLO 2.0s\n2024-03-15T13:00:52Z [alertmanager] INFO  PagerDuty incident INC-20841 created, notifying on-call team\n2024-03-15T13:01:00Z [frontend] ERROR  Site effectively unavailable - 94% 503 error rate\n2024-03-15T13:01:03Z [kubernetes] INFO  Cluster nodes: node-01 (38% CPU), node-02 (41% CPU), node-03 (35% CPU)\n2024-03-15T13:01:05Z [kubernetes] ERROR  ResourceQuota frontend-ns hard.pods=4 is blocking all scale-out\n2024-03-15T13:01:10Z [oncall] INFO  Engineer paged, acknowledged INC-20841\n2024-03-15T13:04:30Z [oncall] INFO  Investigating: kubectl describe resourcequota -n frontend-ns\n2024-03-15T13:04:32Z [kubernetes] INFO  Name: frontend-ns, Namespace: frontend-ns\n2024-03-15T13:04:32Z [kubernetes] INFO  Resource  Used  Hard\n2024-03-15T13:04:32Z [kubernetes] INFO  pods      4     4\n2024-03-15T13:04:32Z [kubernetes] INFO  cpu       8     12\n2024-03-15T13:04:32Z [kubernetes] INFO  memory    16Gi  24Gi\n2024-03-15T13:05:00Z [oncall] INFO  Root cause identified: ResourceQuota pods hard limit set to 4, HPA cannot scale\n2024-03-15T13:05:10Z [oncall] INFO  Applying fix: kubectl patch resourcequota frontend-ns -n frontend-ns --patch pods limit=20\n2024-03-15T13:05:12Z [kubernetes] INFO  ResourceQuota frontend-ns updated: hard.pods=20\n2024-03-15T13:05:14Z [kubernetes] INFO  Scheduling previously-pending pods\n2024-03-15T13:05:20Z [kubernetes] INFO  Pod frontend-7d9f4b6c8-xpqr2: Running\n2024-03-15T13:05:21Z [kubernetes] INFO  Pod frontend-7d9f4b6c8-mnbv3: Running\n2024-03-15T13:05:22Z [kubernetes] INFO  Pod frontend-7d9f4b6c8-lkjh4: Running\n2024-03-15T13:05:25Z [kubernetes] INFO  Pod frontend-7d9f4b6c8-poiu5: Running\n2024-03-15T13:05:30Z [frontend] INFO  Pod count: 8/8 healthy\n2024-03-15T13:05:35Z [frontend] INFO  HTTP 503 rate dropping: 41%\n2024-03-15T13:05:50Z [frontend] INFO  HTTP 503 rate dropping: 12%\n2024-03-15T13:06:00Z [frontend] INFO  P99 latency: 1.8s - within SLO\n2024-03-15T13:06:05Z [frontend] INFO  Error rate: 1.2% - normal\n2024-03-15T13:06:10Z [alertmanager] INFO  INC-20841 resolved - frontend service recovered",
+  "recent_deploys": [
+    {
+      "sha": "a3f8c21",
+      "timestamp": "2024-03-10T09:15:00Z",
+      "author": "pawel.kowalski",
+      "message": "feat: add campaign landing page template for spring sale",
+      "changed_files": [
+        "frontend/templates/campaign.html",
+        "frontend/static/css/campaign.css",
+        "frontend/handlers/campaign_handler.go"
+      ]
+    },
+    {
+      "sha": "b72e4d9",
+      "timestamp": "2024-03-11T14:30:00Z",
+      "author": "anna.wisniewska",
+      "message": "chore: update kubernetes namespace ResourceQuota for frontend-ns",
+      "changed_files": [
+        "infra/k8s/namespaces/frontend-ns/resource-quota.yaml"
+      ]
+    },
+    {
+      "sha": "c19a7f3",
+      "timestamp": "2024-03-12T11:00:00Z",
+      "author": "tomasz.nowak",
+      "message": "fix: resolve memory leak in product listing renderer",
+      "changed_files": [
+        "frontend/handlers/product_list.go",
+        "frontend/cache/lru_cache.go"
+      ]
+    },
+    {
+      "sha": "d44b8e1",
+      "timestamp": "2024-03-13T16:45:00Z",
+      "author": "magdalena.lis",
+      "message": "feat: integrate recommendation-service carousel on homepage",
+      "changed_files": [
+        "frontend/templates/index.html",
+        "frontend/clients/recommendation_client.go",
+        "frontend/config/services.yaml"
+      ]
+    },
+    {
+      "sha": "e91c3a6",
+      "timestamp": "2024-03-14T10:20:00Z",
+      "author": "bartosz.jankowski",
+      "message": "chore: bump HPA maxReplicas to 12 for anticipated campaign load",
+      "changed_files": [
+        "infra/k8s/frontend/hpa.yaml"
+      ]
+    },
+    {
+      "sha": "f03d5b2",
+      "timestamp": "2024-03-14T17:00:00Z",
+      "author": "pawel.kowalski",
+      "message": "feat: enable A/B testing framework for spring campaign banners",
+      "changed_files": [
+        "frontend/ab_testing/campaign_variants.go",
+        "frontend/config/ab_config.yaml",
+        "frontend/handlers/banner_handler.go"
+      ]
+    },
+    {
+      "sha": "g15f6c8",
+      "timestamp": "2024-03-15T08:00:00Z",
+      "author": "anna.wisniewska",
+      "message": "chore: pre-campaign deploy - update CDN cache-control headers",
+      "changed_files": [
+        "infra/cdn/cache_rules.yaml",
+        "frontend/middleware/cache_headers.go"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "The Kubernetes namespace ResourceQuota for frontend-ns had its pod hard limit set to 4 in commit b72e4d9 (infra/k8s/namespaces/frontend-ns/resource-quota.yaml). Although commit e91c3a6 correctly raised the HPA maxReplicas to 12, the namespace-level ResourceQuota was never updated to match. When the marketing campaign triggered a 4x traffic spike at 13:00 UTC, the HPA attempted to schedule 8 additional pods, but all were blocked by the ResourceQuota hard limit of 4 pods. The cluster had ample physical capacity (35%+ free CPU and RAM across all nodes), but the misconfigured quota prevented any scale-out, causing the existing 4 pods to become overwhelmed, leading to OOMKills and a 91%+ HTTP 503 error rate.",
+  "ground_truth_remediation": "1. Immediately patch the ResourceQuota to allow sufficient pods: kubectl patch resourcequota frontend-ns -n frontend-ns -p with hard pods limit set to 20. 2. Verify pending pods are now scheduled and become Running. 3. Confirm HPA scales to desired replica count and error rate normalizes. 4. Long-term: add a CI/CD policy check that ensures HPA maxReplicas never exceeds namespace ResourceQuota pod limits, and require both to be updated together. 5. Update the resource-quota.yaml in version control to reflect the corrected limit and conduct a full audit of all namespace quotas before future planned campaigns.",
+  "red_herring": null
+}

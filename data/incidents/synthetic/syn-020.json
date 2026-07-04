@@ -1,0 +1,70 @@
+{
+  "id": "syn-020",
+  "subset": "synthetic",
+  "category": "deploy_regression",
+  "affected_service": "payment-service",
+  "severity": "high",
+  "alert_text": "ALERT: payment-service retry budget exhausted — p99 latency 14.2s, error rate 38% over last 5 minutes (threshold: 5%). Downstream charge confirmations failing.",
+  "log_window": "2026-05-16T11:58:01.112Z [payment-service] INFO  version=49a7631b1ddb env=production startup complete\n2026-05-16T11:58:01.340Z [payment-service] INFO  config loaded: http_client_timeout=60000ms retry_max=3 retry_budget=100\n2026-05-16T11:58:02.001Z [payment-service] DEBUG worker_pool=8 queue_depth=0 ready to accept requests\n2026-05-16T11:58:05.210Z [payment-service] INFO  service=stripe-gateway connection=established latency_ms=42\n2026-05-16T11:58:10.445Z [payment-service] INFO  req_id=r-10001 method=POST path=/charge amount=99.00 currency=USD started\n2026-05-16T11:58:10.891Z [payment-service] INFO  req_id=r-10001 upstream=stripe-gateway attempt=1 sent\n2026-05-16T11:58:16.903Z [payment-service] WARN  req_id=r-10001 upstream=stripe-gateway attempt=1 elapsed_ms=6012 timeout_threshold_ms=6000 timeout\n2026-05-16T11:58:16.910Z [payment-service] INFO  req_id=r-10001 upstream=stripe-gateway attempt=2 sent\n2026-05-16T11:58:22.921Z [payment-service] WARN  req_id=r-10001 upstream=stripe-gateway attempt=2 elapsed_ms=6010 timeout_threshold_ms=6000 timeout\n2026-05-16T11:58:22.928Z [payment-service] INFO  req_id=r-10001 upstream=stripe-gateway attempt=3 sent\n2026-05-16T11:58:28.945Z [payment-service] ERROR req_id=r-10001 upstream=stripe-gateway attempt=3 elapsed_ms=6017 timeout_threshold_ms=6000 timeout — retry budget consumed\n2026-05-16T11:58:28.947Z [payment-service] ERROR req_id=r-10001 status=500 msg=\"all retries exhausted\" duration_total_ms=18457\n2026-05-16T11:58:29.100Z [stripe-gateway] {\"level\":\"warn\",\"ts\":\"2026-05-16T11:58:29.100Z\",\"msg\":\"slow upstream\",\"target\":\"stripe.com\",\"elapsed_ms\":5980,\"threshold_ms\":3000}\n2026-05-16T11:58:30.210Z [payment-service] INFO  req_id=r-10002 method=POST path=/charge amount=149.00 currency=USD started\n2026-05-16T11:58:30.650Z [payment-service] INFO  req_id=r-10002 upstream=stripe-gateway attempt=1 sent\n2026-05-16T11:58:36.671Z [payment-service] WARN  req_id=r-10002 upstream=stripe-gateway attempt=1 elapsed_ms=6021 timeout_threshold_ms=6000 timeout\n2026-05-16T11:58:36.678Z [payment-service] INFO  req_id=r-10002 upstream=stripe-gateway attempt=2 sent\n2026-05-16T11:58:42.690Z [payment-service] WARN  req_id=r-10002 upstream=stripe-gateway attempt=2 elapsed_ms=6012 timeout_threshold_ms=6000 timeout\n2026-05-16T11:58:42.697Z [payment-service] INFO  req_id=r-10002 upstream=stripe-gateway attempt=3 sent\n2026-05-16T11:58:48.711Z [payment-service] ERROR req_id=r-10002 upstream=stripe-gateway attempt=3 elapsed_ms=6014 timeout_threshold_ms=6000 timeout — retry budget consumed\n2026-05-16T11:58:48.713Z [payment-service] ERROR req_id=r-10002 status=500 msg=\"all retries exhausted\" duration_total_ms=18501\n2026-05-16T11:58:49.001Z [stripe-gateway] {\"level\":\"warn\",\"ts\":\"2026-05-16T11:58:49.001Z\",\"msg\":\"slow upstream\",\"target\":\"stripe.com\",\"elapsed_ms\":5991,\"threshold_ms\":3000}\n2026-05-16T11:59:00.310Z [payment-service] WARN  retry_budget_remaining=82 retry_budget_consumed=18 window=60s\n2026-05-16T11:59:05.410Z [checkout-service] level=error msg=\"payment charge failed\" req_id=r-10001 downstream=payment-service status=500\n2026-05-16T11:59:05.412Z [checkout-service] level=warn  msg=\"retrying payment\" req_id=r-10001 attempt=1\n2026-05-16T11:59:22.881Z [checkout-service] level=error msg=\"payment charge failed\" req_id=r-10001 downstream=payment-service status=500\n2026-05-16T11:59:22.884Z [checkout-service] level=error msg=\"max upstream retries reached, giving up\" req_id=r-10001\n2026-05-16T11:59:30.100Z [payment-service] INFO  req_id=r-10003 method=POST path=/charge amount=59.99 currency=USD started\n2026-05-16T11:59:30.540Z [payment-service] INFO  req_id=r-10003 upstream=stripe-gateway attempt=1 sent\n2026-05-16T11:59:36.558Z [payment-service] WARN  req_id=r-10003 upstream=stripe-gateway attempt=1 elapsed_ms=6018 timeout_threshold_ms=6000 timeout\n2026-05-16T11:59:36.565Z [payment-service] INFO  req_id=r-10003 upstream=stripe-gateway attempt=2 sent\n2026-05-16T11:59:42.578Z [payment-service] WARN  req_id=r-10003 upstream=stripe-gateway attempt=2 elapsed_ms=6013 timeout_threshold_ms=6000 timeout\n2026-05-16T11:59:42.585Z [payment-service] INFO  req_id=r-10003 upstream=stripe-gateway attempt=3 sent\n2026-05-16T11:59:48.601Z [payment-service] ERROR req_id=r-10003 upstream=stripe-gateway attempt=3 elapsed_ms=6016 timeout_threshold_ms=6000 timeout — retry budget consumed\n2026-05-16T11:59:48.603Z [payment-service] ERROR req_id=r-10003 status=500 msg=\"all retries exhausted\" duration_total_ms=18491\n2026-05-16T12:00:00.450Z [payment-service] WARN  retry_budget_remaining=51 retry_budget_consumed=49 window=60s\n2026-05-16T12:00:01.220Z [payment-service] ERROR retry budget at 51% — approaching exhaustion threshold=50\n2026-05-16T12:00:10.330Z [stripe-gateway] {\"level\":\"info\",\"ts\":\"2026-05-16T12:00:10.330Z\",\"msg\":\"stripe.com healthy\",\"latency_ms\":210,\"status\":200}\n2026-05-16T12:00:10.340Z [payment-service] DEBUG upstream=stripe-gateway health_check=ok latency_ms=215\n2026-05-16T12:00:15.010Z [payment-service] INFO  req_id=r-10004 method=POST path=/charge amount=199.00 currency=USD started\n2026-05-16T12:00:15.450Z [payment-service] INFO  req_id=r-10004 upstream=stripe-gateway attempt=1 sent\n2026-05-16T12:00:21.462Z [payment-service] WARN  req_id=r-10004 upstream=stripe-gateway attempt=1 elapsed_ms=6012 timeout_threshold_ms=6000 timeout\n2026-05-16T12:00:21.469Z [payment-service] INFO  req_id=r-10004 upstream=stripe-gateway attempt=2 sent\n2026-05-16T12:00:27.484Z [payment-service] WARN  req_id=r-10004 upstream=stripe-gateway attempt=2 elapsed_ms=6015 timeout_threshold_ms=6000 timeout\n2026-05-16T12:00:27.491Z [payment-service] INFO  req_id=r-10004 upstream=stripe-gateway attempt=3 sent\n2026-05-16T12:00:33.507Z [payment-service] ERROR req_id=r-10004 upstream=stripe-gateway attempt=3 elapsed_ms=6016 timeout_threshold_ms=6000 timeout — retry budget consumed\n2026-05-16T12:00:33.509Z [payment-service] ERROR req_id=r-10004 status=500 msg=\"all retries exhausted\" duration_total_ms=18497\n2026-05-16T12:00:34.000Z [payment-service] FATAL retry_budget_remaining=2 retry_budget_consumed=98 — BUDGET EXHAUSTED IMMINENT\n2026-05-16T12:00:34.200Z [payment-service] FATAL retry budget EXHAUSTED: dropping all new charge requests\n2026-05-16T12:00:34.205Z [payment-service] ERROR\tat com.example.payment.RetryPolicy.acquireBudget(RetryPolicy.java:88)\n2026-05-16T12:00:34.206Z [payment-service] ERROR\tat com.example.payment.ChargeHandler.handle(ChargeHandler.java:142)\n2026-05-16T12:00:34.207Z [payment-service] ERROR\tat com.example.payment.HttpServer.dispatch(HttpServer.java:77)\n2026-05-16T12:00:35.100Z [checkout-service] level=fatal msg=\"payment-service circuit opened, all charges failing\" error=\"retry budget exhausted\"\n2026-05-16T12:00:35.310Z [checkout-service] level=error msg=\"order failed\" req_id=r-10004 reason=\"payment unavailable\"\n2026-05-16T12:00:36.001Z [payment-service] ERROR req_id=r-10005 status=503 msg=\"retry budget exhausted, rejecting request immediately\"\n2026-05-16T12:00:36.100Z [payment-service] ERROR req_id=r-10006 status=503 msg=\"retry budget exhausted, rejecting request immediately\"\n2026-05-16T12:00:36.210Z [payment-service] ERROR req_id=r-10007 status=503 msg=\"retry budget exhausted, rejecting request immediately\"\n2026-05-16T12:00:37.440Z [stripe-gateway] {\"level\":\"info\",\"ts\":\"2026-05-16T12:00:37.440Z\",\"msg\":\"no incoming requests — idle\",\"queue_depth\":0}\n2026-05-16T12:00:38.010Z [payment-service] WARN  note: stripe-gateway health endpoint responding normally — issue is client-side timeout config\n2026-05-16T12:00:39.020Z [payment-service] DEBUG config_source=env HTTP_CLIENT_TIMEOUT_MS=60000 (expected 30000 prior to deploy 49a7631b1ddb)\n2026-05-16T12:00:39.025Z [payment-service] DEBUG previous_value=30000ms current_value=60000ms changed_in_deploy=49a7631b1ddb\n2026-05-16T12:00:40.100Z [payment-service] ERROR error_rate=0.38 p99_latency_ms=14200 alerting\n2026-05-16T12:00:40.500Z [checkout-service] level=error msg=\"degraded: payment-service error_rate=0.38\" alert=firing\n2026-05-16T12:00:41.200Z [payment-service] INFO  paging on-call: payment-service retry budget exhausted, p99=14.2s, error_rate=38%\n2026-05-16T12:01:00.001Z [payment-service] WARN  retry_budget_remaining=0 retry_budget_consumed=100 window=60s — all slots consumed\n2026-05-16T12:01:00.200Z [payment-service] ERROR req_id=r-10010 status=503 msg=\"retry budget exhausted, rejecting request immediately\"\n2026-05-16T12:01:00.350Z [payment-service] ERROR req_id=r-10011 status=503 msg=\"retry budget exhausted, rejecting request immediately\"\n2026-05-16T12:01:01.001Z [checkout-service] level=error msg=\"order failure rate=0.41 exceeds SLA\" alert=critical\n2026-05-16T12:01:05.220Z [stripe-gateway] {\"level\":\"info\",\"ts\":\"2026-05-16T12:01:05.220Z\",\"msg\":\"stripe.com healthy\",\"latency_ms\":198,\"status\":200}\n2026-05-16T12:01:07.010Z [payment-service] DEBUG stripe-gateway direct ping latency_ms=201 — upstream is healthy, problem is timeout misconfiguration\n2026-05-16T12:01:08.500Z [payment-service] INFO  on-call acknowledged incident, beginning rollback assessment\n2026-05-16T12:02:00.010Z [payment-service] WARN  retry_budget_remaining=0 retry_budget_consumed=100 — budget still exhausted, awaiting rollback\n2026-05-16T12:02:01.100Z [payment-service] ERROR req_id=r-10020 status=503 msg=\"retry budget exhausted, rejecting request immediately\"\n2026-05-16T12:02:01.310Z [payment-service] ERROR req_id=r-10021 status=503 msg=\"retry budget exhausted, rejecting request immediately\"\n2026-05-16T12:02:01.510Z [checkout-service] level=error msg=\"payment-service down, orders stalled\" downstream=payment-service\n2026-05-16T12:02:05.001Z [payment-service] INFO  initiating rollback to sha=30ba52fd9566\n2026-05-16T12:03:00.100Z [payment-service] INFO  rollback complete version=30ba52fd9566 http_client_timeout=30000ms\n2026-05-16T12:03:01.200Z [payment-service] INFO  retry_budget reset: remaining=100 consumed=0\n2026-05-16T12:03:10.440Z [payment-service] INFO  req_id=r-10030 upstream=stripe-gateway attempt=1 elapsed_ms=218 status=200 OK\n2026-05-16T12:03:10.442Z [payment-service] INFO  req_id=r-10030 status=200 charge=confirmed duration_ms=221\n2026-05-16T12:03:15.100Z [payment-service] INFO  error_rate=0.00 p99_latency_ms=310 — service recovered",
+  "recent_deploys": [
+    {
+      "sha": "a65d890990f0",
+      "timestamp": "2026-05-05T10:00:49Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "chore(deps): resolve Rust security advisories (#3348)",
+      "changed_files": [
+        "payment-service/Cargo.toml",
+        "payment-service/Cargo.lock",
+        "payment-service/src/crypto/tls.rs"
+      ]
+    },
+    {
+      "sha": "6302e2c10e48",
+      "timestamp": "2026-05-05T10:28:04Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "fix(deps): resolve Ruby security advisories (#3349)",
+      "changed_files": [
+        "payment-service/scripts/Gemfile",
+        "payment-service/scripts/Gemfile.lock"
+      ]
+    },
+    {
+      "sha": "30ba52fd9566",
+      "timestamp": "2026-05-05T06:33:05Z",
+      "author": "Jonathan Munz",
+      "message": "Update React Native example app dependencies (#3296)",
+      "changed_files": [
+        "payment-service/package.json",
+        "payment-service/package-lock.json",
+        "payment-service/src/client/ReactNativeClient.js"
+      ]
+    },
+    {
+      "sha": "997d9970c437",
+      "timestamp": "2026-05-05T08:45:37Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the go-production-dependencies group across 2 directories with",
+      "changed_files": [
+        "payment-service/go.mod",
+        "payment-service/go.sum",
+        "payment-service/internal/httpclient/client.go",
+        "payment-service/internal/httpclient/config.go"
+      ]
+    },
+    {
+      "sha": "49a7631b1ddb",
+      "timestamp": "2026-05-16T12:04:07Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Profiling with firepit (#3333)",
+      "changed_files": [
+        "payment-service/internal/httpclient/config.go",
+        "payment-service/internal/retry/budget.go",
+        "payment-service/config/defaults.yaml",
+        "payment-service/docs/profiling.md"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=49a7631b1ddb (\"Profiling with firepit\", 2026-05-16T12:04:07Z) inadvertently doubled the HTTP client timeout default from 30000ms to 60000ms in payment-service/internal/httpclient/config.go and payment-service/config/defaults.yaml. Because stripe-gateway responses normally complete in ~200ms but the payment-service timeout is now 60s, transient stripe slowdowns (5-6s responses) no longer fail fast — instead each attempt runs to the full per-attempt timeout threshold (mis-set at 6000ms rather than 3000ms), causing 3 retries × ~6s = ~18s of wall time per request. The high per-request retry cost rapidly exhausted the fixed retry budget (100 tokens/minute), causing all subsequent charge requests to be rejected with 503 within 2 minutes of deploy.",
+  "ground_truth_remediation": "Roll back payment-service to the previous known-good deploy sha=30ba52fd9566 immediately using the standard rollback pipeline (`kubectl set image deployment/payment-service payment-service=payment-service:30ba52fd9566` or equivalent). Confirm http_client_timeout_ms returns to 30000ms in startup logs and that retry_budget consumption returns to near-zero. Once recovered, create a follow-up PR to revert the timeout change in config/defaults.yaml and internal/httpclient/config.go, add a config validation test asserting timeout_ms <= 35000, and redeploy 49a7631b1ddb with the fix.",
+  "red_herring": null
+}

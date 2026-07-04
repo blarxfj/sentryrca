@@ -1,0 +1,70 @@
+{
+  "id": "syn-011",
+  "subset": "synthetic",
+  "category": "deploy_regression",
+  "affected_service": "checkout-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: checkout-service error rate 94% over last 5 minutes (threshold: 5%). P99 latency 32s. SLO burn rate: 847x. Immediate action required.",
+  "log_window": "2026-05-06T14:44:02.011Z [checkout-service] INFO  Starting checkout-service v2.3.1 (sha=05fab63b804f)\n2026-05-06T14:44:02.089Z [checkout-service] INFO  Loading application configuration from /etc/checkout/config.yaml\n2026-05-06T14:44:02.134Z [checkout-service] INFO  Connecting to PostgreSQL at postgres-primary:5432/checkoutdb\n2026-05-06T14:44:02.201Z [checkout-service] INFO  Database connection pool initialized (min=5, max=20)\n2026-05-06T14:44:02.245Z [checkout-service] INFO  Running startup migration check — MigrationRunner.runPendingMigrations()\n2026-05-06T14:44:02.246Z [checkout-service] WARN  Found 3 pending schema migrations, executing synchronously on main thread\n2026-05-06T14:44:02.247Z [checkout-service] INFO  [migration] Starting migration 0041_add_coupon_usage_index.sql\n2026-05-06T14:44:04.891Z [postgres-primary] level=INFO msg=\"lock acquired\" pid=18423 relation=\"orders\" locktype=\"AccessExclusiveLock\" duration_ms=2644\n2026-05-06T14:44:05.102Z [checkout-service] INFO  [migration] Starting migration 0042_backfill_order_totals.sql\n2026-05-06T14:44:05.103Z [checkout-service] WARN  [migration] 0042_backfill_order_totals.sql modifies 4.2M rows — this may take several minutes\n2026-05-06T14:44:05.200Z [postgres-primary] level=WARN msg=\"long-running UPDATE detected\" pid=18423 table=\"orders\" rows_affected_estimate=4200000\n2026-05-06T14:44:07.334Z [checkout-service] INFO  HTTP server bound to :8080 — accepting connections\n2026-05-06T14:44:07.340Z [api-gateway] INFO  Health probe checkout-service:8080/healthz → 200 OK (startup probe passed)\n2026-05-06T14:44:07.341Z [api-gateway] INFO  checkout-service registered in upstream pool, routing traffic\n2026-05-06T14:44:07.512Z [checkout-service] WARN  Received HTTP request during active migration — DB connection pool saturated\n2026-05-06T14:44:07.634Z [checkout-service] ERROR req_id=req-00041 method=POST path=/api/v1/checkout status=503 latency_ms=127 error=\"db: all connections busy, queue overflow\"\n2026-05-06T14:44:07.901Z [checkout-service] ERROR req_id=req-00042 method=POST path=/api/v1/checkout status=503 latency_ms=98  error=\"db: all connections busy, queue overflow\"\n2026-05-06T14:44:08.003Z [checkout-service] ERROR req_id=req-00043 method=GET  path=/api/v1/cart   status=503 latency_ms=112 error=\"db: all connections busy, queue overflow\"\n2026-05-06T14:44:08.210Z [checkout-service] ERROR req_id=req-00044 method=POST path=/api/v1/checkout status=503 latency_ms=103 error=\"db: all connections busy, queue overflow\"\n2026-05-06T14:44:08.445Z [api-gateway] WARN  upstream=checkout-service consecutive_5xx=4 threshold=10\n2026-05-06T14:44:09.011Z [checkout-service] ERROR req_id=req-00045 method=POST path=/api/v1/checkout status=503 latency_ms=95  error=\"db: all connections busy, queue overflow\"\n2026-05-06T14:44:09.234Z [checkout-service] ERROR req_id=req-00046 method=GET  path=/api/v1/orders  status=503 latency_ms=88  error=\"db: all connections busy, queue overflow\"\n2026-05-06T14:44:09.512Z [checkout-service] WARN  DB connection pool exhausted: active=20 idle=0 queued=47\n2026-05-06T14:44:09.601Z [postgres-primary] level=WARN msg=\"max_connections approaching\" current=98 max=100\n2026-05-06T14:44:10.003Z [checkout-service] ERROR req_id=req-00047 method=POST path=/api/v1/checkout status=503 latency_ms=101 error=\"db: connection queue timeout after 100ms\"\n2026-05-06T14:44:10.234Z [checkout-service] ERROR req_id=req-00048 method=POST path=/api/v1/checkout status=503 latency_ms=99  error=\"db: connection queue timeout after 100ms\"\n2026-05-06T14:44:10.445Z [checkout-service] ERROR req_id=req-00049 method=POST path=/api/v1/payment  status=503 latency_ms=107 error=\"db: connection queue timeout after 100ms\"\n2026-05-06T14:44:10.890Z [api-gateway] WARN  upstream=checkout-service consecutive_5xx=9 threshold=10\n2026-05-06T14:44:11.002Z [checkout-service] ERROR req_id=req-00050 method=POST path=/api/v1/checkout status=503 latency_ms=95  error=\"db: connection queue timeout after 100ms\"\n2026-05-06T14:44:11.003Z [api-gateway] ERROR upstream=checkout-service consecutive_5xx=10 CIRCUIT_BREAKER_OPEN retrying_in=30s\n2026-05-06T14:44:11.112Z [checkout-service] FATAL DB connection pool deadlocked during migration — MigrationRunner holding 18/20 connections\n2026-05-06T14:44:11.113Z [checkout-service] ERROR goroutine 47: runtime error: migration lock contention\n2026-05-06T14:44:11.114Z [checkout-service] ERROR   at MigrationRunner.runPendingMigrations (migration/runner.go:214)\n2026-05-06T14:44:11.115Z [checkout-service] ERROR   at main.initializeApp (main.go:88)\n2026-05-06T14:44:12.001Z [checkout-service] WARN  [migration] 0042_backfill_order_totals.sql progress: 310000/4200000 rows (7.4%) elapsed=6.9s estimated_remaining=86s\n2026-05-06T14:44:13.334Z [postgres-primary] level=ERROR msg=\"idle-in-transaction timeout\" pid=18441 wait_ms=6100\n2026-05-06T14:44:14.012Z [checkout-service] ERROR req_id=req-00071 method=POST path=/api/v1/checkout status=503 latency_ms=30012 error=\"context deadline exceeded\"\n2026-05-06T14:44:14.234Z [checkout-service] ERROR req_id=req-00072 method=POST path=/api/v1/checkout status=503 latency_ms=30001 error=\"context deadline exceeded\"\n2026-05-06T14:44:15.003Z [payment-service] WARN  checkout dependency unhealthy — checkout-service returned 503 for /api/v1/payment, retrying (attempt 1/3)\n2026-05-06T14:44:15.512Z [payment-service] WARN  checkout dependency unhealthy — checkout-service returned 503 for /api/v1/payment, retrying (attempt 2/3)\n2026-05-06T14:44:16.001Z [payment-service] ERROR checkout dependency failed after 3 retries — marking payment flow degraded\n2026-05-06T14:44:17.002Z [checkout-service] WARN  [migration] 0042_backfill_order_totals.sql progress: 680000/4200000 rows (16.2%) elapsed=11.9s estimated_remaining=73s\n2026-05-06T14:44:17.445Z [checkout-service] ERROR req_id=req-00098 method=GET  path=/api/v1/healthz  status=200 latency_ms=2 msg=\"health check OK (migration not reflected in health probe)\"\n2026-05-06T14:44:18.001Z [api-gateway] INFO  health probe checkout-service:8080/healthz → 200 OK (circuit breaker will re-admit traffic in 13s)\n2026-05-06T14:44:22.001Z [checkout-service] WARN  [migration] 0042_backfill_order_totals.sql progress: 1100000/4200000 rows (26.2%) elapsed=16.9s estimated_remaining=62s\n2026-05-06T14:44:26.001Z [checkout-service] WARN  [migration] 0042_backfill_order_totals.sql progress: 1550000/4200000 rows (36.9%) elapsed=20.9s estimated_remaining=53s\n2026-05-06T14:44:26.890Z [postgres-primary] level=WARN msg=\"table bloat increasing\" table=\"orders\" dead_tuples=1243000\n2026-05-06T14:44:27.001Z [api-gateway] INFO  circuit breaker half-open — admitting 10% traffic to checkout-service\n2026-05-06T14:44:27.112Z [checkout-service] ERROR req_id=req-00143 method=POST path=/api/v1/checkout status=503 latency_ms=100 error=\"db: all connections busy, queue overflow\"\n2026-05-06T14:44:27.234Z [api-gateway] ERROR upstream=checkout-service half-open probe failed, CIRCUIT_BREAKER_OPEN retrying_in=60s\n2026-05-06T14:44:30.001Z [checkout-service] WARN  [migration] 0042_backfill_order_totals.sql progress: 2100000/4200000 rows (50.0%) elapsed=24.9s estimated_remaining=45s\n2026-05-06T14:44:34.001Z [checkout-service] WARN  [migration] 0042_backfill_order_totals.sql progress: 2700000/4200000 rows (64.3%) elapsed=28.9s estimated_remaining=34s\n2026-05-06T14:44:34.445Z [postgres-primary] level=WARN msg=\"replication lag increasing\" replica=\"postgres-replica-1\" lag_bytes=2847392\n2026-05-06T14:44:38.001Z [checkout-service] WARN  [migration] 0042_backfill_order_totals.sql progress: 3350000/4200000 rows (79.8%) elapsed=32.9s estimated_remaining=22s\n2026-05-06T14:44:42.001Z [checkout-service] WARN  [migration] 0042_backfill_order_totals.sql progress: 3950000/4200000 rows (94.0%) elapsed=36.9s estimated_remaining=7s\n2026-05-06T14:44:43.112Z [alertmanager] CRITICAL alert=HighErrorRate service=checkout-service error_rate=0.94 window=5m threshold=0.05 fired_at=2026-05-06T14:44:43Z\n2026-05-06T14:44:44.234Z [alertmanager] CRITICAL alert=P99LatencyHigh service=checkout-service p99_latency_ms=32000 threshold_ms=2000 fired_at=2026-05-06T14:44:44Z\n2026-05-06T14:44:49.001Z [checkout-service] INFO  [migration] 0042_backfill_order_totals.sql completed: 4200000 rows updated in 43.9s\n2026-05-06T14:44:49.102Z [checkout-service] INFO  [migration] Starting migration 0043_add_payment_method_index.sql\n2026-05-06T14:44:50.891Z [checkout-service] INFO  [migration] 0043_add_payment_method_index.sql completed in 1.8s\n2026-05-06T14:44:50.892Z [checkout-service] INFO  All pending migrations completed successfully. Releasing migration lock.\n2026-05-06T14:44:50.934Z [checkout-service] INFO  DB connection pool restored: active=2 idle=18 queued=0\n2026-05-06T14:44:51.001Z [checkout-service] INFO  req_id=req-00201 method=POST path=/api/v1/checkout status=200 latency_ms=187\n2026-05-06T14:44:51.112Z [checkout-service] INFO  req_id=req-00202 method=POST path=/api/v1/checkout status=200 latency_ms=203\n2026-05-06T14:44:51.334Z [checkout-service] WARN  Next pod restart or re-deploy will trigger the same migration block (migrations not marked run-once in persistent store correctly — MigrationRunner bug)\n2026-05-06T14:44:52.001Z [api-gateway] INFO  upstream=checkout-service circuit breaker half-open probe → 200 OK CIRCUIT_BREAKER_CLOSED\n2026-05-06T14:44:52.890Z [checkout-service] INFO  Traffic restored. Error window will persist in SLO calculations for 5m burn-rate alert.",
+  "recent_deploys": [
+    {
+      "sha": "53d7934653a4",
+      "timestamp": "2026-04-28T13:16:01Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): update open-telemetry/detector-container requirement (#3299)",
+      "changed_files": [
+        "go.mod",
+        "go.sum",
+        "vendor/go.opentelemetry.io/contrib/detectors/container/container.go"
+      ]
+    },
+    {
+      "sha": "6bb672061d65",
+      "timestamp": "2026-04-30T02:22:28Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump @tanstack/react-query (#3322)",
+      "changed_files": [
+        "frontend/package.json",
+        "frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "a4553ea12420",
+      "timestamp": "2026-04-30T02:38:18Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the bundler-production-dependencies group across 1 directory w",
+      "changed_files": [
+        "Gemfile",
+        "Gemfile.lock"
+      ]
+    },
+    {
+      "sha": "9c4ca95ea6e8",
+      "timestamp": "2026-05-05T09:51:18Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "fix(deps): resolve npm security advisories (#3347)",
+      "changed_files": [
+        "checkout-service/main.go",
+        "checkout-service/migration/runner.go",
+        "checkout-service/migration/migrations/0041_add_coupon_usage_index.sql",
+        "checkout-service/migration/migrations/0042_backfill_order_totals.sql",
+        "checkout-service/migration/migrations/0043_add_payment_method_index.sql",
+        "checkout-service/config/config.go"
+      ]
+    },
+    {
+      "sha": "05fab63b804f",
+      "timestamp": "2026-05-06T14:43:41Z",
+      "author": "Shenoy Pratik",
+      "message": "fix: collector otelcol.signal scope attribute conflict in logs pipeline (#3321)",
+      "changed_files": [
+        "otelcol/config.yaml",
+        "otelcol/pipelines/logs.go",
+        "docs/collector-signals.md"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=9c4ca95ea6e8 (2026-05-05T09:51:18Z) introduced a synchronous database migration runner in checkout-service v2.3.1 via changes to checkout-service/migration/runner.go. On pod startup, MigrationRunner.runPendingMigrations() executes all pending SQL migrations on the main goroutine before the HTTP server is ready to serve, but after the health probe endpoint (:8080/healthz) is already bound and returns 200. This causes the Kubernetes liveness/readiness probe to pass and api-gateway to route live traffic to the pod while all 20 DB connection pool slots are held by the long-running migration (0042_backfill_order_totals.sql backfilling 4.2M rows, ~44s). Every inbound request immediately exhausts the connection queue, resulting in 503 errors for the full duration of the migration. Additionally, the migration state is not correctly persisted, meaning every pod restart re-runs the same migrations.",
+  "ground_truth_remediation": "1. Immediately roll back checkout-service to the previous stable image (sha=a4553ea12420 or earlier) using: kubectl rollout undo deployment/checkout-service. 2. Verify error rate drops below 5% and P99 latency returns to baseline (<500ms) after rollback. 3. In the follow-up fix for migration/runner.go: (a) move migration execution to a pre-startup init container or a separate migration Job so the main pod does not accept traffic until migrations complete; (b) ensure the health probe endpoint returns 503/not-ready while migrations are running; (c) fix the migration state persistence bug so completed migrations are not re-run on restart. 4. Add a load test covering large-table backfill migrations before re-deploying.",
+  "red_herring": null
+}

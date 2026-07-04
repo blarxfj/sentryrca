@@ -68,20 +68,54 @@ jobs:
       - name: Build docker images
         run: docker compose build
 
-      - name: Smoke-test API health
+      - name: Create CI .env for API container
         run: |
-          docker compose up -d postgres
-          sleep 5
-          echo "docker compose build succeeded — API smoke test requires week-2 implementation"
+          cp .env.example .env
+          echo "ANTHROPIC_API_KEY=sk-ant-stub" >> .env
+          echo "NEXTAUTH_SECRET=00000000000000000000000000000000" >> .env
+          echo "LANGFUSE_SALT=00000000000000000000000000000000" >> .env
+          echo "LANGFUSE_ENCRYPTION_KEY=0000000000000000000000000000000000000000000000000000000000000000" >> .env
+          echo "LANGFUSE_INIT_USER_EMAIL=ci@example.com" >> .env
+          echo "LANGFUSE_INIT_USER_PASSWORD=changeme" >> .env
+
+      - name: Start postgres and API
+        run: |
+          docker compose up -d postgres api
+          echo "Waiting for API health..."
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8000/health && break
+            sleep 2
+          done
+
+      - name: Verify /health responds 200
+        run: curl -sf http://localhost:8000/health | grep '"status":"ok"'
 
       - name: Tear down
         run: docker compose down -v
 
-  # ─── 4. Eval gate (stub — wired up in week 3) ────────────────────────────
+  # ─── 4. Eval gate ─────────────────────────────────────────────────────────
   eval-gate:
     name: Eval gate
     runs-on: ubuntu-latest
     needs: test
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: sentryrca
+          POSTGRES_PASSWORD: sentryrca
+          POSTGRES_DB: sentryrca
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U sentryrca -d sentryrca"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql+asyncpg://sentryrca:sentryrca@localhost:5433/sentryrca
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      EVAL_SKIP_LATENCY_GATE: "1"  # live API p95 is dominated by network; gated separately via Langfuse SLOs
     steps:
       - uses: actions/checkout@v4
 
@@ -92,8 +126,18 @@ jobs:
       - name: Install deps
         run: uv sync --group dev
 
-      - name: Run fast eval subset
+      - name: Index corpus (bootstraps schema + embeddings)
+        run: make index-corpus
+
+      - name: Run fast eval subset + gate check
         run: make eval-fast
+
+      - name: Upload eval results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results-fast
+          path: eval/results/fast.json
 
   # ─── 5. Security ───────────────────────────────────────────────────────────
   security:

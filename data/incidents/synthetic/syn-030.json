@@ -1,0 +1,86 @@
+{
+  "id": "syn-030",
+  "subset": "synthetic",
+  "category": "dependency_outage",
+  "affected_service": "frontend",
+  "severity": "critical",
+  "alert_text": "CRITICAL: Frontend CDN asset delivery latency p99 > 30s for 5+ minutes. Edge nodes returning 504 Gateway Timeout. User-facing page load failures > 85% across all regions.",
+  "log_window": "2026-05-07T07:18:02.114Z [frontend] INFO  service=frontend version=52a8a76cf862 env=production startup complete, listening on :8080\n2026-05-07T07:18:03.221Z [frontend] INFO  service=frontend cdn_provider=fastly origin_shield=enabled region=us-east-1 CDN configuration loaded\n2026-05-07T07:18:04.005Z [frontend] DEBUG service=frontend asset_cache_ttl=3600s stale_while_revalidate=60s cache policy initialized\n2026-05-07T07:21:10.334Z [cdn-origin-shield] INFO  shield=iad region=us-east-1 status=healthy upstream_latency_ms=42 health check passed\n2026-05-07T07:21:55.882Z [frontend] INFO  service=frontend method=GET path=/static/main.js cache=HIT latency_ms=18 status=200\n2026-05-07T07:21:56.003Z [frontend] INFO  service=frontend method=GET path=/static/styles.css cache=HIT latency_ms=12 status=200\n2026-05-07T07:22:01.445Z [frontend] INFO  service=frontend method=GET path=/ cache=MISS latency_ms=105 status=200\n2026-05-07T07:22:14.772Z [cdn-origin-shield] INFO  shield=iad region=us-east-1 upstream_latency_ms=48 status=healthy request_rate=1240rps\n2026-05-07T07:22:45.119Z [frontend] INFO  service=frontend method=GET path=/api/products cache=MISS latency_ms=88 status=200\n2026-05-07T07:23:00.001Z [cdn-origin-shield] WARN  shield=iad region=us-east-1 upstream_latency_ms=1820 upstream=frontend-origin-lb threshold_ms=1000 latency spike detected\n2026-05-07T07:23:01.334Z [cdn-origin-shield] WARN  shield=iad region=us-east-1 upstream_latency_ms=2340 upstream=frontend-origin-lb consecutive_slow=2\n2026-05-07T07:23:04.889Z [frontend] WARN  service=frontend cdn_probe=failed probe_url=https://shield.cdn.internal/healthz http_status=0 err=\"connection timeout after 3000ms\"\n2026-05-07T07:23:05.112Z [frontend] INFO  service=frontend method=GET path=/static/vendor.js cache=HIT latency_ms=19 status=200\n2026-05-07T07:23:08.003Z [cdn-origin-shield] ERROR shield=iad region=us-east-1 upstream_latency_ms=8910 upstream=frontend-origin-lb timeout_threshold_ms=5000 ORIGIN SLOW - approaching timeout\n2026-05-07T07:23:09.445Z [cdn-origin-shield] ERROR shield=iad region=us-east-1 upstream=frontend-origin-lb err=\"upstream read timeout\" request_id=req-a8f2c1 origin_connect_ms=9201\n2026-05-07T07:23:09.556Z [cdn-origin-shield] ERROR shield=iad region=us-east-1 upstream=frontend-origin-lb err=\"upstream read timeout\" request_id=req-a8f2c2 origin_connect_ms=9205\n2026-05-07T07:23:10.001Z [cdn-origin-shield] ERROR shield=iad region=us-east-1 upstream=frontend-origin-lb err=\"upstream read timeout\" request_id=req-a8f2c3 origin_connect_ms=9203 SHIELD ENTERING TIMEOUT STATE\n2026-05-07T07:23:10.334Z [frontend] ERROR service=frontend cdn_event=origin_shield_timeout shield_region=us-east-1 edge_fallback=none CDN origin shield timeout event received\n2026-05-07T07:23:10.778Z [cdn-edge] ERROR edge=fra-01 shield=iad shield_status=TIMEOUT fallback=direct_origin attempting direct origin bypass\n2026-05-07T07:23:10.890Z [cdn-edge] ERROR edge=sin-01 shield=iad shield_status=TIMEOUT fallback=direct_origin attempting direct origin bypass\n2026-05-07T07:23:10.991Z [cdn-edge] ERROR edge=lax-01 shield=iad shield_status=TIMEOUT fallback=direct_origin attempting direct origin bypass\n2026-05-07T07:23:11.004Z [cdn-edge] ERROR edge=ams-01 shield=iad shield_status=TIMEOUT fallback=direct_origin attempting direct origin bypass\n2026-05-07T07:23:11.334Z [frontend] ERROR service=frontend origin_shield_bypass=true direct_edge_connections=4 origin_load_multiplier=12x WARNING: origin shield down, all edges hitting origin directly\n2026-05-07T07:23:12.001Z [frontend] WARN  service=frontend method=GET path=/static/main.js cache=EXPIRED revalidation_timeout=true origin_unreachable=false latency_ms=4201 status=200\n2026-05-07T07:23:12.445Z [cdn-edge] ERROR edge=fra-01 origin_connect_ms=9800 err=\"504 Gateway Timeout\" path=/static/main.js request_id=req-b1f3a1\n2026-05-07T07:23:12.556Z [cdn-edge] ERROR edge=sin-01 origin_connect_ms=9802 err=\"504 Gateway Timeout\" path=/static/styles.css request_id=req-b1f3a2\n2026-05-07T07:23:13.001Z [frontend] ERROR service=frontend http_status=504 method=GET path=/static/main.js edge=fra-01 err=\"gateway timeout from CDN edge\" latency_ms=9812\n2026-05-07T07:23:13.112Z [frontend] ERROR service=frontend http_status=504 method=GET path=/static/styles.css edge=sin-01 err=\"gateway timeout from CDN edge\" latency_ms=9814\n2026-05-07T07:23:13.334Z [cdn-origin-shield] FATAL shield=iad region=us-east-1 status=UNHEALTHY consecutive_timeouts=12 SHIELD MARKED UNHEALTHY - propagating failure to all edge nodes\n2026-05-07T07:23:13.890Z [cdn-edge] FATAL edge=fra-01 shield_status=UNHEALTHY cached_assets=0 direct_origin_latency_ms=9900 504_rate=1.0 ALL REQUESTS FAILING\n2026-05-07T07:23:13.991Z [cdn-edge] FATAL edge=sin-01 shield_status=UNHEALTHY cached_assets=0 direct_origin_latency_ms=9950 504_rate=1.0 ALL REQUESTS FAILING\n2026-05-07T07:23:14.004Z [cdn-edge] FATAL edge=lax-01 shield_status=UNHEALTHY cached_assets=0 direct_origin_latency_ms=9910 504_rate=0.98 ALL REQUESTS FAILING\n2026-05-07T07:23:14.115Z [cdn-edge] FATAL edge=ams-01 shield_status=UNHEALTHY cached_assets=0 direct_origin_latency_ms=9930 504_rate=1.0 ALL REQUESTS FAILING\n2026-05-07T07:23:15.001Z [frontend] FATAL service=frontend cdn_504_rate=0.97 affected_edges=4 origin_shield=UNHEALTHY user_facing_error_rate=0.97 CRITICAL: near-total CDN failure\n2026-05-07T07:23:15.334Z [frontend] ERROR service=frontend method=GET path=/ edge=fra-01 http_status=504 err=\"CDN edge cannot reach origin\" user_agent=\"Mozilla/5.0\" latency_ms=10001\n2026-05-07T07:23:15.556Z [frontend] ERROR service=frontend method=GET path=/ edge=sin-01 http_status=504 err=\"CDN edge cannot reach origin\" user_agent=\"Mozilla/5.0\" latency_ms=10002\n2026-05-07T07:23:15.778Z [frontend] ERROR service=frontend method=GET path=/ edge=lax-01 http_status=504 err=\"CDN edge cannot reach origin\" user_agent=\"Mozilla/5.0\" latency_ms=10001\n2026-05-07T07:23:16.001Z [frontend] ERROR service=frontend method=GET path=/api/products edge=ams-01 http_status=504 err=\"CDN edge cannot reach origin\" latency_ms=10003\n2026-05-07T07:23:17.334Z [cdn-origin-shield] ERROR shield=iad region=us-east-1 origin_lb=frontend-origin-lb lb_health_check=FAIL lb_response_code=0 tcp_connect_timeout=true\n2026-05-07T07:23:18.001Z [frontend] ERROR service=frontend origin_lb_health=UNKNOWN cdn_shield_health=UNHEALTHY self_health=HEALTHY internal service appears healthy, issue is CDN-side\n2026-05-07T07:23:18.445Z [cdn-origin-shield] ERROR shield=iad upstream=frontend-origin-lb tcp_handshake_timeout_ms=9500 err=\"TCP connect timeout\" retry_attempt=1\n2026-05-07T07:23:18.890Z [cdn-origin-shield] ERROR shield=iad upstream=frontend-origin-lb tcp_handshake_timeout_ms=9510 err=\"TCP connect timeout\" retry_attempt=2\n2026-05-07T07:23:19.334Z [cdn-origin-shield] ERROR shield=iad upstream=frontend-origin-lb err=\"all retries exhausted\" circuit_state=OPEN circuit_breaker=cdn-origin-shield-to-frontend\n2026-05-07T07:23:19.556Z [frontend] ERROR service=frontend circuit_breaker=cdn-origin-shield-to-frontend state=OPEN all CDN origin shield to frontend circuit OPEN\n2026-05-07T07:23:20.001Z [cdn-edge] ERROR edge=fra-01 shield_circuit=OPEN fallback=none err=\"no fallback configured for origin shield circuit open\" dropping_requests=true\n2026-05-07T07:23:20.112Z [cdn-edge] ERROR edge=sin-01 shield_circuit=OPEN fallback=none err=\"no fallback configured for origin shield circuit open\" dropping_requests=true\n2026-05-07T07:23:20.334Z [cdn-edge] ERROR edge=lax-01 shield_circuit=OPEN fallback=none err=\"no fallback configured for origin shield circuit open\" dropping_requests=true\n2026-05-07T07:23:20.445Z [cdn-edge] ERROR edge=ams-01 shield_circuit=OPEN fallback=none err=\"no fallback configured for origin shield circuit open\" dropping_requests=true\n2026-05-07T07:23:21.001Z [frontend] FATAL service=frontend error_rate=0.99 p99_latency_ms=30001 cdn_circuit=OPEN active_users_impacted=14820 PAGING ONCALL\n2026-05-07T07:23:22.334Z [frontend] ERROR service=frontend method=POST path=/api/cart edge=fra-01 http_status=504 err=\"circuit open\" latency_ms=30001\n2026-05-07T07:23:22.556Z [frontend] ERROR service=frontend method=POST path=/api/cart edge=sin-01 http_status=504 err=\"circuit open\" latency_ms=30002\n2026-05-07T07:24:00.001Z [cdn-origin-shield] ERROR shield=iad upstream=frontend-origin-lb circuit_state=OPEN elapsed_open_ms=40667 next_half_open_probe_ms=60000\n2026-05-07T07:24:15.334Z [frontend] ERROR service=frontend cdn_health_check=FAIL shield_status=UNHEALTHY edge_count_504=4 self_check=PASS frontend origin pod health: OK (8/8 pods ready)\n2026-05-07T07:24:15.890Z [frontend] INFO  service=frontend internal_latency_p99_ms=88 db_query_p99_ms=12 internal systems nominal\n2026-05-07T07:24:16.001Z [cdn-origin-shield] ERROR shield=iad upstream_lb=frontend-origin-lb lb_type=AWS-NLB nlb_status=UNKNOWN possible_nlb_misconfiguration investigating\n2026-05-07T07:24:30.334Z [frontend] WARN  service=frontend cdn_bypass_attempted=true direct_url=https://origin.frontend.internal status=200 latency_ms=91 direct origin reachable bypassing CDN\n2026-05-07T07:25:00.001Z [cdn-origin-shield] ERROR shield=iad nlb_target_group=frontend-tg healthy_targets=0 last_healthy_target_deregistered=2026-05-07T07:22:58Z NLB TARGET GROUP EMPTY - all targets deregistered\n2026-05-07T07:25:00.334Z [frontend] FATAL service=frontend cdn_root_cause=nlb_target_deregistration shield_region=us-east-1 nlb_tg=frontend-tg CDN origin shield unable to reach origin: NLB target group has 0 healthy targets\n2026-05-07T07:25:01.001Z [cdn-origin-shield] ERROR shield=iad nlb_tg=frontend-tg healthy_targets=0 deregister_event_time=2026-05-07T07:22:58Z deregister_cause=UNKNOWN CDN origin shield completely isolated\n2026-05-07T07:25:15.334Z [frontend] ERROR service=frontend alert=cdn_origin_shield_timeout duration_secs=132 error_rate=0.99 user_impact=CRITICAL escalating to CDN and infra teams\n2026-05-07T07:26:00.001Z [cdn-edge] ERROR edge=fra-01 shield=iad 504_count_last_60s=4201 cache_hit_rate=0.0 all cached assets expired\n2026-05-07T07:26:00.112Z [cdn-edge] ERROR edge=sin-01 shield=iad 504_count_last_60s=3980 cache_hit_rate=0.0 all cached assets expired\n2026-05-07T07:26:00.334Z [cdn-edge] ERROR edge=lax-01 shield=iad 504_count_last_60s=4010 cache_hit_rate=0.0 all cached assets expired\n2026-05-07T07:26:01.001Z [cdn-edge] ERROR edge=ams-01 shield=iad 504_count_last_60s=3890 cache_hit_rate=0.0 all cached assets expired\n2026-05-07T07:27:00.001Z [cdn-origin-shield] ERROR shield=iad upstream=frontend-origin-lb circuit_state=OPEN elapsed_open_ms=100667 half_open_probe=FAIL nlb_tg_targets=0 circuit remains open\n2026-05-07T07:27:14.334Z [frontend] FATAL service=frontend incident=active duration_mins=4.2 pages_served_successfully=0 total_504s=68420 CDN ORIGIN SHIELD TIMEOUT INCIDENT ONGOING",
+  "recent_deploys": [
+    {
+      "sha": "75dc5aa9b428",
+      "timestamp": "2026-04-23T15:05:28Z",
+      "author": "Ayooluwa Isaiah",
+      "message": "Fix charge span leak in the payment service (#3276)",
+      "changed_files": [
+        "src/paymentservice/charge.js",
+        "src/paymentservice/server.js",
+        "src/paymentservice/tracing.js"
+      ]
+    },
+    {
+      "sha": "51f1a6bba4e8",
+      "timestamp": "2026-04-24T06:02:13Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Remove tag from the docker logging used via docker compose (#3304)",
+      "changed_files": [
+        "docker-compose.yml",
+        "docker-compose.override.yml"
+      ]
+    },
+    {
+      "sha": "3c2af106dae8",
+      "timestamp": "2026-04-28T13:09:38Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the bundler-production-dependencies group across 1 directory w",
+      "changed_files": [
+        "src/frontend/Gemfile",
+        "src/frontend/Gemfile.lock"
+      ]
+    },
+    {
+      "sha": "81528af3e3be",
+      "timestamp": "2026-04-28T14:09:01Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump idna_adapter (#3320)",
+      "changed_files": [
+        "src/frontend/requirements.txt",
+        "src/frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "dc4785b348ba",
+      "timestamp": "2026-04-30T02:23:16Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump swoosh (#3323)",
+      "changed_files": [
+        "src/frontend/mix.exs",
+        "src/frontend/mix.lock"
+      ]
+    },
+    {
+      "sha": "83dce9a815b2",
+      "timestamp": "2026-05-05T09:51:41Z",
+      "author": "Juliano Costa",
+      "message": "[chore] Promote Dónal to approver (#3336)",
+      "changed_files": [
+        "CODEOWNERS",
+        ".github/CODEOWNERS"
+      ]
+    },
+    {
+      "sha": "52a8a76cf862",
+      "timestamp": "2026-05-07T07:06:44Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with ",
+      "changed_files": [
+        "src/frontend/mix.exs",
+        "src/frontend/mix.lock",
+        "src/frontend/assets/package.json"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "The CDN origin shield (Fastly IAD shield node) lost connectivity to the frontend origin's AWS Network Load Balancer target group at 2026-05-07T07:22:58Z. The NLB target group 'frontend-tg' had all backend targets deregistered (healthy_targets=0), causing the origin shield to time out on every upstream request after ~9.2 seconds. Because the origin shield is the single upstream for all four CDN edge nodes (fra-01, sin-01, lax-01, ams-01), the timeout propagated globally: edges attempted direct-origin bypass but also failed via the same NLB, the shield circuit breaker opened, and CDN cache TTLs expired, resulting in 99% of user requests receiving 504 responses. The frontend service itself (all 8 pods) remained healthy throughout—internal p99 latency was 88ms and direct-origin requests succeeded—confirming the fault is entirely in the CDN/NLB layer, not in any application deploy.",
+  "ground_truth_remediation": "1. Immediately re-register healthy frontend backend instances into the NLB target group 'frontend-tg' in us-east-1 via the AWS console or CLI (aws elbv2 register-targets). 2. Confirm target group health checks pass (healthy_targets >= 2). 3. Force the Fastly IAD origin shield circuit breaker to reset by issuing a Fastly API purge-all or by temporarily toggling the shield off and back on via the Fastly control plane. 4. Verify CDN edge nodes resume cache fills and 504 rate drops to 0. 5. Conduct post-incident review to identify why all NLB targets were deregistered simultaneously (likely an erroneous auto-scaling event or manual deregistration) and add a guardrail to prevent target group from reaching 0 healthy targets.",
+  "red_herring": null
+}

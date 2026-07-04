@@ -1,0 +1,88 @@
+{
+  "id": "syn-022",
+  "subset": "synthetic",
+  "category": "dependency_outage",
+  "affected_service": "payment-service",
+  "severity": "high",
+  "alert_text": "ALERT: payment-service fraud check P99 latency > 30s for 5+ minutes; transaction approval rate dropped to 12% — fraud-detection-service unreachable",
+  "log_window": "2026-05-13T12:14:02.101Z [payment-service] INFO  Starting payment processing worker pool size=8 version=2.11.4\n2026-05-13T12:14:02.834Z [payment-service] INFO  Connected to postgres host=payments-db-primary port=5432 pool_size=20\n2026-05-13T12:14:03.210Z [payment-service] INFO  Connected to redis host=redis-cache port=6379\n2026-05-13T12:14:03.891Z [payment-service] INFO  Registered downstream: fraud-detection-service url=http://fraud-detection-svc:8080 timeout_ms=5000\n2026-05-13T12:14:04.112Z [payment-service] INFO  Health check passed — all dependencies reachable\n2026-05-13T12:14:10.003Z [payment-service] INFO  txn_id=txn-00112 action=fraud_check status=submitted amount=142.50 currency=USD\n2026-05-13T12:14:10.440Z [payment-service] INFO  txn_id=txn-00113 action=fraud_check status=submitted amount=89.00 currency=USD\n2026-05-13T12:14:10.881Z [payment-service] INFO  txn_id=txn-00114 action=fraud_check status=submitted amount=310.75 currency=USD\n2026-05-13T12:14:15.220Z [fraud-detection-service] level=INFO msg=\"Pod scheduled\" node=worker-node-07 pod=fraud-detection-6b7d9f-xvz2p namespace=payments\n2026-05-13T12:14:15.998Z [fraud-detection-service] level=INFO msg=\"Container starting\" image=fraud-detection:1.9.2 cold_start=true\n2026-05-13T12:14:16.330Z [fraud-detection-service] level=INFO msg=\"Loading ML model weights\" model=fraud-xgboost-v3 size_mb=412\n2026-05-13T12:14:17.450Z [payment-service] WARN  txn_id=txn-00112 fraud_check_elapsed_ms=7441 threshold_ms=5000 — slow response from fraud-detection-service\n2026-05-13T12:14:17.891Z [payment-service] WARN  txn_id=txn-00113 fraud_check_elapsed_ms=7880 threshold_ms=5000 — slow response from fraud-detection-service\n2026-05-13T12:14:18.102Z [payment-service] ERROR txn_id=txn-00112 action=fraud_check error=\"context deadline exceeded\" downstream=fraud-detection-service retrying attempt=1\n2026-05-13T12:14:18.560Z [payment-service] ERROR txn_id=txn-00113 action=fraud_check error=\"context deadline exceeded\" downstream=fraud-detection-service retrying attempt=1\n2026-05-13T12:14:18.990Z [payment-service] ERROR txn_id=txn-00114 action=fraud_check error=\"context deadline exceeded\" downstream=fraud-detection-service retrying attempt=1\n2026-05-13T12:14:19.210Z [fraud-detection-service] level=INFO msg=\"Model weights loaded\" elapsed_ms=3120 model=fraud-xgboost-v3\n2026-05-13T12:14:19.550Z [fraud-detection-service] level=INFO msg=\"Warming inference cache\" cache_entries=50000\n2026-05-13T12:14:20.003Z [fraud-detection-service] level=WARN msg=\"Inference cache warm incomplete\" progress=12% elapsed_ms=4000\n2026-05-13T12:14:21.112Z [payment-service] ERROR txn_id=txn-00112 action=fraud_check error=\"connection refused\" downstream=fraud-detection-service attempt=2\n2026-05-13T12:14:21.334Z [payment-service] ERROR txn_id=txn-00113 action=fraud_check error=\"connection refused\" downstream=fraud-detection-service attempt=2\n2026-05-13T12:14:21.780Z [payment-service] ERROR txn_id=txn-00114 action=fraud_check error=\"connection refused\" downstream=fraud-detection-service attempt=2\n2026-05-13T12:14:22.001Z [payment-service] WARN  circuit_breaker name=fraud-detection-service consecutive_failures=3 state=HALF_OPEN\n2026-05-13T12:14:22.445Z [fraud-detection-service] level=WARN msg=\"HTTP server not yet ready — still initializing\" readiness=false liveness=true\n2026-05-13T12:14:23.110Z [payment-service] INFO  txn_id=txn-00115 action=fraud_check status=submitted amount=55.00 currency=USD\n2026-05-13T12:14:23.550Z [payment-service] ERROR txn_id=txn-00115 action=fraud_check error=\"connection refused\" downstream=fraud-detection-service attempt=1\n2026-05-13T12:14:24.000Z [payment-service] ERROR circuit_breaker name=fraud-detection-service state=OPEN consecutive_failures=5 — all fraud checks will fail-open for 30s\n2026-05-13T12:14:24.221Z [payment-service] WARN  txn_id=txn-00112 fraud_decision=BLOCKED_CIRCUIT_OPEN reason=\"circuit breaker OPEN; fail-closed policy applied\"\n2026-05-13T12:14:24.450Z [payment-service] WARN  txn_id=txn-00113 fraud_decision=BLOCKED_CIRCUIT_OPEN reason=\"circuit breaker OPEN; fail-closed policy applied\"\n2026-05-13T12:14:24.880Z [payment-service] WARN  txn_id=txn-00114 fraud_decision=BLOCKED_CIRCUIT_OPEN reason=\"circuit breaker OPEN; fail-closed policy applied\"\n2026-05-13T12:14:25.001Z [payment-service] WARN  txn_id=txn-00115 fraud_decision=BLOCKED_CIRCUIT_OPEN reason=\"circuit breaker OPEN; fail-closed policy applied\"\n2026-05-13T12:14:25.310Z [fraud-detection-service] level=INFO msg=\"Inference cache warm incomplete\" progress=34% elapsed_ms=5500\n2026-05-13T12:14:26.002Z [payment-gateway] INFO  txn_id=txn-00112 result=DECLINED reason=fraud_check_blocked customer_id=cust-8821\n2026-05-13T12:14:26.214Z [payment-gateway] INFO  txn_id=txn-00113 result=DECLINED reason=fraud_check_blocked customer_id=cust-4410\n2026-05-13T12:14:26.890Z [payment-gateway] INFO  txn_id=txn-00114 result=DECLINED reason=fraud_check_blocked customer_id=cust-9903\n2026-05-13T12:14:27.003Z [payment-service] INFO  Processing 14 pending transactions — circuit_breaker=OPEN dropping to fail-closed\n2026-05-13T12:14:30.012Z [fraud-detection-service] level=INFO msg=\"Inference cache warm incomplete\" progress=51% elapsed_ms=9200\n2026-05-13T12:14:31.445Z [payment-service] ERROR txn_id=txn-00116 action=fraud_check error=\"circuit breaker OPEN\" downstream=fraud-detection-service\n2026-05-13T12:14:31.668Z [payment-service] ERROR txn_id=txn-00117 action=fraud_check error=\"circuit breaker OPEN\" downstream=fraud-detection-service\n2026-05-13T12:14:31.900Z [payment-service] ERROR txn_id=txn-00118 action=fraud_check error=\"circuit breaker OPEN\" downstream=fraud-detection-service\n2026-05-13T12:14:32.112Z [payment-service] ERROR txn_id=txn-00119 action=fraud_check error=\"circuit breaker OPEN\" downstream=fraud-detection-service\n2026-05-13T12:14:34.225Z [fraud-detection-service] level=INFO msg=\"Inference cache warm complete\" progress=100% elapsed_ms=14000\n2026-05-13T12:14:34.780Z [fraud-detection-service] level=INFO msg=\"HTTP server listening\" port=8080 ready=true\n2026-05-13T12:14:35.001Z [fraud-detection-service] level=INFO msg=\"Readiness probe passed\" path=/health/ready\n2026-05-13T12:14:40.003Z [payment-service] INFO  circuit_breaker name=fraud-detection-service probe=HALF_OPEN sending probe request\n2026-05-13T12:14:40.445Z [payment-service] INFO  circuit_breaker name=fraud-detection-service probe=SUCCESS latency_ms=180 — transitioning to CLOSED\n2026-05-13T12:14:40.880Z [payment-service] INFO  circuit_breaker name=fraud-detection-service state=CLOSED\n2026-05-13T12:14:41.002Z [payment-service] INFO  txn_id=txn-00120 action=fraud_check status=submitted amount=200.00 currency=USD\n2026-05-13T12:14:41.445Z [payment-service] INFO  txn_id=txn-00120 fraud_decision=APPROVED latency_ms=195\n2026-05-13T12:14:42.001Z [payment-service] INFO  Replaying 18 queued transactions after circuit_breaker CLOSED\n2026-05-13T12:14:55.330Z [fraud-detection-service] level=WARN msg=\"High request queue depth during catch-up\" queue_depth=118 workers=4\n2026-05-13T12:15:01.002Z [payment-service] WARN  fraud_check_p99_ms=2840 fraud_check_p50_ms=210 — elevated latency (catch-up burst)\n2026-05-13T12:15:10.110Z [fraud-detection-service] level=WARN msg=\"Request queue draining\" queue_depth=42 workers=4\n2026-05-13T12:15:20.003Z [fraud-detection-service] level=INFO msg=\"Request queue cleared\" queue_depth=0\n2026-05-13T12:15:21.445Z [payment-service] INFO  fraud_check_p99_ms=190 fraud_check_p50_ms=88 — latency nominal\n2026-05-13T12:15:22.001Z [payment-service] INFO  Transaction approval rate restored approvals=94% window=60s\n2026-05-13T12:16:00.334Z [payment-service] INFO  Metrics snapshot fraud_checks_total=312 circuit_open_events=1 circuit_open_duration_ms=16000 blocked_transactions=47\n2026-05-13T12:16:01.002Z [fraud-detection-service] level=INFO msg=\"Replica scaled from 0 to 1\" scaler=keda trigger=cron schedule=\"0 12 * * *\" namespace=payments\n2026-05-13T12:16:01.440Z [fraud-detection-service] level=WARN msg=\"Scale-to-zero was active for 4h22m\" last_request_time=2026-05-13T07:51:44Z\n2026-05-13T12:16:02.001Z [fraud-detection-service] level=INFO msg=\"No pre-warm hook configured — cold start on first traffic\" config_source=helm/fraud-detection/values.yaml\n2026-05-13T12:16:03.110Z [payment-service] INFO  All systems nominal — monitoring for recurrence\n2026-05-13T12:16:04.002Z [payment-service] WARN  Incident summary: 47 transactions blocked due to fraud-detection cold-start; circuit_open_duration=16s; data_loss=none\n2026-05-13T12:20:10.334Z [payment-service] INFO  fraud_check_p99_ms=182 fraud_check_p50_ms=79 — stable\n2026-05-13T12:22:45.002Z [payment-service] INFO  fraud_check_p99_ms=175 fraud_check_p50_ms=76 — stable\n2026-05-13T12:24:00.119Z [payment-service] INFO  Heartbeat OK uptime=9m58s version=2.11.4\n2026-05-13T12:26:00.002Z [payment-service] INFO  Metrics snapshot fraud_checks_total=1087 circuit_open_events=1 blocked_transactions=47 (no new incidents)",
+  "recent_deploys": [
+    {
+      "sha": "d7df5ef51d88",
+      "timestamp": "2026-04-21T12:05:02Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the bundler-production-dependencies group across 1 directory w",
+      "changed_files": [
+        "Gemfile",
+        "Gemfile.lock"
+      ]
+    },
+    {
+      "sha": "60d18e40e88c",
+      "timestamp": "2026-04-23T08:23:08Z",
+      "author": "Juliano Costa",
+      "message": "[frontend] fix: handle undefined product images across multiple components (#329",
+      "changed_files": [
+        "src/frontend/components/ProductCard.tsx",
+        "src/frontend/components/CartItem.tsx",
+        "src/frontend/components/CheckoutSummary.tsx",
+        "src/frontend/utils/imageHelpers.ts"
+      ]
+    },
+    {
+      "sha": "53d7934653a4",
+      "timestamp": "2026-04-28T13:16:01Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): update open-telemetry/detector-container requirement (#3299)",
+      "changed_files": [
+        "src/fraud-detection/requirements.txt",
+        "src/fraud-detection/Pipfile.lock"
+      ]
+    },
+    {
+      "sha": "3e626da455a9",
+      "timestamp": "2026-04-28T14:08:34Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "f266a31c651b",
+      "timestamp": "2026-04-30T02:38:44Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 4 directories wit",
+      "changed_files": [
+        "src/fraud-detection/requirements.txt",
+        "src/payment-service/requirements.txt",
+        "src/recommendation-service/requirements.txt",
+        "src/ad-service/requirements.txt"
+      ]
+    },
+    {
+      "sha": "313728caeedd",
+      "timestamp": "2026-05-06T00:11:01Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "2b8ccac18a70",
+      "timestamp": "2026-05-13T12:00:40Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump swoosh (#3365)",
+      "changed_files": [
+        "src/email-service/mix.exs",
+        "src/email-service/mix.lock"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "The fraud-detection-service was configured with KEDA scale-to-zero (cron trigger), causing it to spin down after 4+ hours of inactivity. When payment traffic resumed at ~12:14 UTC, the pod cold-started from zero replicas and required ~20 seconds to load a 412 MB XGBoost model and warm its 50,000-entry inference cache before becoming ready. The fraud-detection service had no pre-warm hook configured (confirmed in helm/fraud-detection/values.yaml). During this cold-start window, payment-service exhausted its 5-second timeout, opened its circuit breaker (OPEN state), and applied a fail-closed policy that blocked 47 legitimate transactions. This is an operational misconfiguration of the fraud-detection-service's scale-to-zero policy — not caused by any recent code deploy.",
+  "ground_truth_remediation": "1. Immediately: contact the fraud-detection-service team to disable scale-to-zero or set minimum replicas to 1 in the KEDA ScaledObject (helm/fraud-detection/values.yaml: minReplicaCount: 1) to prevent recurrence. 2. Short-term: add a pre-warm lifecycle hook or init container to fraud-detection-service that pre-loads the ML model and warms the inference cache before the readiness probe passes, ensuring the pod only receives traffic once fully ready. 3. In payment-service: consider raising the fraud-check timeout to 30s with retry backoff specifically during circuit HALF_OPEN probes to tolerate legitimate cold-starts. 4. Review KEDA schedule to ensure scale-up fires at least 60 seconds before expected traffic ramp, not concurrently.",
+  "red_herring": null
+}

@@ -1,0 +1,87 @@
+{
+  "id": "syn-025",
+  "subset": "synthetic",
+  "category": "dependency_outage",
+  "affected_service": "cart-service",
+  "severity": "high",
+  "alert_text": "P1 ALERT: cart-service p99 read latency exceeded 5000ms for 10 consecutive minutes. Redis GET operations timing out. Cart retrieval success rate dropped to 34%. Incident opened at 2026-05-16T14:22:00Z.",
+  "log_window": "2026-05-16T14:10:01.112Z [cart-service] INFO  Starting cart-service v2.14.3 on port 8083\n2026-05-16T14:10:01.334Z [cart-service] INFO  Redis cluster connection pool initialized: nodes=[redis-01:6379, redis-02:6379, redis-03:6379] pool_size=20\n2026-05-16T14:10:02.001Z [cart-service] INFO  Health check endpoint /healthz registered\n2026-05-16T14:10:05.221Z [cart-service] INFO  {\"level\":\"info\",\"msg\":\"Received GET /cart/user-4821\",\"user_id\":\"4821\",\"trace_id\":\"a1b2c3d4\"}\n2026-05-16T14:10:05.310Z [cart-service] DEBUG redis_cmd=GET key=cart:user-4821 latency_ms=3\n2026-05-16T14:10:05.312Z [cart-service] INFO  {\"level\":\"info\",\"msg\":\"Cart retrieved successfully\",\"user_id\":\"4821\",\"items\":3,\"latency_ms\":5}\n2026-05-16T14:10:08.441Z [cart-service] DEBUG redis_cmd=GET key=cart:user-9034 latency_ms=4\n2026-05-16T14:10:08.443Z [cart-service] INFO  {\"level\":\"info\",\"msg\":\"Cart retrieved successfully\",\"user_id\":\"9034\",\"items\":1,\"latency_ms\":6}\n2026-05-16T14:10:15.881Z [cart-service] DEBUG redis_cmd=SET key=cart:user-1122 latency_ms=2\n2026-05-16T14:10:20.003Z [redis-proxy] INFO  cluster_status=OK primary_nodes=3 replica_nodes=3\n2026-05-16T14:10:30.110Z [cart-service] INFO  {\"level\":\"info\",\"msg\":\"Processed 142 cart requests in last 30s\",\"errors\":0,\"p99_ms\":8}\n2026-05-16T14:11:00.204Z [cart-service] DEBUG redis_cmd=GET key=cart:user-5571 latency_ms=5\n2026-05-16T14:11:00.207Z [cart-service] INFO  {\"level\":\"info\",\"msg\":\"Cart retrieved successfully\",\"user_id\":\"5571\",\"items\":2,\"latency_ms\":7}\n2026-05-16T14:11:14.880Z [redis-proxy] WARN  cluster_event=FAILOVER_START node=redis-02:6379 reason=primary_unresponsive\n2026-05-16T14:11:14.991Z [redis-proxy] WARN  cluster_event=ELECTION_IN_PROGRESS candidates=[redis-02-replica-a:6380, redis-02-replica-b:6381]\n2026-05-16T14:11:15.102Z [cart-service] WARN  redis_pool=degraded active_connections=18 failed_connections=2 node=redis-02:6379\n2026-05-16T14:11:15.340Z [cart-service] WARN  {\"level\":\"warn\",\"msg\":\"Redis GET slow response\",\"key\":\"cart:user-3301\",\"latency_ms\":312,\"threshold_ms\":50}\n2026-05-16T14:11:15.521Z [cart-service] WARN  {\"level\":\"warn\",\"msg\":\"Redis GET slow response\",\"key\":\"cart:user-7712\",\"latency_ms\":489,\"threshold_ms\":50}\n2026-05-16T14:11:16.003Z [redis-proxy] WARN  cluster_event=SLOT_MIGRATION slots=5461-10922 from=redis-02:6379 to=redis-02-replica-a:6380\n2026-05-16T14:11:16.211Z [cart-service] ERROR redis_cmd=GET key=cart:user-8823 error=\"MOVED 7291 redis-02-replica-a:6380\" latency_ms=1203\n2026-05-16T14:11:16.450Z [cart-service] ERROR {\"level\":\"error\",\"msg\":\"Redis operation failed\",\"cmd\":\"GET\",\"key\":\"cart:user-4410\",\"error\":\"connection timeout\",\"latency_ms\":2011}\n2026-05-16T14:11:16.891Z [cart-service] ERROR {\"level\":\"error\",\"msg\":\"Cart retrieval failed\",\"user_id\":\"4410\",\"reason\":\"redis_timeout\",\"action\":\"returning_empty_cart\"}\n2026-05-16T14:11:17.100Z [redis-proxy] ERROR cluster_event=NODE_DOWN node=redis-02:6379 slots_affected=5461-10922\n2026-05-16T14:11:17.334Z [cart-service] ERROR redis_pool node=redis-02:6379 status=UNREACHABLE removing_from_pool=true\n2026-05-16T14:11:17.601Z [cart-service] WARN  {\"level\":\"warn\",\"msg\":\"Redis cluster topology changed, refreshing slots\",\"new_primary\":\"redis-02-replica-a:6380\"}\n2026-05-16T14:11:18.002Z [cart-service] ERROR redis_cmd=GET key=cart:user-6634 error=\"connection refused\" host=redis-02:6379 latency_ms=5001\n2026-05-16T14:11:18.210Z [cart-service] ERROR redis_cmd=GET key=cart:user-9901 error=\"connection refused\" host=redis-02:6379 latency_ms=5001\n2026-05-16T14:11:18.445Z [cart-service] ERROR redis_cmd=GET key=cart:user-2233 error=\"connection refused\" host=redis-02:6379 latency_ms=5001\n2026-05-16T14:11:19.001Z [cart-service] ERROR {\"level\":\"error\",\"msg\":\"Redis bulk GET failure\",\"affected_keys\":14,\"error\":\"CLUSTERDOWN The cluster is down\"}\n2026-05-16T14:11:19.210Z [cart-service] WARN  circuit_breaker=redis_cluster state=HALF_OPEN failure_count=12 threshold=10\n2026-05-16T14:11:19.501Z [cart-service] ERROR circuit_breaker=redis_cluster state=OPEN failure_rate=0.87 window_seconds=30\n  at com.shop.cart.RedisCartRepository.getCart(RedisCartRepository.java:142)\n  at com.shop.cart.CartService.retrieveCart(CartService.java:89)\n2026-05-16T14:11:20.003Z [cart-service] ERROR {\"level\":\"error\",\"msg\":\"Circuit breaker OPEN for redis_cluster\",\"requests_blocked\":true,\"fallback\":\"empty_cart\"}\n2026-05-16T14:11:20.221Z [redis-proxy] INFO  cluster_event=ELECTION_COMPLETE new_primary=redis-02-replica-a:6380 elapsed_ms=5341\n2026-05-16T14:11:20.554Z [redis-proxy] INFO  cluster_event=REPLICATION_SYNC new_primary=redis-02-replica-a:6380 replica=redis-02-replica-b:6381 sync_lag_ms=112\n2026-05-16T14:11:21.001Z [cart-service] WARN  {\"level\":\"warn\",\"msg\":\"Redis cluster recovered partially, probing circuit breaker\",\"state\":\"HALF_OPEN\"}\n2026-05-16T14:11:21.440Z [cart-service] ERROR redis_cmd=GET key=cart:user-1155 error=\"timeout\" host=redis-02-replica-a:6380 latency_ms=3892 note=replica_catching_up\n2026-05-16T14:11:21.880Z [cart-service] ERROR circuit_breaker=redis_cluster state=OPEN failure_count=15 re_opened=true\n2026-05-16T14:11:30.001Z [cart-service] INFO  {\"level\":\"info\",\"msg\":\"Stats: last 30s\",\"cart_requests\":188,\"redis_errors\":161,\"success_rate\":0.14,\"p99_ms\":5001}\n2026-05-16T14:12:00.221Z [redis-proxy] WARN  replication_lag node=redis-02-replica-a:6380 lag_ms=8210 threshold_ms=500\n2026-05-16T14:12:01.003Z [cart-service] ERROR redis_cmd=GET key=cart:user-7743 error=\"timeout\" host=redis-02-replica-a:6380 latency_ms=5001\n2026-05-16T14:12:01.441Z [cart-service] ERROR redis_cmd=GET key=cart:user-3312 error=\"timeout\" host=redis-02-replica-a:6380 latency_ms=5001\n2026-05-16T14:12:02.001Z [cart-service] ERROR circuit_breaker=redis_cluster state=OPEN blocked_rps=47 fallback_rps=47\n2026-05-16T14:12:02.334Z [cart-service] WARN  {\"level\":\"warn\",\"msg\":\"Serving empty carts due to Redis unavailability\",\"affected_users_last_60s\":284}\n2026-05-16T14:12:15.001Z [redis-proxy] WARN  cluster_event=SLOT_REASSIGNMENT_SLOW slots_migrated=1240 slots_remaining=4221 eta_seconds=92\n2026-05-16T14:12:30.112Z [cart-service] INFO  {\"level\":\"info\",\"msg\":\"Stats: last 30s\",\"cart_requests\":201,\"redis_errors\":189,\"success_rate\":0.06,\"p99_ms\":5001}\n2026-05-16T14:13:00.001Z [redis-proxy] INFO  replication_lag node=redis-02-replica-a:6380 lag_ms=3411\n2026-05-16T14:13:01.220Z [cart-service] WARN  circuit_breaker=redis_cluster state=HALF_OPEN probe_result=timeout\n2026-05-16T14:13:01.560Z [cart-service] ERROR circuit_breaker=redis_cluster state=OPEN re_opened=true failure_streak=3\n2026-05-16T14:13:15.001Z [redis-proxy] WARN  replication_lag node=redis-02-replica-a:6380 lag_ms=1821\n2026-05-16T14:13:30.001Z [cart-service] INFO  {\"level\":\"info\",\"msg\":\"Stats: last 30s\",\"cart_requests\":196,\"redis_errors\":174,\"success_rate\":0.11,\"p99_ms\":5001}\n2026-05-16T14:14:00.112Z [redis-proxy] INFO  replication_lag node=redis-02-replica-a:6380 lag_ms=440\n2026-05-16T14:14:01.003Z [cart-service] WARN  circuit_breaker=redis_cluster state=HALF_OPEN probe_latency_ms=612\n2026-05-16T14:14:01.445Z [cart-service] WARN  {\"level\":\"warn\",\"msg\":\"Redis probe latency high but under error threshold\",\"latency_ms\":612,\"error_threshold_ms\":5000}\n2026-05-16T14:14:02.001Z [cart-service] WARN  circuit_breaker=redis_cluster state=HALF_OPEN consecutive_successes=1 required=5\n2026-05-16T14:14:15.221Z [redis-proxy] INFO  cluster_event=SLOT_REASSIGNMENT_COMPLETE all_slots_serving=true\n2026-05-16T14:14:16.003Z [redis-proxy] INFO  cluster_status=OK primary_nodes=3 replica_nodes=3 new_topology=true\n2026-05-16T14:14:30.001Z [cart-service] INFO  {\"level\":\"info\",\"msg\":\"Stats: last 30s\",\"cart_requests\":188,\"redis_errors\":104,\"success_rate\":0.45,\"p99_ms\":2341}\n2026-05-16T14:15:00.334Z [cart-service] WARN  circuit_breaker=redis_cluster state=HALF_OPEN consecutive_successes=4 required=5\n2026-05-16T14:15:01.001Z [cart-service] WARN  circuit_breaker=redis_cluster state=HALF_OPEN consecutive_successes=5 required=5\n2026-05-16T14:15:01.220Z [cart-service] INFO  circuit_breaker=redis_cluster state=CLOSED latency_ms=88\n2026-05-16T14:15:02.001Z [cart-service] INFO  {\"level\":\"info\",\"msg\":\"Redis circuit breaker CLOSED, resuming normal operations\",\"recovery_elapsed_ms\":227000}\n2026-05-16T14:15:30.112Z [cart-service] INFO  {\"level\":\"info\",\"msg\":\"Stats: last 30s\",\"cart_requests\":194,\"redis_errors\":8,\"success_rate\":0.96,\"p99_ms\":143}\n2026-05-16T14:16:00.001Z [cart-service] INFO  {\"level\":\"info\",\"msg\":\"Stats: last 30s\",\"cart_requests\":201,\"redis_errors\":2,\"success_rate\":0.99,\"p99_ms\":22}\n2026-05-16T14:16:30.221Z [cart-service] INFO  {\"level\":\"info\",\"msg\":\"Fully recovered. Redis nominal.\",\"p99_ms\":9,\"success_rate\":1.0}\n2026-05-16T14:16:30.450Z [redis-proxy] INFO  cluster_status=OK primary_nodes=3 replica_nodes=3 replication_lag_max_ms=18",
+  "recent_deploys": [
+    {
+      "sha": "53f46ae9eb45",
+      "timestamp": "2026-04-22T13:56:23Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 6 updates (#3295)",
+      "changed_files": [
+        "src/cart-service/packages.csproj",
+        "src/cart-service/nuget.lock",
+        "src/shared/telemetry/packages.csproj"
+      ]
+    },
+    {
+      "sha": "781c571cc008",
+      "timestamp": "2026-05-05T05:40:16Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump bytestring (#3345)",
+      "changed_files": [
+        "src/cart-service/Cargo.toml",
+        "src/cart-service/Cargo.lock"
+      ]
+    },
+    {
+      "sha": "974792d4cdda",
+      "timestamp": "2026-05-05T05:40:26Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with ",
+      "changed_files": [
+        "src/redis-proxy/mix.exs",
+        "src/redis-proxy/mix.lock"
+      ]
+    },
+    {
+      "sha": "9c4ca95ea6e8",
+      "timestamp": "2026-05-05T09:51:18Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "fix(deps): resolve npm security advisories (#3347)",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json",
+        "src/cart-service/client/package.json"
+      ]
+    },
+    {
+      "sha": "83dce9a815b2",
+      "timestamp": "2026-05-05T09:51:41Z",
+      "author": "Juliano Costa",
+      "message": "[chore] Promote Dónal to approver (#3336)",
+      "changed_files": [
+        "CODEOWNERS",
+        "docs/approvers.md"
+      ]
+    },
+    {
+      "sha": "e01faa1367fa",
+      "timestamp": "2026-05-12T14:13:20Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github/codeql-action (#3359)",
+      "changed_files": [
+        ".github/workflows/codeql.yml"
+      ]
+    },
+    {
+      "sha": "49a7631b1ddb",
+      "timestamp": "2026-05-16T12:04:07Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Profiling with firepit (#3333)",
+      "changed_files": [
+        "src/redis-proxy/lib/cluster_manager.ex",
+        "src/redis-proxy/lib/failover_policy.ex",
+        "src/redis-proxy/config/cluster.exs",
+        "src/redis-proxy/test/failover_test.exs"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "The Redis cluster experienced an unplanned primary node failover on redis-02:6379 at 2026-05-16T14:11:14Z, triggered approximately 2 hours after the deploy of SHA 49a7631b1ddb ('Profiling with firepit'). That commit modified redis-proxy/lib/cluster_manager.ex and failover_policy.ex, introducing a regression in the failover election logic that caused extended slot migration (slots 5461-10922) and elevated replication lag on the new primary redis-02-replica-a:6380 (peak lag 8210ms). This caused cart-service to receive MOVED errors, connection timeouts, and ultimately tripped its Redis circuit breaker to OPEN state, resulting in empty cart fallbacks being served for ~4 minutes.",
+  "ground_truth_remediation": "1. Immediately: page the redis-proxy/infrastructure team to investigate SHA 49a7631b1ddb changes in cluster_manager.ex and failover_policy.ex. 2. Roll back redis-proxy to the previous stable build (pre-49a7631b1ddb) to restore normal failover behavior. 3. If rollback is not immediately possible, manually promote a healthy replica and force slot reassignment via redis-cli CLUSTER FAILOVER TAKEOVER on a stable node. 4. Confirm cart-service circuit breaker returns to CLOSED state and p99 latency returns below 50ms. 5. Post-incident: add failover regression tests to redis-proxy CI pipeline and enforce a minimum replication-lag threshold before promoting replicas.",
+  "red_herring": null
+}

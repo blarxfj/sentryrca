@@ -1,0 +1,86 @@
+{
+  "id": "syn-046",
+  "subset": "synthetic",
+  "category": "resource_exhaustion",
+  "affected_service": "ad-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: ad-service heap usage at 94% (3.76 GB / 4 GB limit). OOM kill imminent. Pod ad-service-7d8f9b-xkqpl restarted 3 times in last 30 minutes. GC overhead exceeding 40% CPU.",
+  "log_window": "2026-05-13T10:52:11.043Z INFO  [ad-service] AdService starting up, build=bade4db5c2e0, log_buffer_size=unlimited\n2026-05-13T10:52:11.187Z INFO  [ad-service] Log buffer initialized: async_flush=true, flush_threshold=DISABLED, max_buffer_entries=UNBOUNDED\n2026-05-13T10:52:11.342Z INFO  [ad-service] Connected to ad-database host=ads-db.internal:5432 pool_size=10\n2026-05-13T10:52:11.501Z INFO  [ad-service] gRPC server listening on :9555\n2026-05-13T10:52:14.002Z INFO  [ad-service] HTTP health endpoint listening on :8080\n2026-05-13T10:52:20.115Z DEBUG [ad-service] request_id=a1b2c3 method=GetAds context_keys=[\"banking\"] ads_returned=4 latency_ms=12\n2026-05-13T10:52:20.230Z DEBUG [ad-service] request_id=a1b2c4 method=GetAds context_keys=[\"travel\",\"insurance\"] ads_returned=6 latency_ms=14\n2026-05-13T10:52:21.005Z DEBUG [ad-service] log_buffer entries=142 heap_used_mb=312 heap_total_mb=4096\n2026-05-13T10:52:22.118Z INFO  [frontend] Forwarding ad request to ad-service context=[\"apparel\"] request_id=b3c4d5\n2026-05-13T10:52:22.345Z DEBUG [ad-service] request_id=b3c4d5 method=GetAds context_keys=[\"apparel\"] ads_returned=3 latency_ms=11\n2026-05-13T10:53:01.002Z DEBUG [ad-service] log_buffer entries=4817 heap_used_mb=389 heap_total_mb=4096\n2026-05-13T10:53:01.230Z DEBUG [ad-service] request_id=c5d6e7 method=GetAds context_keys=[\"banking\"] ads_returned=4 latency_ms=13\n2026-05-13T10:53:02.115Z INFO  [frontend] ad-service responded OK request_id=c5d6e7 latency_ms=15\n2026-05-13T10:53:15.443Z DEBUG [ad-service] request_id=d7e8f9 method=GetAds context_keys=[\"travel\"] ads_returned=5 latency_ms=10\n2026-05-13T10:53:30.002Z DEBUG [ad-service] log_buffer entries=12443 heap_used_mb=521 heap_total_mb=4096\n2026-05-13T10:53:30.198Z WARN  [ad-service] GC pause detected duration_ms=85 heap_used_mb=521\n2026-05-13T10:53:45.002Z DEBUG [ad-service] request_id=e9f0a1 method=GetAds context_keys=[\"insurance\",\"banking\"] ads_returned=7 latency_ms=18\n2026-05-13T10:54:00.003Z DEBUG [ad-service] log_buffer entries=24118 heap_used_mb=712 heap_total_mb=4096\n2026-05-13T10:54:00.341Z WARN  [ad-service] GC pause detected duration_ms=143 heap_used_mb=712 gc_overhead_pct=12\n2026-05-13T10:54:05.117Z INFO  [frontend] High ad request rate detected rps=340\n2026-05-13T10:54:05.220Z DEBUG [ad-service] request_id=f1a2b3 method=GetAds context_keys=[\"apparel\",\"travel\"] ads_returned=6 latency_ms=22\n2026-05-13T10:54:10.002Z WARN  [ad-service] log_buffer entries=31200 heap_used_mb=891 heap_total_mb=4096 WARNING: buffer flush not triggered, flush_threshold=DISABLED\n2026-05-13T10:54:10.445Z WARN  [ad-service] GC pause detected duration_ms=228 heap_used_mb=891 gc_overhead_pct=19\n2026-05-13T10:54:15.330Z WARN  [ad-service] response latency degrading p99_ms=145 p50_ms=38\n2026-05-13T10:54:20.002Z ERROR [ad-service] {\"level\":\"error\",\"ts\":\"2026-05-13T10:54:20.002Z\",\"msg\":\"GC overhead critical\",\"heap_used_mb\":1102,\"heap_total_mb\":4096,\"gc_overhead_pct\":27,\"log_buffer_entries\":41890}\n2026-05-13T10:54:20.115Z WARN  [frontend] ad-service latency elevated p99_ms=210 degrading SLO\n2026-05-13T10:54:25.002Z ERROR [ad-service] {\"level\":\"error\",\"ts\":\"2026-05-13T10:54:25.002Z\",\"msg\":\"log buffer growing unbounded\",\"log_buffer_entries\":48200,\"heap_used_mb\":1289,\"action\":\"none — flush_threshold disabled\"}\n2026-05-13T10:54:30.002Z ERROR [ad-service] GC pause duration_ms=412 heap_used_mb=1489 gc_overhead_pct=33\n2026-05-13T10:54:30.118Z ERROR [ad-service] request_id=g2h3i4 method=GetAds FAILED err=\"context deadline exceeded\" latency_ms=5001\n2026-05-13T10:54:30.210Z ERROR [frontend] ad-service RPC failed request_id=g2h3i4 err=\"deadline exceeded\" retrying=true\n2026-05-13T10:54:35.002Z ERROR [ad-service] {\"level\":\"error\",\"ts\":\"2026-05-13T10:54:35.002Z\",\"msg\":\"log buffer growing unbounded\",\"log_buffer_entries\":58771,\"heap_used_mb\":1821,\"action\":\"none — flush_threshold disabled\"}\n2026-05-13T10:54:40.002Z ERROR [ad-service] GC pause duration_ms=689 heap_used_mb=2104 gc_overhead_pct=38\n2026-05-13T10:54:40.115Z ERROR [ad-service] request_id=h4i5j6 method=GetAds FAILED err=\"context deadline exceeded\" latency_ms=5001\n2026-05-13T10:54:40.220Z ERROR [frontend] ad-service RPC failed request_id=h4i5j6 err=\"deadline exceeded\" retrying=false circuit_breaker=open\n2026-05-13T10:54:41.001Z WARN  [otel-collector] ad-service trace export lagging export_queue_depth=8420 drop_pct=0.4\n2026-05-13T10:54:43.002Z ERROR [ad-service] {\"level\":\"error\",\"ts\":\"2026-05-13T10:54:43.002Z\",\"msg\":\"async log flush goroutine stalled\",\"goroutine_id\":\"g-8821\",\"waiting_on\":\"buffer_lock\",\"blocked_ms\":3100}\n2026-05-13T10:54:45.002Z FATAL [ad-service] GC overhead exceeded threshold gc_overhead_pct=41 heap_used_mb=2512\n  at com.example.ads.LogBuffer.append(LogBuffer.java:214)\n  at com.example.ads.AdService.getAds(AdService.java:87)\n  at com.example.ads.AdServiceGrpc.processCall(AdServiceGrpc.java:341)\n2026-05-13T10:54:45.110Z ERROR [ad-service] {\"level\":\"fatal\",\"ts\":\"2026-05-13T10:54:45.110Z\",\"msg\":\"log buffer memory pressure uncontrolled\",\"log_buffer_entries\":74033,\"heap_used_mb\":2512,\"heap_total_mb\":4096}\n2026-05-13T10:54:46.001Z ERROR [otel-collector] ad-service trace export failed host=ad-service:4317 err=\"connection refused\"\n2026-05-13T10:54:46.220Z ERROR [frontend] ad-service unavailable, returning empty ads for all requests\n2026-05-13T10:54:47.002Z FATAL [ad-service] {\"level\":\"fatal\",\"ts\":\"2026-05-13T10:54:47.002Z\",\"msg\":\"OutOfMemoryError: Java heap space\",\"heap_used_mb\":3812,\"heap_total_mb\":4096,\"log_buffer_entries\":81204}\n  at java.util.ArrayList.grow(ArrayList.java:265)\n  at com.example.ads.LogBuffer.append(LogBuffer.java:218)\n  at com.example.ads.AdService.getAds(AdService.java:87)\n2026-05-13T10:54:47.340Z INFO  [kubernetes] Pod ad-service-7d8f9b-xkqpl OOMKilled reason=OOMKilled exit_code=137\n2026-05-13T10:54:47.341Z INFO  [kubernetes] Restarting pod ad-service-7d8f9b-xkqpl restart_count=1\n2026-05-13T10:55:10.002Z INFO  [ad-service] AdService starting up, build=bade4db5c2e0, log_buffer_size=unlimited\n2026-05-13T10:55:10.145Z INFO  [ad-service] Log buffer initialized: async_flush=true, flush_threshold=DISABLED, max_buffer_entries=UNBOUNDED\n2026-05-13T10:55:10.330Z INFO  [ad-service] Connected to ad-database host=ads-db.internal:5432 pool_size=10\n2026-05-13T10:55:10.501Z INFO  [ad-service] gRPC server listening on :9555\n2026-05-13T10:55:15.002Z DEBUG [ad-service] log_buffer entries=188 heap_used_mb=328 heap_total_mb=4096\n2026-05-13T10:55:30.002Z DEBUG [ad-service] log_buffer entries=5901 heap_used_mb=441 heap_total_mb=4096\n2026-05-13T10:55:45.003Z WARN  [ad-service] GC pause detected duration_ms=91 heap_used_mb=598\n2026-05-13T10:56:00.002Z DEBUG [ad-service] log_buffer entries=18440 heap_used_mb=801 heap_total_mb=4096\n2026-05-13T10:56:00.118Z WARN  [ad-service] GC pause detected duration_ms=187 heap_used_mb=801 gc_overhead_pct=14\n2026-05-13T10:56:15.002Z ERROR [ad-service] {\"level\":\"error\",\"ts\":\"2026-05-13T10:56:15.002Z\",\"msg\":\"GC overhead critical\",\"heap_used_mb\":1144,\"heap_total_mb\":4096,\"gc_overhead_pct\":28,\"log_buffer_entries\":37210}\n2026-05-13T10:56:30.002Z ERROR [ad-service] GC pause duration_ms=501 heap_used_mb=1788 gc_overhead_pct=36\n2026-05-13T10:56:45.002Z FATAL [ad-service] {\"level\":\"fatal\",\"ts\":\"2026-05-13T10:56:45.002Z\",\"msg\":\"OutOfMemoryError: Java heap space\",\"heap_used_mb\":3901,\"heap_total_mb\":4096,\"log_buffer_entries\":79812}\n  at java.util.ArrayList.grow(ArrayList.java:265)\n  at com.example.ads.LogBuffer.append(LogBuffer.java:218)\n2026-05-13T10:56:45.210Z INFO  [kubernetes] Pod ad-service-7d8f9b-xkqpl OOMKilled reason=OOMKilled exit_code=137\n2026-05-13T10:56:45.211Z INFO  [kubernetes] Restarting pod ad-service-7d8f9b-xkqpl restart_count=2\n2026-05-13T10:57:08.002Z INFO  [ad-service] AdService starting up, build=bade4db5c2e0, log_buffer_size=unlimited\n2026-05-13T10:57:08.140Z INFO  [ad-service] Log buffer initialized: async_flush=true, flush_threshold=DISABLED, max_buffer_entries=UNBOUNDED\n2026-05-13T10:57:08.320Z INFO  [ad-service] Connected to ad-database host=ads-db.internal:5432 pool_size=10\n2026-05-13T10:57:08.500Z INFO  [ad-service] gRPC server listening on :9555\n2026-05-13T10:57:30.002Z WARN  [ad-service] GC pause detected duration_ms=77 heap_used_mb=542 gc_overhead_pct=10\n2026-05-13T10:57:45.002Z ERROR [ad-service] {\"level\":\"error\",\"ts\":\"2026-05-13T10:57:45.002Z\",\"msg\":\"log buffer growing unbounded\",\"log_buffer_entries\":29003,\"heap_used_mb\":1022}\n2026-05-13T10:58:00.002Z ERROR [ad-service] GC pause duration_ms=588 heap_used_mb=1901 gc_overhead_pct=39\n2026-05-13T10:58:15.002Z FATAL [ad-service] {\"level\":\"fatal\",\"ts\":\"2026-05-13T10:58:15.002Z\",\"msg\":\"OutOfMemoryError: Java heap space\",\"heap_used_mb\":3988,\"heap_total_mb\":4096,\"log_buffer_entries\":81901}\n  at java.util.ArrayList.grow(ArrayList.java:265)\n  at com.example.ads.LogBuffer.append(LogBuffer.java:218)\n2026-05-13T10:58:15.350Z INFO  [kubernetes] Pod ad-service-7d8f9b-xkqpl OOMKilled reason=OOMKilled exit_code=137\n2026-05-13T10:58:15.351Z INFO  [kubernetes] Restarting pod ad-service-7d8f9b-xkqpl restart_count=3\n2026-05-13T10:58:20.001Z ERROR [frontend] ad-service circuit breaker open, all ad requests failing fallback=empty_ads\n2026-05-13T10:58:20.115Z ERROR [otel-collector] ad-service export endpoint unreachable consecutive_failures=12\n2026-05-13T10:58:21.002Z INFO  [kubernetes] CrashLoopBackOff detected for pod ad-service-7d8f9b-xkqpl restart_count=3 reason=OOMKilled",
+  "recent_deploys": [
+    {
+      "sha": "0c5e175889c2",
+      "timestamp": "2026-04-16T13:20:06Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump next (#3269)",
+      "changed_files": [
+        "src/adservice/package.json",
+        "src/adservice/package-lock.json"
+      ]
+    },
+    {
+      "sha": "c789fc89a688",
+      "timestamp": "2026-04-21T11:57:50Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "src/adservice/package.json",
+        "src/adservice/package-lock.json",
+        "src/adservice/jest.config.js"
+      ]
+    },
+    {
+      "sha": "bade4db5c2e0",
+      "timestamp": "2026-04-28T14:14:11Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/adservice/pom.xml",
+        "src/adservice/src/main/java/com/example/ads/LogBuffer.java",
+        "src/adservice/src/main/java/com/example/ads/AdService.java",
+        "src/adservice/src/main/resources/application.properties"
+      ]
+    },
+    {
+      "sha": "f266a31c651b",
+      "timestamp": "2026-04-30T02:38:44Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 4 directories wit",
+      "changed_files": [
+        "src/recommendationservice/requirements.txt",
+        "src/currencyservice/requirements.txt"
+      ]
+    },
+    {
+      "sha": "2b9113d98e20",
+      "timestamp": "2026-04-30T06:51:57Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] execute dependabot every Tuesday 3:00am+ (#3330)",
+      "changed_files": [
+        ".github/dependabot.yml"
+      ]
+    },
+    {
+      "sha": "974792d4cdda",
+      "timestamp": "2026-05-05T05:40:26Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with ",
+      "changed_files": [
+        "src/adservice/mix.exs",
+        "src/adservice/mix.lock"
+      ]
+    },
+    {
+      "sha": "5c20010b3f8a",
+      "timestamp": "2026-05-13T10:51:05Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 3 directories wit",
+      "changed_files": [
+        "src/adservice/requirements.txt",
+        "src/adservice/src/main/java/com/example/ads/LogBuffer.java"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy bade4db5c2e0 (2026-04-28T14:14:11Z) modified LogBuffer.java and application.properties, inadvertently setting flush_threshold=DISABLED and max_buffer_entries=UNBOUNDED for the async log buffer in ad-service. Under high ad request throughput (>300 rps), every GetAds call appends structured log entries to an in-memory ArrayList in LogBuffer.append() (line 218) that is never flushed, causing unbounded heap growth. This triggers progressive GC pressure (gc_overhead_pct rising from 12% to 41%+) and ultimately OOMKill (exit code 137) within ~2 minutes of startup under load. The crash loop repeats on every pod restart because the misconfiguration is baked into the deployed artifact.",
+  "ground_truth_remediation": "1. Immediately roll back ad-service to the previous stable deploy (sha: c789fc89a688) using `kubectl set image deployment/ad-service ad-service=ad-service:c789fc89a688` to break the OOMKill crash loop. 2. Delete the current crashing pod to force clean restart: `kubectl delete pod ad-service-7d8f9b-xkqpl`. 3. In the code, fix LogBuffer.java to re-enable flush_threshold (e.g., flush every 1000 entries or every 5 seconds) and cap max_buffer_entries to a safe limit (e.g., 10000) to prevent unbounded growth. 4. Restore the correct application.properties values: `log.buffer.flush_threshold=1000` and `log.buffer.max_entries=10000`. 5. Cut a hotfix release, validate in staging under load, and redeploy. 6. Add a heap usage alert at 70% and a JVM GC overhead alert at >20% to catch regression early.",
+  "red_herring": null
+}

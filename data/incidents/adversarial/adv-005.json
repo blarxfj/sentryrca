@@ -1,0 +1,93 @@
+{
+  "id": "adv-005",
+  "subset": "adversarial",
+  "category": "dependency_outage",
+  "affected_service": "cart-service",
+  "severity": "high",
+  "alert_text": "ALERT: cart-service p99 latency > 8000ms for 5 consecutive minutes; error rate 34% on POST /cart/checkout; origin connection pool saturation detected in eu-west-1",
+  "log_window": "2024-03-14T13:00:01Z [cart-service] INFO  Promotional discount engine initialized successfully\n2024-03-14T13:00:02Z [cart-service] INFO  Pricing engine v2.4.1 loaded; discount rules: 12 active\n2024-03-14T13:00:03Z [cart-service] INFO  Cart total computation path updated to include promotional_discount_calculator\n2024-03-14T13:00:05Z [cart-service] INFO  Health check OK; all subsystems nominal\n2024-03-14T13:00:11Z [cart-service] DEBUG cart_id=c8821 discount_calc=0ms subtotal=142.99 discount=14.30 total=128.69\n2024-03-14T13:00:12Z [cart-service] DEBUG cart_id=c8822 discount_calc=1ms subtotal=89.50 discount=0.00 total=89.50\n2024-03-14T13:00:14Z [cart-service] DEBUG cart_id=c8823 discount_calc=0ms subtotal=210.00 discount=21.00 total=189.00\n2024-03-14T13:01:03Z [cart-service] INFO  Static asset fetch for product thumbnail SKU-7821: GET https://cdn.example.com/assets/sku-7821.jpg -> 200 OK (12ms)\n2024-03-14T13:01:04Z [cart-service] INFO  Static asset fetch for product thumbnail SKU-4490: GET https://cdn.example.com/assets/sku-4490.jpg -> 200 OK (14ms)\n2024-03-14T13:01:55Z [cart-service] INFO  Static asset fetch for product thumbnail SKU-1103: GET https://cdn.example.com/assets/sku-1103.jpg -> 200 OK (11ms)\n2024-03-14T13:15:00Z [fastly-agent] WARN  Fastly CDN status change detected: eu-west-1 edge nodes reporting degraded state\n2024-03-14T13:15:02Z [cart-service] WARN  Static asset fetch for SKU-9021: CDN returned 503; falling back to origin https://origin.assets.example.com/assets/sku-9021.jpg\n2024-03-14T13:15:02Z [cart-service] DEBUG cart_id=c9100 discount_calc=1ms subtotal=55.00 discount=0.00 total=55.00\n2024-03-14T13:15:03Z [cart-service] WARN  Static asset fetch for SKU-3310: CDN returned 503; falling back to origin https://origin.assets.example.com/assets/sku-3310.jpg\n2024-03-14T13:15:03Z [cart-service] WARN  Static asset fetch for SKU-8871: CDN returned 503; falling back to origin https://origin.assets.example.com/assets/sku-8871.jpg\n2024-03-14T13:15:04Z [cart-service] WARN  Static asset fetch for SKU-2201: CDN returned 503; falling back to origin https://origin.assets.example.com/assets/sku-2201.jpg\n2024-03-14T13:15:04Z [cart-service] INFO  Origin connection pool usage: 45/100 connections active\n2024-03-14T13:15:05Z [cart-service] WARN  Static asset fetch for SKU-6643: CDN returned 503; falling back to origin\n2024-03-14T13:15:05Z [cart-service] WARN  Static asset fetch for SKU-7712: CDN returned 503; falling back to origin\n2024-03-14T13:15:06Z [cart-service] WARN  Static asset fetch for SKU-5500: CDN returned 503; falling back to origin\n2024-03-14T13:15:06Z [cart-service] WARN  Static asset fetch for SKU-4491: CDN returned 503; falling back to origin\n2024-03-14T13:15:07Z [cart-service] WARN  Origin connection pool usage: 78/100 connections active\n2024-03-14T13:15:08Z [cart-service] WARN  Static asset fetch for SKU-3302: CDN returned 503; falling back to origin\n2024-03-14T13:15:08Z [cart-service] WARN  Static asset fetch for SKU-9988: CDN returned 503; falling back to origin\n2024-03-14T13:15:09Z [cart-service] ERROR Origin connection pool usage: 98/100 connections active - NEAR SATURATION\n2024-03-14T13:15:10Z [cart-service] ERROR Origin connection pool EXHAUSTED (100/100); queuing asset requests\n2024-03-14T13:15:10Z [cart-service] ERROR POST /cart/checkout cart_id=c9211 TIMEOUT waiting for asset fetch (origin pool full)\n2024-03-14T13:15:11Z [cart-service] ERROR POST /cart/checkout cart_id=c9212 TIMEOUT waiting for asset fetch (origin pool full)\n2024-03-14T13:15:11Z [cart-service] ERROR POST /cart/checkout cart_id=c9213 TIMEOUT waiting for asset fetch (origin pool full)\n2024-03-14T13:15:12Z [cart-service] ERROR POST /cart/checkout cart_id=c9214 TIMEOUT waiting for asset fetch (origin pool full)\n2024-03-14T13:15:12Z [cart-service] ERROR POST /cart/checkout cart_id=c9215 TIMEOUT waiting for asset fetch (origin pool full)\n2024-03-14T13:15:13Z [cart-service] DEBUG cart_id=c9216 discount_calc=1ms subtotal=300.00 discount=30.00 total=270.00\n2024-03-14T13:15:13Z [cart-service] ERROR POST /cart/checkout cart_id=c9216 TIMEOUT waiting for asset fetch (origin pool full)\n2024-03-14T13:15:14Z [cart-service] ERROR Origin asset fetch queue depth: 312 requests pending\n2024-03-14T13:15:15Z [cart-service] ERROR p99 latency spike: 8420ms (SLO threshold: 2000ms)\n2024-03-14T13:15:15Z [cart-service] ERROR error_rate=34.1% on POST /cart/checkout\n2024-03-14T13:15:16Z [cart-service] ERROR Fastly CDN eu-west-1: all PoPs returning 503; 100% traffic bypassing CDN to origin\n2024-03-14T13:15:17Z [cart-service] WARN  discount_calc healthy: avg=1ms max=3ms p99=2ms - no anomaly detected\n2024-03-14T13:15:18Z [cart-service] ERROR Origin connection pool saturated; new checkout requests rejected with HTTP 503\n2024-03-14T13:15:20Z [cart-service] ERROR Origin asset fetch queue depth: 589 requests pending\n2024-03-14T13:15:22Z [cart-service] ERROR POST /cart/checkout cart_id=c9300 failed: upstream connect error or disconnect/reset before headers. reset reason: connection timeout\n2024-03-14T13:15:24Z [cart-service] ERROR POST /cart/checkout cart_id=c9301 failed: upstream connect error or disconnect/reset before headers. reset reason: connection timeout\n2024-03-14T13:15:26Z [cart-service] INFO  Fastly status page (statuspage.io): INCIDENT IDENTIFIED - eu-west-1 CDN routing failure; engineers investigating\n2024-03-14T13:15:28Z [cart-service] ERROR Origin connection pool saturated; requests queued > 30s, dropping with 504 Gateway Timeout\n2024-03-14T13:15:30Z [cart-service] DEBUG cart_id=c9310 discount_calc=1ms subtotal=75.25 discount=7.53 total=67.72\n2024-03-14T13:15:30Z [cart-service] ERROR POST /cart/checkout cart_id=c9310 504 Gateway Timeout (asset fetch failed after 30002ms)\n2024-03-14T13:16:00Z [cart-service] ERROR origin_pool_active=100 origin_pool_queued=812 cdn_fallback_rate=100%\n2024-03-14T13:16:01Z [cart-service] WARN  No errors in pricing engine; discount_calculator.apply_promotion() completing normally\n2024-03-14T13:16:02Z [cart-service] ERROR Fastly eu-west-1 outage confirmed; ETA for resolution unknown\n2024-03-14T13:17:00Z [cart-service] ERROR origin_pool_active=100 origin_pool_queued=1244 cdn_fallback_rate=100% error_rate=36.8%\n2024-03-14T13:18:00Z [cart-service] ERROR origin_pool_active=100 origin_pool_queued=1901 cdn_fallback_rate=100% error_rate=38.2%\n2024-03-14T13:19:00Z [cart-service] ERROR origin_pool_active=100 origin_pool_queued=2540 cdn_fallback_rate=100% error_rate=39.5%\n2024-03-14T13:20:00Z [cart-service] ERROR origin_pool_active=100 origin_pool_queued=3102 cdn_fallback_rate=100% error_rate=40.1%",
+  "recent_deploys": [
+    {
+      "sha": "a1f3c92d84e07b5f1234abcd6789ef01b2c3d4e5",
+      "timestamp": "2024-03-13T09:15:00Z",
+      "author": "priya.nair@example.com",
+      "message": "chore: upgrade axios from 1.5.0 to 1.6.8 to resolve CVE-2024-1234",
+      "changed_files": [
+        "package.json",
+        "package-lock.json"
+      ]
+    },
+    {
+      "sha": "b2e4d81a95f18c6e2345bcde7890fa12c3d4e5f6",
+      "timestamp": "2024-03-13T14:30:00Z",
+      "author": "leon.kovacs@example.com",
+      "message": "feat: add cart item quantity validation on add-to-cart endpoint",
+      "changed_files": [
+        "src/handlers/cart.js",
+        "src/validators/item_validator.js",
+        "tests/unit/cart_handler.test.js"
+      ]
+    },
+    {
+      "sha": "c3f5e92b06a29d7f3456cdef8901ab23d4e5f6a7",
+      "timestamp": "2024-03-13T18:00:00Z",
+      "author": "amara.osei@example.com",
+      "message": "fix: correct currency rounding for EUR locale in cart summary",
+      "changed_files": [
+        "src/utils/currency_formatter.js",
+        "tests/unit/currency_formatter.test.js"
+      ]
+    },
+    {
+      "sha": "d4a6f03c17b30e8a4567def09012bc34e5f6a7b8",
+      "timestamp": "2024-03-14T08:00:00Z",
+      "author": "tomasz.wisniewski@example.com",
+      "message": "refactor: extract asset URL builder into dedicated module",
+      "changed_files": [
+        "src/utils/asset_url_builder.js",
+        "src/handlers/cart.js",
+        "tests/unit/asset_url_builder.test.js"
+      ]
+    },
+    {
+      "sha": "e5b7a14d28c41f9b5678efa01123cd45f6a7b8c9",
+      "timestamp": "2024-03-14T10:22:00Z",
+      "author": "mei.zhang@example.com",
+      "message": "feat: add promotional discount calculation to pricing engine and cart total",
+      "changed_files": [
+        "src/pricing/discount_calculator.js",
+        "src/pricing/pricing_engine.js",
+        "src/handlers/cart_checkout.js",
+        "src/models/cart_total.js",
+        "tests/unit/discount_calculator.test.js",
+        "tests/integration/checkout_flow.test.js",
+        "config/discount_rules.json"
+      ]
+    },
+    {
+      "sha": "f6c8b25e39d52a0c6789fab12234de56a7b8c9d0",
+      "timestamp": "2024-03-14T11:45:00Z",
+      "author": "devops-bot@example.com",
+      "message": "chore: rotate internal service-to-service mTLS certificates",
+      "changed_files": [
+        "deploy/certs/cart-service-internal.pem",
+        "deploy/certs/cart-service-internal.key"
+      ]
+    },
+    {
+      "sha": "a7d9c36f40e63b1d7890abc23345ef67b8c9d0e1",
+      "timestamp": "2024-03-14T12:30:00Z",
+      "author": "sophie.andersson@example.com",
+      "message": "perf: add Redis caching for frequently accessed cart session data",
+      "changed_files": [
+        "src/cache/session_cache.js",
+        "src/handlers/cart.js",
+        "config/redis.js",
+        "tests/integration/session_cache.test.js"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Fastly CDN regional outage in eu-west-1 caused 100% of static asset requests (product thumbnails, etc.) to bypass CDN edge nodes and route directly to the origin asset server. The cart-service origin HTTP connection pool (100 connections max) was rapidly exhausted by the flood of direct origin requests. With the pool saturated, checkout requests that required asset fetches were queued indefinitely, causing p99 latency to exceed 8000ms and an error rate above 34%. This is entirely unrelated to any recent deploy. The logs explicitly show Fastly 503 responses beginning at 13:15:02Z, pool saturation at 13:15:10Z, and a confirmed Fastly statuspage incident notification at 13:15:26Z.",
+  "ground_truth_remediation": "1. Immediately configure cart-service to skip non-critical asset prefetching during checkout to relieve origin pool pressure. 2. Set a circuit breaker on the CDN fallback path to return placeholder assets instead of hitting origin when CDN fallback rate exceeds 50%. 3. Temporarily increase origin connection pool size from 100 to 500 as a stopgap. 4. Monitor Fastly eu-west-1 statuspage and re-enable CDN routing once Fastly confirms recovery. 5. Post-incident: implement async/lazy asset loading in checkout flow so asset availability is never on the critical path.",
+  "red_herring": "The promotional discount deploy (SHA e5b7a14d28c41f9b5678efa01123cd45f6a7b8c9, deployed at 10:22Z) is a strong red herring because it (a) modified cart_checkout.js and the pricing engine just 2h53m before the incident, touching the exact code path exercised on POST /cart/checkout which is the failing endpoint, making it natural to suspect the new discount logic introduced a latency regression or blocking computation. However, the logs conclusively exonerate this deploy: at 13:15:13Z and 13:15:30Z debug lines show discount_calc completing in 1ms with correct results even during the outage; at 13:16:01Z the log explicitly states 'No errors in pricing engine; discount_calculator.apply_promotion() completing normally'; and at 13:15:17Z a metrics line confirms discount_calc p99=2ms with no anomaly detected. The actual failure chain begins at 13:15:00Z with the fastly-agent detecting Fastly eu-west-1 degradation, escalates through a cascade of CDN 503 errors forcing origin fallback, and culminates in origin connection pool exhaustion at 13:15:10Z, all of which is entirely independent of any deploy."
+}

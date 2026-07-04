@@ -1,0 +1,86 @@
+{
+  "id": "syn-029",
+  "subset": "synthetic",
+  "category": "dependency_outage",
+  "affected_service": "cart-service",
+  "severity": "high",
+  "alert_text": "ALERT: cart-service gRPC error rate > 15% for 5 minutes — CheckoutService and AddItem calls failing with UNAVAILABLE/transport closing. P99 latency spike to 28s. Possible downstream dependency outage.",
+  "log_window": "2026-05-12T14:18:02.011Z [cart-service] INFO  Starting cart-service v2.7.4 on port 7070\n2026-05-12T14:18:02.345Z [cart-service] INFO  gRPC server initialized, keepalive_time=30s keepalive_timeout=10s\n2026-05-12T14:18:02.891Z [cart-service] INFO  Connected to redis://redis:6379 — ping OK\n2026-05-12T14:18:03.102Z [cart-service] INFO  Registered gRPC client for otel-collector endpoint=otelcol:4317\n2026-05-12T14:18:03.444Z [cart-service] INFO  Health check passed — ready to serve\n2026-05-12T14:19:10.001Z [otel-collector] INFO  msg=\"Received pipeline config\" pipelines=traces,metrics,logs\n2026-05-12T14:19:10.221Z [otel-collector] INFO  msg=\"Starting receivers\" receiver=otlp/grpc\n2026-05-12T14:19:10.780Z [otel-collector] INFO  msg=\"gRPC server listening\" endpoint=0.0.0.0:4317\n2026-05-12T14:20:15.003Z [cart-service] INFO  request=AddItem user_id=usr_4421 item_sku=OLJCESPC7Z qty=1 status=OK latency=12ms\n2026-05-12T14:20:16.112Z [cart-service] INFO  request=GetCart user_id=usr_4421 status=OK latency=8ms\n2026-05-12T14:20:44.889Z [cart-service] INFO  request=AddItem user_id=usr_9812 item_sku=9SIQT8TOJO qty=2 status=OK latency=14ms\n2026-05-12T14:21:03.214Z [otel-collector] INFO  msg=\"Export successful\" exporter=otlphttp/traces spans=142\n2026-05-12T14:21:33.021Z [cart-service] INFO  request=AddItem user_id=usr_2200 item_sku=LS4PSXUNUM qty=1 status=OK latency=11ms\n2026-05-12T14:22:00.000Z [load-balancer] INFO  type=idle_timeout_closed conn=10.0.1.45:52311->10.0.2.8:4317 idle_seconds=60\n2026-05-12T14:22:00.193Z [otel-collector] WARN  msg=\"gRPC transport closed unexpectedly\" peer=10.0.1.45 connection_age=62s\n2026-05-12T14:22:00.441Z [cart-service] WARN  grpc_client target=otelcol:4317 event=transport_closed reason=\"connection idle-closed by intermediate proxy\" attempt=1\n2026-05-12T14:22:00.557Z [cart-service] DEBUG grpc_client target=otelcol:4317 action=reconnect backoff=1s\n2026-05-12T14:22:01.701Z [cart-service] INFO  grpc_client target=otelcol:4317 event=reconnected latency=1144ms\n2026-05-12T14:22:05.008Z [cart-service] INFO  request=AddItem user_id=usr_3301 item_sku=HQTGWGPNH4 qty=1 status=OK latency=13ms\n2026-05-12T14:23:00.001Z [load-balancer] INFO  type=idle_timeout_closed conn=10.0.1.45:52388->10.0.2.8:4317 idle_seconds=60\n2026-05-12T14:23:00.129Z [otel-collector] WARN  msg=\"gRPC transport closed unexpectedly\" peer=10.0.1.45 connection_age=60s\n2026-05-12T14:23:00.344Z [cart-service] WARN  grpc_client target=otelcol:4317 event=transport_closed reason=\"connection idle-closed by intermediate proxy\" attempt=2\n2026-05-12T14:23:00.501Z [cart-service] DEBUG grpc_client target=otelcol:4317 action=reconnect backoff=2s\n2026-05-12T14:23:02.778Z [cart-service] INFO  grpc_client target=otelcol:4317 event=reconnected latency=2277ms\n2026-05-12T14:24:00.003Z [load-balancer] INFO  type=idle_timeout_closed conn=10.0.1.45:52401->10.0.2.8:4317 idle_seconds=60\n2026-05-12T14:24:00.191Z [otel-collector] WARN  msg=\"gRPC transport closed unexpectedly\" peer=10.0.1.45 connection_age=60s\n2026-05-12T14:24:00.388Z [cart-service] WARN  grpc_client target=otelcol:4317 event=transport_closed reason=\"connection idle-closed by intermediate proxy\" attempt=3\n2026-05-12T14:24:01.012Z [cart-service] DEBUG grpc_client target=otelcol:4317 action=reconnect backoff=4s\n2026-05-12T14:24:05.221Z [cart-service] INFO  grpc_client target=otelcol:4317 event=reconnected latency=4209ms\n2026-05-12T14:25:00.001Z [load-balancer] INFO  type=idle_timeout_closed conn=10.0.1.45:52419->10.0.2.8:4317 idle_seconds=60\n2026-05-12T14:25:00.147Z [otel-collector] WARN  msg=\"gRPC transport closed unexpectedly\" peer=10.0.1.45 connection_age=61s\n2026-05-12T14:25:00.333Z [cart-service] ERROR grpc_client target=otelcol:4317 event=transport_closed reason=\"keepalive watchdog: no PING ACK within 10s\" attempt=4\n2026-05-12T14:25:00.334Z [cart-service] ERROR grpc_client target=otelcol:4317 msg=\"GOAWAY received — server closing transport\" code=UNAVAILABLE\n2026-05-12T14:25:00.501Z [cart-service] DEBUG grpc_client target=otelcol:4317 action=reconnect backoff=8s\n2026-05-12T14:25:09.003Z [cart-service] ERROR grpc_client target=otelcol:4317 event=reconnect_failed err=\"dial tcp 10.0.2.8:4317: connect: connection refused\"\n2026-05-12T14:25:09.004Z [cart-service] ERROR span export dropped spans=34 reason=\"otel-collector unreachable\"\n2026-05-12T14:25:10.221Z [cart-service] INFO  request=AddItem user_id=usr_7712 item_sku=2ZYFJ3GM2N qty=1 status=OK latency=14ms\n2026-05-12T14:25:12.889Z [otel-collector] FATAL msg=\"gRPC listener crashed\" err=\"server transport: keepalive policy violation — max_connection_idle exceeded repeated enforcement loop\" goroutine=grpc-server-main\n2026-05-12T14:25:12.901Z [otel-collector] FATAL msg=\"Exiting\" code=1\n2026-05-12T14:25:13.002Z [cart-service] ERROR grpc_client target=otelcol:4317 event=transport_closed reason=\"EOF\" attempt=5\n2026-05-12T14:25:13.011Z [cart-service] ERROR grpc_client target=otelcol:4317 action=reconnect backoff=16s\n2026-05-12T14:25:29.021Z [cart-service] ERROR grpc_client target=otelcol:4317 event=reconnect_failed err=\"dial tcp 10.0.2.8:4317: connect: connection refused\"\n2026-05-12T14:25:29.022Z [cart-service] ERROR span export dropped spans=51 reason=\"otel-collector unreachable\"\n2026-05-12T14:25:30.441Z [cart-service] INFO  request=AddItem user_id=usr_5500 item_sku=0PUK6V6EV0 qty=3 status=OK latency=15ms\n2026-05-12T14:26:00.111Z [cart-service] ERROR grpc_client target=otelcol:4317 event=reconnect_failed err=\"dial tcp 10.0.2.8:4317: connect: connection refused\" attempt=6 backoff=32s\n2026-05-12T14:26:00.112Z [cart-service] ERROR span export dropped spans=88 reason=\"otel-collector unreachable\"\n2026-05-12T14:26:05.331Z [cart-service] WARN  circuit_breaker name=otel-exporter state=OPEN threshold_pct=100 window=60s\n2026-05-12T14:26:10.002Z [cart-service] INFO  request=GetCart user_id=usr_1103 status=OK latency=9ms\n2026-05-12T14:26:10.991Z [cart-service] INFO  request=AddItem user_id=usr_8801 item_sku=L9ECAV7KIM qty=1 status=OK latency=12ms\n2026-05-12T14:26:44.221Z [cart-service] ERROR grpc_client target=otelcol:4317 event=reconnect_failed err=\"dial tcp 10.0.2.8:4317: connect: connection refused\" attempt=7 backoff=60s\n2026-05-12T14:26:44.222Z [cart-service] ERROR span export dropped spans=114 reason=\"otel-collector unreachable\"\n2026-05-12T14:27:00.001Z [cart-service] WARN  telemetry degraded: otel-collector UNREACHABLE for 112s — traces/metrics will be lost until collector recovers\n2026-05-12T14:27:01.113Z [cart-service] INFO  request=AddItem user_id=usr_6644 item_sku=OLJCESPC7Z qty=2 status=OK latency=11ms\n2026-05-12T14:27:44.119Z [cart-service] ERROR grpc_client target=otelcol:4317 event=reconnect_failed err=\"dial tcp 10.0.2.8:4317: connect: connection refused\" attempt=8\n2026-05-12T14:27:44.120Z [cart-service] ERROR span export dropped spans=139 reason=\"otel-collector unreachable\"\n2026-05-12T14:28:00.335Z [cart-service] WARN  circuit_breaker name=otel-exporter state=OPEN consecutive_failures=8\n2026-05-12T14:28:02.771Z [cart-service] INFO  request=GetCart user_id=usr_9921 status=OK latency=10ms\n2026-05-12T14:28:31.002Z [cart-service] ERROR grpc_client target=otelcol:4317 event=reconnect_failed err=\"dial tcp 10.0.2.8:4317: connect: connection refused\" attempt=9\n2026-05-12T14:28:31.003Z [cart-service] ERROR span export dropped spans=167 reason=\"otel-collector unreachable\"\n2026-05-12T14:29:00.009Z [cart-service] WARN  telemetry degraded: otel-collector UNREACHABLE for 228s — total dropped spans=167\n2026-05-12T14:29:01.221Z [cart-service] INFO  request=AddItem user_id=usr_3312 item_sku=9SIQT8TOJO qty=1 status=OK latency=13ms\n2026-05-12T14:29:14.441Z [cart-service] ERROR grpc_client target=otelcol:4317 event=reconnect_failed err=\"dial tcp 10.0.2.8:4317: connect: connection refused\" attempt=10\n2026-05-12T14:29:14.442Z [cart-service] ERROR\n  at grpc.(*ClientConn).resetTransport (clientconn.go:819)\n  at grpc.(*addrConn).createTransport (clientconn.go:1082)\n2026-05-12T14:29:14.443Z [cart-service] ERROR span export dropped spans=192 reason=\"otel-collector unreachable\"\n2026-05-12T14:29:30.001Z [cart-service] WARN  circuit_breaker name=otel-exporter state=OPEN — skipping export attempts until half-open probe at T+300s\n2026-05-12T14:30:00.002Z [cart-service] INFO  request=AddItem user_id=usr_4421 item_sku=HQTGWGPNH4 qty=1 status=OK latency=12ms\n2026-05-12T14:30:15.779Z [cart-service] WARN  telemetry degraded: otel-collector UNREACHABLE for 315s — total dropped spans=219\n2026-05-12T14:30:44.001Z [cart-service] INFO  request=GetCart user_id=usr_7700 status=OK latency=8ms\n2026-05-12T14:31:00.110Z [cart-service] WARN  telemetry degraded: otel-collector UNREACHABLE for 360s — total dropped spans=241\n2026-05-12T14:31:30.441Z [cart-service] INFO  request=AddItem user_id=usr_5512 item_sku=LS4PSXUNUM qty=1 status=OK latency=11ms\n2026-05-12T14:32:00.003Z [cart-service] WARN  circuit_breaker name=otel-exporter state=HALF_OPEN probe_attempt=1\n2026-05-12T14:32:00.555Z [cart-service] ERROR grpc_client target=otelcol:4317 event=reconnect_failed err=\"dial tcp 10.0.2.8:4317: connect: connection refused\" probe=half-open\n2026-05-12T14:32:00.556Z [cart-service] ERROR circuit_breaker name=otel-exporter state=OPEN probe_failed=true next_probe=T+300s\n2026-05-12T14:32:01.112Z [cart-service] INFO  request=GetCart user_id=usr_1199 status=OK latency=9ms",
+  "recent_deploys": [
+    {
+      "sha": "b6de548594c2",
+      "timestamp": "2026-04-21T15:46:42Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the cargo-production-dependencies group across 1 directory wit",
+      "changed_files": [
+        "Cargo.lock",
+        "Cargo.toml"
+      ]
+    },
+    {
+      "sha": "7d7e533c001a",
+      "timestamp": "2026-04-23T07:59:20Z",
+      "author": "Timur Olzhabayev",
+      "message": "[chore] exclude platform.openai.com and gnu.org from link check (#3289)",
+      "changed_files": [
+        ".mlc_config.json",
+        "docs/link-check-config.yml"
+      ]
+    },
+    {
+      "sha": "9487d3f5eb14",
+      "timestamp": "2026-04-30T02:23:48Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 1 update (#3326)",
+      "changed_files": [
+        "src/cartservice/cartservice.csproj",
+        "Directory.Packages.props"
+      ]
+    },
+    {
+      "sha": "0e6ca5152176",
+      "timestamp": "2026-04-30T03:12:04Z",
+      "author": "Roman Dmytrenko",
+      "message": "fix(frontend): handle corrupted session data in localStorage (#3313)",
+      "changed_files": [
+        "src/frontend/utils/sessionStorage.ts",
+        "src/frontend/components/CartIcon.tsx",
+        "src/frontend/pages/_app.tsx"
+      ]
+    },
+    {
+      "sha": "28ed8395ff76",
+      "timestamp": "2026-05-06T14:37:03Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/recommendationservice/requirements.txt",
+        "src/loadgenerator/requirements.txt"
+      ]
+    },
+    {
+      "sha": "52a8a76cf862",
+      "timestamp": "2026-05-07T07:06:44Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with ",
+      "changed_files": [
+        "src/emailservice/mix.lock",
+        "src/emailservice/mix.exs"
+      ]
+    },
+    {
+      "sha": "e01faa1367fa",
+      "timestamp": "2026-05-12T14:13:20Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github/codeql-action (#3359)",
+      "changed_files": [
+        ".github/workflows/codeql.yml",
+        "collector/otelcol-config.yml",
+        "collector/otelcol-config-extras.yml"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha e01faa1367fa (2026-05-12T14:13:20Z) modified collector/otelcol-config.yml and introduced a gRPC keepalive policy for the otel-collector that set max_connection_idle=60s. The AWS Network Load Balancer sitting in front of otelcol:4317 also has a 60-second idle TCP timeout. Because the NLB silently kills idle TCP connections at exactly 60s without sending a TCP RST visible to both sides before the gRPC PING keepalive fires, the collector repeatedly receives broken connections, triggers a goroutine enforcement loop ('max_connection_idle exceeded repeated enforcement loop'), and ultimately crashes (FATAL at 14:25:12). cart-service cannot reconnect because otel-collector is down, causing all OTLP gRPC exports to fail with 'connection refused' and the circuit breaker to open. Cart-service itself (Redis, business logic) remains fully healthy — only telemetry export is disrupted.",
+  "ground_truth_remediation": "1. Immediately: restart the otel-collector pod to restore telemetry ingestion. 2. In collector/otelcol-config.yml (introduced in e01faa1367fa), increase grpc.keepalive.server_parameters.max_connection_idle to at least 90s (e.g., 120s) so it is comfortably longer than the NLB's 60s idle timeout. 3. Alternatively, configure the cart-service gRPC client keepalive_time to 20s and keepalive_timeout to 10s so a PING is sent before the NLB silently drops the connection, keeping the connection alive. 4. Set the NLB idle timeout to 350s (recommended for gRPC) via the AWS console to permanently prevent the mismatch. Deploy the config fix and confirm otel-collector stays up and cart-service exports resume without dropped spans.",
+  "red_herring": null
+}

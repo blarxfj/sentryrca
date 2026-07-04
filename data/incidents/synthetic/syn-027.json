@@ -1,0 +1,88 @@
+{
+  "id": "syn-027",
+  "subset": "synthetic",
+  "category": "dependency_outage",
+  "affected_service": "payment-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: payment-service p99 latency > 30s for 5 minutes; Stripe webhook handler queue depth > 5000; payment retry storm detected — 847 duplicate charge attempts in last 60s",
+  "log_window": "2026-05-13T15:12:01.023Z [payment-service] INFO  Starting payment-service v2.4.1 (pid=1842)\n2026-05-13T15:12:01.187Z [payment-service] INFO  Connected to postgres://payments-db:5432/payments_prod\n2026-05-13T15:12:01.341Z [payment-service] INFO  Stripe webhook listener initialized on :8080/webhooks/stripe\n2026-05-13T15:12:01.412Z [payment-service] INFO  Circuit breaker initialized: stripe-webhook-processor maxFailures=5 timeout=10000ms\n2026-05-13T15:12:02.001Z [otel-collector] {\"level\":\"info\",\"ts\":\"2026-05-13T15:12:02.001Z\",\"msg\":\"OTLP receiver started\",\"endpoint\":\"0.0.0.0:4317\"}\n2026-05-13T15:12:02.104Z [otel-collector] {\"level\":\"info\",\"ts\":\"2026-05-13T15:12:02.104Z\",\"msg\":\"Exporter started\",\"exporter\":\"otlphttp\",\"endpoint\":\"https://stripe-telemetry.internal:9411\"}\n2026-05-13T15:13:00.011Z [payment-service] INFO  request_id=req-001a method=POST path=/webhooks/stripe status=200 duration_ms=142\n2026-05-13T15:13:00.204Z [payment-service] INFO  request_id=req-001b method=POST path=/webhooks/stripe status=200 duration_ms=138\n2026-05-13T15:13:01.022Z [payment-service] INFO  event=payment.succeeded charge_id=ch_3P8aAbLkj2eya1 amount=4999 currency=usd\n2026-05-13T15:13:01.345Z [payment-service] INFO  event=payment.succeeded charge_id=ch_3P8aAcMnp4qzb2 amount=12000 currency=usd\n2026-05-13T15:13:15.001Z [payment-service] INFO  webhook_queue_depth=12 workers=4 idle_workers=2\n2026-05-13T15:14:00.003Z [payment-service] INFO  request_id=req-002a method=POST path=/webhooks/stripe status=200 duration_ms=155\n2026-05-13T15:14:15.001Z [payment-service] INFO  webhook_queue_depth=18 workers=4 idle_workers=1\n2026-05-13T15:15:00.112Z [payment-service] INFO  request_id=req-003a method=POST path=/webhooks/stripe status=200 duration_ms=162\n2026-05-13T15:15:15.001Z [payment-service] INFO  webhook_queue_depth=24 workers=4 idle_workers=0\n2026-05-13T15:15:44.201Z [otel-collector] {\"level\":\"warn\",\"ts\":\"2026-05-13T15:15:44.201Z\",\"msg\":\"Exporter queue filling\",\"exporter\":\"otlphttp\",\"queue_size\":847,\"queue_capacity\":1000}\n2026-05-13T15:15:48.334Z [otel-collector] {\"level\":\"error\",\"ts\":\"2026-05-13T15:15:48.334Z\",\"msg\":\"Export failed\",\"exporter\":\"otlphttp\",\"error\":\"context deadline exceeded\",\"retry_attempt\":1}\n2026-05-13T15:15:50.112Z [payment-service] WARN  stripe_webhook_rtt_ms=4821 threshold_ms=3000 charge_id=ch_3P8aAdOqr5stc3\n2026-05-13T15:15:52.987Z [payment-service] WARN  stripe_webhook_rtt_ms=5103 threshold_ms=3000 charge_id=ch_3P8aAePs6uvd4\n2026-05-13T15:15:55.441Z [otel-collector] {\"level\":\"error\",\"ts\":\"2026-05-13T15:15:55.441Z\",\"msg\":\"Export failed\",\"exporter\":\"otlphttp\",\"error\":\"context deadline exceeded\",\"retry_attempt\":2}\n2026-05-13T15:16:00.001Z [payment-service] WARN  webhook_queue_depth=312 workers=4 idle_workers=0 — queue growing faster than processing\n2026-05-13T15:16:01.223Z [payment-service] WARN  stripe_api_timeout charge_id=ch_3P8aAfQt7vwe5 elapsed_ms=10002 action=retry attempt=1\n2026-05-13T15:16:02.004Z [payment-service] WARN  stripe_api_timeout charge_id=ch_3P8aAcMnp4qzb2 elapsed_ms=10001 action=retry attempt=1 — DUPLICATE charge attempt detected\n2026-05-13T15:16:03.881Z [otel-collector] {\"level\":\"error\",\"ts\":\"2026-05-13T15:16:03.881Z\",\"msg\":\"Export failed\",\"exporter\":\"otlphttp\",\"error\":\"connection refused\",\"endpoint\":\"https://stripe-telemetry.internal:9411\",\"retry_attempt\":3}\n2026-05-13T15:16:05.002Z [payment-service] ERROR request_id=req-005a method=POST path=/webhooks/stripe status=504 duration_ms=10005 error=\"upstream timeout waiting for Stripe ack\"\n2026-05-13T15:16:06.110Z [payment-service] ERROR stripe_webhook_delivery_failed charge_id=ch_3P8aAgRu8wxf6 error=\"read timeout after 10000ms\" will_retry=true\n2026-05-13T15:16:06.334Z [payment-service] WARN  idempotency_key_collision charge_id=ch_3P8aAcMnp4qzb2 — retry storm may cause double-charge\n2026-05-13T15:16:07.221Z [otel-collector] {\"level\":\"error\",\"ts\":\"2026-05-13T15:16:07.221Z\",\"msg\":\"Dropping spans\",\"dropped_spans\":412,\"reason\":\"queue_full\"}\n2026-05-13T15:16:08.001Z [payment-service] ERROR circuit_breaker name=stripe-webhook-processor state=OPEN failure_count=5 last_error=\"connection refused\" opened_at=2026-05-13T15:16:08.001Z\n2026-05-13T15:16:08.112Z [payment-service] ERROR All requests to Stripe webhook processor rejected — circuit breaker OPEN\n2026-05-13T15:16:09.003Z [payment-service] WARN  webhook_queue_depth=891 workers=4 idle_workers=0\n2026-05-13T15:16:10.441Z [otel-collector] {\"level\":\"fatal\",\"ts\":\"2026-05-13T15:16:10.441Z\",\"msg\":\"Exporter permanently failed\",\"exporter\":\"otlphttp\",\"endpoint\":\"https://stripe-telemetry.internal:9411\",\"error\":\"connection refused after 3 retries — giving up\"}\n2026-05-13T15:16:11.002Z [payment-service] ERROR request_id=req-006a status=503 error=\"circuit breaker OPEN: stripe-webhook-processor\" path=/webhooks/stripe\n2026-05-13T15:16:11.345Z [payment-service] ERROR request_id=req-006b status=503 error=\"circuit breaker OPEN: stripe-webhook-processor\" path=/webhooks/stripe\n2026-05-13T15:16:12.001Z [payment-service] WARN  retry_scheduler enqueuing charge_id=ch_3P8aAfQt7vwe5 attempt=2 backoff_ms=2000\n2026-05-13T15:16:12.003Z [payment-service] WARN  retry_scheduler enqueuing charge_id=ch_3P8aAcMnp4qzb2 attempt=2 backoff_ms=2000\n2026-05-13T15:16:12.444Z [payment-service] WARN  retry_scheduler enqueuing charge_id=ch_3P8aAgRu8wxf6 attempt=2 backoff_ms=2000\n2026-05-13T15:16:14.001Z [payment-service] ERROR webhook_queue_depth=1247 — queue overflow imminent (max=2000)\n2026-05-13T15:16:15.889Z [otel-collector] {\"level\":\"error\",\"ts\":\"2026-05-13T15:16:15.889Z\",\"msg\":\"Trace pipeline stalled\",\"pending_batches\":88,\"cause\":\"exporter offline\"}\n2026-05-13T15:16:16.001Z [payment-service] ERROR request_id=req-007a status=503 path=/webhooks/stripe error=\"circuit breaker OPEN\"\n2026-05-13T15:16:18.334Z [payment-service] ERROR retry_storm_detected active_retries=147 duplicate_risk=HIGH\n2026-05-13T15:16:20.001Z [payment-service] ERROR webhook_queue_depth=1589 workers=4 idle_workers=0\n2026-05-13T15:16:22.551Z [postgres] level=warn msg=\"long running transaction\" pid=4421 duration_ms=8912 query=\"INSERT INTO webhook_events ...\"\n2026-05-13T15:16:23.112Z [payment-service] ERROR failed to persist webhook event charge_id=ch_3P8aAhSv9xyz7 error=\"deadlock detected\" — at app/models/webhook_event.rb:88\n2026-05-13T15:16:23.115Z [payment-service]   app/models/webhook_event.rb:88:in `save!'\n2026-05-13T15:16:23.117Z [payment-service]   app/controllers/webhooks_controller.rb:44:in `process_event'\n2026-05-13T15:16:25.003Z [payment-service] ERROR webhook_queue_depth=1821 workers=4 idle_workers=0\n2026-05-13T15:16:26.001Z [payment-service] FATAL retry_count=847 in last 60s — PAYMENT RETRY STORM IN PROGRESS\n2026-05-13T15:16:26.445Z [otel-collector] {\"level\":\"error\",\"ts\":\"2026-05-13T15:16:26.445Z\",\"msg\":\"Health check failed\",\"component\":\"otlphttp-exporter\",\"target\":\"https://stripe-telemetry.internal:9411\",\"status\":\"unreachable\"}\n2026-05-13T15:16:27.001Z [payment-service] FATAL webhook_queue_depth=1994 — QUEUE NEAR CAPACITY, shedding load\n2026-05-13T15:16:27.445Z [payment-service] ERROR dropping webhook event charge_id=ch_3P8aAiTw0aab8 reason=\"queue_full\"\n2026-05-13T15:16:28.001Z [payment-service] ERROR dropping webhook event charge_id=ch_3P8aAjUx1bbc9 reason=\"queue_full\"\n2026-05-13T15:16:29.005Z [payment-service] FATAL circuit_breaker=stripe-webhook-processor state=OPEN — upstream stripe-telemetry.internal:9411 unreachable\n2026-05-13T15:16:30.001Z [payment-service] ERROR p99_latency_ms=31420 p50_latency_ms=10220 active_requests=412\n2026-05-13T15:16:31.223Z [otel-collector] {\"level\":\"error\",\"ts\":\"2026-05-13T15:16:31.223Z\",\"msg\":\"OTel pipeline degraded\",\"spans_dropped_total\":4821,\"traces_lost\":true}\n2026-05-13T15:16:32.001Z [payment-service] FATAL webhook_processing_halted — circuit breaker prevents all Stripe webhook acknowledgement\n2026-05-13T15:16:33.441Z [payment-service] ERROR active_retry_storm=true duplicate_charges_at_risk=847 — escalating to on-call\n2026-05-13T15:16:34.001Z [postgres] level=error msg=\"connection pool exhausted\" max_connections=50 active=50 waiting=38\n2026-05-13T15:16:35.112Z [payment-service] FATAL postgres connection pool exhausted — unable to persist webhook state\n2026-05-13T15:16:35.115Z [payment-service]   app/services/payment_persistence.rb:32:in `acquire_connection'\n2026-05-13T15:16:35.117Z [payment-service]   app/services/payment_persistence.rb:61:in `save_webhook_event'\n2026-05-13T15:16:36.001Z [payment-service] FATAL system entering degraded mode — webhook ingestion suspended\n2026-05-13T15:16:37.002Z [otel-collector] {\"level\":\"fatal\",\"ts\":\"2026-05-13T15:16:37.002Z\",\"msg\":\"Collector unhealthy\",\"reason\":\"all exporters failed\",\"uptime_s\":3215}\n2026-05-13T15:16:38.334Z [payment-service] FATAL p99_latency_ms=34100 webhook_queue_depth=2000 QUEUE_FULL circuit_breaker=OPEN — CRITICAL SYSTEM STATE",
+  "recent_deploys": [
+    {
+      "sha": "d7df5ef51d88",
+      "timestamp": "2026-04-21T12:05:02Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the bundler-production-dependencies group across 1 directory w",
+      "changed_files": [
+        "Gemfile",
+        "Gemfile.lock"
+      ]
+    },
+    {
+      "sha": "c92f3bc755e8",
+      "timestamp": "2026-04-24T03:26:57Z",
+      "author": "Timur Olzhabayev",
+      "message": "chore(grafana): bump image to 13.0.1 and provision default-email receiver (#3288",
+      "changed_files": [
+        "docker-compose.yml",
+        "grafana/provisioning/alerting/receivers.yaml",
+        "grafana/provisioning/dashboards/payment-service.json"
+      ]
+    },
+    {
+      "sha": "51f1a6bba4e8",
+      "timestamp": "2026-04-24T06:02:13Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Remove tag from the docker logging used via docker compose (#3304)",
+      "changed_files": [
+        "docker-compose.yml",
+        "docker-compose.override.yml"
+      ]
+    },
+    {
+      "sha": "bade4db5c2e0",
+      "timestamp": "2026-04-28T14:14:11Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/payment-service/package.json",
+        "src/payment-service/package-lock.json",
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "dc4785b348ba",
+      "timestamp": "2026-04-30T02:23:16Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump swoosh (#3323)",
+      "changed_files": [
+        "src/email-service/mix.exs",
+        "src/email-service/mix.lock"
+      ]
+    },
+    {
+      "sha": "2b9113d98e20",
+      "timestamp": "2026-04-30T06:51:57Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] execute dependabot every Tuesday 3:00am+ (#3330)",
+      "changed_files": [
+        ".github/dependabot.yml"
+      ]
+    },
+    {
+      "sha": "cf3ba5c857d1",
+      "timestamp": "2026-05-13T15:04:07Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the gradle-production-dependencies group across 2 directories",
+      "changed_files": [
+        "src/otel-collector/build.gradle",
+        "src/otel-collector/gradle/wrapper/gradle-wrapper.properties",
+        "src/stripe-telemetry-exporter/build.gradle",
+        "src/stripe-telemetry-exporter/gradle/wrapper/gradle-wrapper.properties"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "The OTel collector's OTLP HTTP exporter targeting the Stripe telemetry endpoint (https://stripe-telemetry.internal:9411) became unreachable shortly after the deploy of cf3ba5c857d1 at 2026-05-13T15:04:07Z, which bumped Gradle production dependencies for both the otel-collector and stripe-telemetry-exporter components. The dependency bump introduced an incompatible change in the stripe-telemetry-exporter's gRPC/HTTP client library, causing the exporter process to crash and making stripe-telemetry.internal:9411 refuse connections. With the OTel pipeline stalled, the payment-service's Stripe webhook processor lost its telemetry-backed acknowledgement path, causing webhook round-trips to time out at 10s. This triggered the circuit breaker (OPEN at 15:16:08Z), which caused Stripe to re-deliver unacknowledged webhooks, generating a retry storm of 847 duplicate charge attempts within 60 seconds.",
+  "ground_truth_remediation": "1. Immediately roll back the stripe-telemetry-exporter and otel-collector to the pre-cf3ba5c857d1 Gradle dependency versions to restore the OTLP exporter and bring stripe-telemetry.internal:9411 back online. 2. Once the OTel pipeline recovers, reset the circuit breaker in payment-service to allow webhook processing to resume. 3. Drain the webhook retry queue by temporarily increasing worker concurrency and enabling Stripe's idempotency-key deduplication to prevent duplicate charges. 4. Audit the postgres connection pool exhaustion and release held connections before re-enabling full webhook ingestion. Total estimated remediation time: 45–90 minutes.",
+  "red_herring": null
+}

@@ -1,0 +1,88 @@
+{
+  "id": "syn-048",
+  "subset": "synthetic",
+  "category": "resource_exhaustion",
+  "affected_service": "frontend",
+  "severity": "high",
+  "alert_text": "ALERT: frontend pod memory usage > 90% (2.7GB / 3GB limit) and file descriptor count approaching OS limit (61440 / 65536). P95 WebSocket latency > 8s. Pod restart imminent.",
+  "log_window": "2026-05-05T08:52:11.034Z [frontend] INFO  server started on :3000, pid=1\n2026-05-05T08:52:11.201Z [frontend] INFO  websocket manager initialized, idleTimeout=90s, maxConns=5000\n2026-05-05T08:52:11.345Z [frontend] DEBUG ws_pool: initial pool size=0\n2026-05-05T08:53:02.112Z [frontend] INFO  {\"level\":\"info\",\"msg\":\"user connected\",\"connId\":\"ws-00041\",\"userId\":\"u-8821\",\"ts\":\"2026-05-05T08:53:02Z\"}\n2026-05-05T08:53:14.554Z [frontend] INFO  {\"level\":\"info\",\"msg\":\"user connected\",\"connId\":\"ws-00042\",\"userId\":\"u-9134\",\"ts\":\"2026-05-05T08:53:14Z\"}\n2026-05-05T08:54:00.001Z [nginx] INFO  upstream=frontend status=200 rt=0.012 req=\"GET /healthz\"\n2026-05-05T08:55:31.209Z [frontend] DEBUG ws_pool: active_conns=158 idle_conns=12\n2026-05-05T08:56:00.001Z [nginx] INFO  upstream=frontend status=200 rt=0.013 req=\"GET /healthz\"\n2026-05-05T08:57:45.882Z [frontend] INFO  {\"level\":\"info\",\"msg\":\"user connected\",\"connId\":\"ws-00311\",\"userId\":\"u-2047\",\"ts\":\"2026-05-05T08:57:45Z\"}\n2026-05-05T08:58:00.001Z [nginx] INFO  upstream=frontend status=200 rt=0.015 req=\"GET /healthz\"\n2026-05-05T08:58:55.100Z [frontend] DEBUG ws_pool: active_conns=402 idle_conns=87\n2026-05-05T08:59:12.334Z [frontend] WARN  ws_pool: idle connection threshold exceeded idle_conns=87 threshold=80\n2026-05-05T08:59:12.341Z [frontend] WARN  ws_pool: pruner invocation skipped — pruner goroutine not scheduled (idleTimeout check disabled after refactor)\n2026-05-05T08:59:30.001Z [nginx] INFO  upstream=frontend status=200 rt=0.019 req=\"GET /healthz\"\n2026-05-05T09:00:00.512Z [frontend] INFO  {\"level\":\"info\",\"msg\":\"gc_stats\",\"heap_alloc_mb\":312,\"heap_sys_mb\":480,\"num_gc\":14,\"ts\":\"2026-05-05T09:00:00Z\"}\n2026-05-05T09:00:31.772Z [frontend] DEBUG ws_pool: active_conns=641 idle_conns=203\n2026-05-05T09:00:31.780Z [frontend] WARN  ws_pool: idle connection threshold exceeded idle_conns=203 threshold=80\n2026-05-05T09:00:31.784Z [frontend] WARN  ws_pool: pruner invocation skipped — pruner goroutine not scheduled (idleTimeout check disabled after refactor)\n2026-05-05T09:01:04.991Z [frontend] WARN  memory pressure rising heap_alloc_mb=489 gc_pause_ms=18\n2026-05-05T09:01:30.001Z [nginx] INFO  upstream=frontend status=200 rt=0.031 req=\"GET /healthz\"\n2026-05-05T09:02:00.017Z [frontend] INFO  {\"level\":\"info\",\"msg\":\"gc_stats\",\"heap_alloc_mb\":621,\"heap_sys_mb\":810,\"num_gc\":29,\"ts\":\"2026-05-05T09:02:00Z\"}\n2026-05-05T09:02:14.558Z [frontend] DEBUG ws_pool: active_conns=914 idle_conns=488\n2026-05-05T09:02:14.566Z [frontend] WARN  ws_pool: idle connection threshold exceeded idle_conns=488 threshold=80\n2026-05-05T09:02:14.570Z [frontend] WARN  ws_pool: pruner invocation skipped — pruner goroutine not scheduled (idleTimeout check disabled after refactor)\n2026-05-05T09:02:45.221Z [frontend] WARN  fd_usage: open_fds=12480 limit=65536\n2026-05-05T09:03:00.001Z [nginx] INFO  upstream=frontend status=200 rt=0.058 req=\"GET /healthz\"\n2026-05-05T09:03:17.889Z [frontend] ERROR ws_pool: failed to write heartbeat connId=ws-00041 err=\"write: broken pipe\"\n2026-05-05T09:03:17.902Z [frontend] WARN  stale connection detected but not reclaimed connId=ws-00041 idle_since=\"2026-05-05T08:57:30Z\"\n2026-05-05T09:03:30.443Z [frontend] WARN  memory pressure rising heap_alloc_mb=958 gc_pause_ms=44\n2026-05-05T09:04:00.102Z [frontend] INFO  {\"level\":\"info\",\"msg\":\"gc_stats\",\"heap_alloc_mb\":1102,\"heap_sys_mb\":1390,\"num_gc\":51,\"ts\":\"2026-05-05T09:04:00Z\"}\n2026-05-05T09:04:22.671Z [frontend] DEBUG ws_pool: active_conns=1287 idle_conns=834\n2026-05-05T09:04:22.678Z [frontend] WARN  ws_pool: idle connection threshold exceeded idle_conns=834 threshold=80\n2026-05-05T09:04:22.681Z [frontend] WARN  ws_pool: pruner invocation skipped — pruner goroutine not scheduled (idleTimeout check disabled after refactor)\n2026-05-05T09:04:44.009Z [frontend] WARN  fd_usage: open_fds=28940 limit=65536\n2026-05-05T09:05:00.001Z [nginx] INFO  upstream=frontend status=200 rt=0.134 req=\"GET /healthz\"\n2026-05-05T09:05:12.334Z [frontend] ERROR ws_pool: failed to write heartbeat connId=ws-00311 err=\"write: broken pipe\"\n2026-05-05T09:05:12.349Z [frontend] WARN  stale connection detected but not reclaimed connId=ws-00311 idle_since=\"2026-05-05T09:00:11Z\"\n2026-05-05T09:05:33.789Z [frontend] WARN  memory pressure rising heap_alloc_mb=1489 gc_pause_ms=91\n2026-05-05T09:05:51.003Z [frontend] ERROR GC overhead limit: pause=112ms heap_alloc_mb=1620 next_gc_mb=1800\n2026-05-05T09:06:00.009Z [frontend] INFO  {\"level\":\"info\",\"msg\":\"gc_stats\",\"heap_alloc_mb\":1744,\"heap_sys_mb\":2100,\"num_gc\":88,\"ts\":\"2026-05-05T09:06:00Z\"}\n2026-05-05T09:06:08.229Z [frontend] DEBUG ws_pool: active_conns=1821 idle_conns=1340\n2026-05-05T09:06:08.237Z [frontend] WARN  ws_pool: idle connection threshold exceeded idle_conns=1340 threshold=80\n2026-05-05T09:06:08.241Z [frontend] WARN  ws_pool: pruner invocation skipped — pruner goroutine not scheduled (idleTimeout check disabled after refactor)\n2026-05-05T09:06:30.001Z [nginx] WARN   upstream=frontend status=200 rt=0.389 req=\"GET /healthz\" upstream_response_time=0.387\n2026-05-05T09:06:41.552Z [frontend] WARN  fd_usage: open_fds=44118 limit=65536\n2026-05-05T09:06:55.883Z [frontend] ERROR request handler timeout path=\"/api/cart\" latency_ms=8214 connId=ws-01044\n2026-05-05T09:07:00.441Z [frontend] ERROR request handler timeout path=\"/api/products\" latency_ms=9031 connId=ws-01187\n2026-05-05T09:07:04.881Z [frontend] ERROR GC overhead limit: pause=198ms heap_alloc_mb=2201 next_gc_mb=2400\n2026-05-05T09:07:14.003Z [frontend] INFO  {\"level\":\"info\",\"msg\":\"gc_stats\",\"heap_alloc_mb\":2344,\"heap_sys_mb\":2690,\"num_gc\":134,\"ts\":\"2026-05-05T09:07:14Z\"}\n2026-05-05T09:07:21.112Z [frontend] DEBUG ws_pool: active_conns=2199 idle_conns=1788\n2026-05-05T09:07:21.119Z [frontend] WARN  ws_pool: idle connection threshold exceeded idle_conns=1788 threshold=80\n2026-05-05T09:07:21.122Z [frontend] WARN  ws_pool: pruner invocation skipped — pruner goroutine not scheduled (idleTimeout check disabled after refactor)\n2026-05-05T09:07:30.001Z [nginx] ERROR  upstream=frontend status=502 rt=10.002 req=\"GET /\" upstream_response_time=10.001\n2026-05-05T09:07:30.881Z [nginx] ERROR  upstream=frontend status=502 rt=10.003 req=\"POST /api/cart\" upstream_response_time=10.002\n2026-05-05T09:07:33.009Z [frontend] WARN  fd_usage: open_fds=58830 limit=65536\n2026-05-05T09:07:44.771Z [frontend] ERROR fd_usage: approaching OS limit open_fds=61440 limit=65536 headroom=4096\n2026-05-05T09:07:55.119Z [frontend] ERROR failed to accept new connection err=\"accept: too many open files\"\n2026-05-05T09:07:55.231Z [frontend] ERROR failed to accept new connection err=\"accept: too many open files\"\n2026-05-05T09:07:55.448Z [frontend] ERROR failed to accept new connection err=\"accept: too many open files\"\n2026-05-05T09:08:00.001Z [nginx] ERROR  upstream=frontend status=502 rt=10.001 req=\"GET /healthz\" upstream_response_time=10.001\n2026-05-05T09:08:01.334Z [frontend] FATAL out-of-memory kill signal received by container runtime\n  goroutine 1 [running]:\n  runtime.throw(0x1a3b210, 0xe)\n  /usr/local/go/src/runtime/panic.go:1188\n2026-05-05T09:08:01.340Z [frontend] FATAL heap_alloc_mb=2731 rss_mb=2890 oom_score=998 container_limit_mb=3072\n2026-05-05T09:08:01.902Z [k8s-events] WARN  Pod frontend-6d8c9b7f4-xpk9r OOMKilled reason=OOMKilled lastState=running\n2026-05-05T09:08:02.101Z [k8s-events] INFO  Pod frontend-6d8c9b7f4-xpk9r restarting (restartCount=1)\n2026-05-05T09:08:04.331Z [nginx] WARN   upstream=frontend status=503 rt=0.001 req=\"GET /healthz\" (pod restarting)\n2026-05-05T09:08:18.009Z [frontend] INFO  server started on :3000, pid=1 (after restart)\n2026-05-05T09:08:18.221Z [frontend] INFO  websocket manager initialized, idleTimeout=90s, maxConns=5000\n2026-05-05T09:08:18.225Z [frontend] WARN  ws_pool: pruner goroutine still not registered — idle connections will not be reclaimed (idleTimeout check disabled after refactor)\n2026-05-05T09:08:19.001Z [nginx] INFO  upstream=frontend status=200 rt=0.011 req=\"GET /healthz\"\n2026-05-05T09:08:31.772Z [frontend] DEBUG ws_pool: active_conns=44 idle_conns=0\n2026-05-05T09:09:00.001Z [nginx] INFO  upstream=frontend status=200 rt=0.012 req=\"GET /healthz\"\n2026-05-05T09:09:11.334Z [frontend] WARN  ws_pool: idle connection threshold exceeded idle_conns=9 threshold=80\n2026-05-05T09:09:11.340Z [frontend] WARN  ws_pool: pruner invocation skipped — pruner goroutine not scheduled (idleTimeout check disabled after refactor)\n2026-05-05T09:09:44.009Z [frontend] INFO  {\"level\":\"info\",\"msg\":\"gc_stats\",\"heap_alloc_mb\":98,\"heap_sys_mb\":160,\"num_gc\":2,\"ts\":\"2026-05-05T09:09:44Z\"}",
+  "recent_deploys": [
+    {
+      "sha": "0c5e175889c2",
+      "timestamp": "2026-04-16T13:20:06Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump next (#3269)",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "d8fd7bba8052",
+      "timestamp": "2026-04-23T08:11:22Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 1 update (#3300)",
+      "changed_files": [
+        "src/cartservice/cartservice.csproj",
+        "src/cartservice/packages.lock.json"
+      ]
+    },
+    {
+      "sha": "75dc5aa9b428",
+      "timestamp": "2026-04-23T15:05:28Z",
+      "author": "Ayooluwa Isaiah",
+      "message": "Fix charge span leak in the payment service (#3276)",
+      "changed_files": [
+        "src/paymentservice/charge.js",
+        "src/paymentservice/tracer.js"
+      ]
+    },
+    {
+      "sha": "1d475a67d631",
+      "timestamp": "2026-04-24T06:49:14Z",
+      "author": "Juliano Costa",
+      "message": "chore: add retry configuration parameters to lychee (#3306)",
+      "changed_files": [
+        ".lychee.toml",
+        ".github/workflows/links.yml"
+      ]
+    },
+    {
+      "sha": "0e6ca5152176",
+      "timestamp": "2026-04-30T03:12:04Z",
+      "author": "Roman Dmytrenko",
+      "message": "fix(frontend): handle corrupted session data in localStorage (#3313)",
+      "changed_files": [
+        "src/frontend/utils/session.ts",
+        "src/frontend/hooks/useSession.ts",
+        "src/frontend/lib/websocket/wsManager.ts",
+        "src/frontend/lib/websocket/wsPool.ts"
+      ]
+    },
+    {
+      "sha": "bb0e91424e8a",
+      "timestamp": "2026-05-05T07:38:47Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 4 updates (#3341)",
+      "changed_files": [
+        "src/cartservice/cartservice.csproj",
+        "src/cartservice/packages.lock.json"
+      ]
+    },
+    {
+      "sha": "997d9970c437",
+      "timestamp": "2026-05-05T08:45:37Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the go-production-dependencies group across 2 directories with",
+      "changed_files": [
+        "src/productcatalogservice/go.mod",
+        "src/productcatalogservice/go.sum",
+        "src/recommendationservice/go.mod",
+        "src/recommendationservice/go.sum"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha 0e6ca5152176 (\"fix(frontend): handle corrupted session data in localStorage\") refactored wsPool.ts and wsManager.ts to fix a session corruption bug. During refactoring, the call to register the idle-connection pruner goroutine/timer was accidentally removed from the wsPool initialization path. As a result, WebSocket connections that have exceeded the 90-second idleTimeout are never reclaimed: the pool accumulates stale connections indefinitely, each holding a file descriptor and a heap-allocated connection object. Under normal traffic load this causes the frontend pod to exhaust both file descriptors (~65536 OS limit) and memory (3GB container limit) within ~15 minutes, triggering OOMKill.",
+  "ground_truth_remediation": "1. Immediately restart the affected frontend pod to restore service (already done automatically by OOMKill restart, but connections will re-accumulate). 2. Deploy a hotfix to src/frontend/lib/websocket/wsPool.ts that re-registers the pruner: re-add the `scheduleIdlePruner(idleTimeout)` call inside the `initPool()` function, which was present before sha 0e6ca5152176 but dropped during the refactor. 3. Optionally lower the idleTimeout from 90s to 30s and the max connection limit as a safety measure until the fix is validated. 4. Verify the pruner is active post-deploy by confirming WARN logs about idle threshold are followed by pruning actions rather than 'pruner invocation skipped' messages.",
+  "red_herring": null
+}

@@ -52,9 +52,25 @@ test-unit:  ## Fast unit tests only (no schema, no integration)
 
 .PHONY: test-all
 test-all:  ## Full test suite including integration (requires docker compose up)
-	uv run pytest -v
+	uv run pytest tests/unit/ tests/integration/ -v
+
+.PHONY: test-integration
+test-integration:  ## Integration tests only — no coverage gate (requires make up && make index-corpus)
+	uv run pytest tests/integration/ -v --no-cov
 
 # ─── Eval ────────────────────────────────────────────────────────────────────
+
+# ─── Corpus generation ───────────────────────────────────────────────────────
+
+# ─── Retrieval ───────────────────────────────────────────────────────────────
+
+.PHONY: index-corpus
+index-corpus:  ## Embed and index all incidents into pgvector (requires make up)
+	$(PYTHON) -m sentryrca.retrieval.indexer --data-dir data/incidents
+
+.PHONY: retrieve
+retrieve:  ## Interactive retrieval CLI — usage: make retrieve QUERY="checkout latency spike"
+	$(PYTHON) -m sentryrca.retrieval "$(QUERY)"
 
 # ─── Corpus generation ───────────────────────────────────────────────────────
 
@@ -76,16 +92,20 @@ generate-adversarial:  ## Generate 9 adversarial incidents
 # ─── Eval ────────────────────────────────────────────────────────────────────
 
 .PHONY: eval
-eval:  ## Full 70-incident eval benchmark (week 3)
-	@echo "eval harness not implemented yet — coming in week 3"; exit 0
+eval:  ## Full 70-incident eval benchmark
+	$(PYTHON) -m sentryrca.eval --data-dir data/incidents
 
 .PHONY: eval-fast
-eval-fast:  ## Fast 10-incident CI subset (week 3)
-	@echo "eval-fast harness not implemented yet — coming in week 3"; exit 0
+eval-fast:  ## Fast 10-incident CI subset + gate check against baseline
+	$(PYTHON) -m sentryrca.eval --fast --gate --data-dir data/incidents
+
+.PHONY: eval-update-baseline
+eval-update-baseline:  ## Overwrite baseline with current eval results (run after a confirmed improvement)
+	$(PYTHON) -m sentryrca.eval --data-dir data/incidents --output eval/baselines/main.json
 
 .PHONY: eval-cost-routing
-eval-cost-routing:  ## Sonnet vs Haiku vs hybrid cost comparison (week 3)
-	@echo "cost-routing eval not implemented yet — coming in week 3"; exit 0
+eval-cost-routing:  ## Sonnet vs Haiku vs hybrid cost comparison
+	$(PYTHON) -m sentryrca.eval.cost_routing_cli --data-dir data/incidents
 
 # ─── App ─────────────────────────────────────────────────────────────────────
 
@@ -99,7 +119,7 @@ ui:  ## Start Streamlit demo UI
 
 .PHONY: trace
 trace:  ## Open Langfuse UI in browser
-	open http://localhost:3000
+	open http://localhost:3001
 
 # ─── Help ────────────────────────────────────────────────────────────────────
 

@@ -1,0 +1,88 @@
+{
+  "id": "syn-021",
+  "subset": "synthetic",
+  "category": "dependency_outage",
+  "affected_service": "checkout-service",
+  "severity": "high",
+  "alert_text": "ALERT: checkout-service p99 latency > 8000ms and error rate > 15% for 5 minutes. Multiple checkout failures reported. Upstream dependency currency-service returning 503/timeout.",
+  "log_window": "2026-05-13T11:48:55.012Z INFO  [checkout-service] Starting order processing pipeline version=2.4.1\n2026-05-13T11:49:01.234Z INFO  [checkout-service] POST /checkout order_id=ord-88821 user_id=usr-4421 cart_items=3\n2026-05-13T11:49:01.301Z DEBUG [checkout-service] Calling currency-service for FX conversion src=USD dst=EUR amount=142.50\n2026-05-13T11:49:01.892Z INFO  [currency-service] GET /convert?from=USD&to=EUR&amount=142.50 status=200 latency=590ms\n2026-05-13T11:49:02.101Z INFO  [checkout-service] FX rate acquired USD->EUR rate=0.9213 order_id=ord-88821\n2026-05-13T11:49:02.450Z INFO  [checkout-service] Order ord-88821 completed successfully total_eur=131.29\n2026-05-13T11:49:08.011Z INFO  [checkout-service] POST /checkout order_id=ord-88822 user_id=usr-5530 cart_items=1\n2026-05-13T11:49:08.099Z DEBUG [checkout-service] Calling currency-service for FX conversion src=GBP dst=USD amount=89.00\n2026-05-13T11:49:09.450Z INFO  [currency-service] GET /convert?from=GBP&to=USD&amount=89.00 status=200 latency=1350ms\n2026-05-13T11:49:09.700Z WARN  [currency-service] Upstream forex API response slow provider=fxrates-api latency_ms=1290\n2026-05-13T11:49:09.812Z INFO  [checkout-service] FX rate acquired GBP->USD rate=1.2731 order_id=ord-88822\n2026-05-13T11:49:10.100Z INFO  [checkout-service] Order ord-88822 completed successfully total_usd=113.31\n2026-05-13T11:49:15.222Z INFO  [checkout-service] POST /checkout order_id=ord-88823 user_id=usr-6612 cart_items=5\n2026-05-13T11:49:15.310Z DEBUG [checkout-service] Calling currency-service for FX conversion src=JPY dst=USD amount=15000\n2026-05-13T11:49:17.881Z WARN  [currency-service] Upstream forex API slow response provider=fxrates-api latency_ms=2570 threshold_ms=2000\n2026-05-13T11:49:18.100Z WARN  [checkout-service] currency-service call slow order_id=ord-88823 elapsed_ms=2790\n2026-05-13T11:49:18.210Z INFO  [checkout-service] FX rate acquired JPY->USD rate=0.00671 order_id=ord-88823\n2026-05-13T11:49:18.500Z INFO  [checkout-service] Order ord-88823 completed successfully total_usd=100.65\n2026-05-13T11:49:22.001Z WARN  [currency-service] fxrates-api rate limit warning X-RateLimit-Remaining=12 X-RateLimit-Reset=1747136400\n2026-05-13T11:49:25.450Z INFO  [checkout-service] POST /checkout order_id=ord-88824 user_id=usr-7741 cart_items=2\n2026-05-13T11:49:25.531Z DEBUG [checkout-service] Calling currency-service for FX conversion src=EUR dst=USD amount=210.00\n2026-05-13T11:49:28.901Z ERROR [currency-service] fxrates-api returned HTTP 429 Too Many Requests provider=fxrates-api retry=1\n2026-05-13T11:49:30.002Z ERROR [currency-service] fxrates-api returned HTTP 429 Too Many Requests provider=fxrates-api retry=2\n2026-05-13T11:49:31.103Z ERROR [currency-service] fxrates-api returned HTTP 429 Too Many Requests provider=fxrates-api retry=3 max_retries=3\n2026-05-13T11:49:31.210Z ERROR [currency-service] All retries exhausted for forex lookup from=EUR to=USD\n2026-05-13T11:49:31.310Z ERROR [currency-service] Returning 503 to caller: upstream forex API rate-limited\n2026-05-13T11:49:31.400Z ERROR [checkout-service] currency-service returned 503 order_id=ord-88824 elapsed_ms=5869\n2026-05-13T11:49:31.500Z ERROR [checkout-service] Failed to complete FX conversion order_id=ord-88824 error=currency-service:503-Service-Unavailable\n2026-05-13T11:49:31.512Z WARN  [checkout-service] Circuit breaker state=HALF_OPEN failures=1 threshold=3\n2026-05-13T11:49:35.100Z INFO  [checkout-service] POST /checkout order_id=ord-88825 user_id=usr-9901 cart_items=4\n2026-05-13T11:49:35.188Z DEBUG [checkout-service] Calling currency-service for FX conversion src=CAD dst=USD amount=320.00\n2026-05-13T11:49:38.441Z ERROR [currency-service] fxrates-api returned HTTP 429 Too Many Requests provider=fxrates-api retry=1\n2026-05-13T11:49:39.541Z ERROR [currency-service] fxrates-api returned HTTP 429 Too Many Requests provider=fxrates-api retry=2\n2026-05-13T11:49:40.642Z ERROR [currency-service] fxrates-api returned HTTP 429 Too Many Requests provider=fxrates-api retry=3 max_retries=3\n2026-05-13T11:49:40.750Z ERROR [currency-service] Returning 503 to caller: upstream forex API rate-limited\n2026-05-13T11:49:40.860Z ERROR [checkout-service] currency-service returned 503 order_id=ord-88825 elapsed_ms=5672\n2026-05-13T11:49:40.871Z ERROR [checkout-service] Failed to complete FX conversion order_id=ord-88825 error=currency-service:503-Service-Unavailable\n2026-05-13T11:49:40.880Z WARN  [checkout-service] Circuit breaker state=HALF_OPEN failures=2 threshold=3\n2026-05-13T11:49:44.200Z INFO  [checkout-service] POST /checkout order_id=ord-88826 user_id=usr-1123 cart_items=1\n2026-05-13T11:49:44.288Z DEBUG [checkout-service] Calling currency-service for FX conversion src=AUD dst=USD amount=75.00\n2026-05-13T11:49:47.501Z ERROR [currency-service] fxrates-api returned HTTP 429 Too Many Requests provider=fxrates-api retry=1\n2026-05-13T11:49:48.601Z ERROR [currency-service] fxrates-api returned HTTP 429 Too Many Requests provider=fxrates-api retry=2\n2026-05-13T11:49:49.702Z ERROR [currency-service] fxrates-api returned HTTP 429 Too Many Requests provider=fxrates-api retry=3 max_retries=3\n2026-05-13T11:49:49.810Z ERROR [currency-service] Returning 503 to caller: upstream forex API rate-limited\n2026-05-13T11:49:49.920Z ERROR [checkout-service] currency-service returned 503 order_id=ord-88826 elapsed_ms=5632\n2026-05-13T11:49:49.931Z ERROR [checkout-service] Failed to complete FX conversion order_id=ord-88826 error=currency-service:503-Service-Unavailable\n2026-05-13T11:49:49.942Z ERROR [checkout-service] Circuit breaker OPEN after 3 consecutive failures dependency=currency-service\n2026-05-13T11:49:49.950Z ERROR [checkout-service] Circuit breaker state=OPEN failures=3 threshold=3 retry_after=60s\n2026-05-13T11:49:52.100Z INFO  [checkout-service] POST /checkout order_id=ord-88827 user_id=usr-3345 cart_items=2\n2026-05-13T11:49:52.188Z ERROR [checkout-service] Circuit breaker OPEN skipping currency-service call dependency=currency-service order_id=ord-88827\n2026-05-13T11:49:52.190Z ERROR [checkout-service] Cannot complete checkout: FX conversion unavailable order_id=ord-88827\n2026-05-13T11:49:52.200Z ERROR [checkout-service] Returning HTTP 503 to client order_id=ord-88827\n2026-05-13T11:49:55.300Z INFO  [checkout-service] POST /checkout order_id=ord-88828 user_id=usr-4456 cart_items=3\n2026-05-13T11:49:55.388Z ERROR [checkout-service] Circuit breaker OPEN skipping currency-service call dependency=currency-service order_id=ord-88828\n2026-05-13T11:49:55.390Z ERROR [checkout-service] Cannot complete checkout: FX conversion unavailable order_id=ord-88828\n2026-05-13T11:49:55.401Z ERROR [checkout-service] Returning HTTP 503 to client order_id=ord-88828\n2026-05-13T11:49:58.010Z INFO  [otel-collector] level=info msg=spans-received service=checkout-service span_count=42 dropped=0\n2026-05-13T11:49:58.800Z INFO  [checkout-service] POST /checkout order_id=ord-88829 user_id=usr-5567 cart_items=6\n2026-05-13T11:49:58.889Z ERROR [checkout-service] Circuit breaker OPEN skipping currency-service call dependency=currency-service order_id=ord-88829\n2026-05-13T11:49:58.891Z ERROR [checkout-service] Cannot complete checkout: FX conversion unavailable order_id=ord-88829\n2026-05-13T11:49:58.901Z ERROR [checkout-service] Returning HTTP 503 to client order_id=ord-88829\n2026-05-13T11:50:01.000Z WARN  [currency-service] fxrates-api rate limit in effect X-RateLimit-Remaining=0 X-RateLimit-Reset=1747136400 reset_in_seconds=312\n2026-05-13T11:50:01.100Z ERROR [currency-service] Proactive health check failed: fxrates-api rate-limited refusing all FX requests until reset\n2026-05-13T11:50:05.500Z WARN  [checkout-service] Elevated error rate detected error_rate=0.72 window=60s threshold=0.10\n2026-05-13T11:50:05.600Z ERROR [checkout-service] SLA breach: checkout success rate below 90% current_rate=0.28 sla=0.95\n2026-05-13T11:50:10.200Z INFO  [otel-collector] level=warn msg=high-error-span-rate service=checkout-service error_span_pct=71.4 threshold_pct=10.0\n2026-05-13T11:50:15.000Z INFO  [checkout-service] POST /checkout order_id=ord-88830 user_id=usr-6678 cart_items=1\n2026-05-13T11:50:15.088Z ERROR [checkout-service] Circuit breaker OPEN skipping currency-service call dependency=currency-service order_id=ord-88830\n2026-05-13T11:50:15.090Z ERROR [checkout-service] Cannot complete checkout: FX conversion unavailable order_id=ord-88830\n2026-05-13T11:50:15.100Z ERROR [checkout-service] Returning HTTP 503 to client order_id=ord-88830\n2026-05-13T11:50:18.400Z ERROR [currency-service] Health endpoint returning degraded: upstream_forex=rate_limited provider=fxrates-api\n  at ForexClient.checkHealth(forex_client.go:214)\n  at HealthHandler.handle(health.go:88)\n2026-05-13T11:50:20.000Z WARN  [checkout-service] currency-service health check failed status=degraded dependency=currency-service\n2026-05-13T11:50:20.100Z WARN  [checkout-service] Dependency health: currency-service=DEGRADED payment-service=OK inventory-service=OK\n2026-05-13T11:50:25.000Z ERROR [currency-service] Cannot serve FX request: fxrates-api quota exhausted next reset at 2026-05-13T11:55:20Z\n  at ForexClient.fetchRate(forex_client.go:178)\n  at CurrencyHandler.convert(handler.go:95)\n2026-05-13T11:50:30.300Z INFO  [checkout-service] POST /checkout order_id=ord-88831 user_id=usr-7789 cart_items=2\n2026-05-13T11:50:30.388Z ERROR [checkout-service] Circuit breaker OPEN skipping currency-service call dependency=currency-service order_id=ord-88831\n2026-05-13T11:50:30.390Z ERROR [checkout-service] Cannot complete checkout: FX conversion unavailable order_id=ord-88831\n2026-05-13T11:50:30.401Z ERROR [checkout-service] Returning HTTP 503 to client order_id=ord-88831\n2026-05-13T11:50:35.700Z WARN  [otel-collector] level=warn msg=downstream-service-degraded service=currency-service health=DEGRADED caller=health_check.go:112\n2026-05-13T11:50:40.000Z ERROR [checkout-service] PagerDuty alert triggered: checkout failure rate 72% exceeds critical threshold alert_id=pd-92281\n2026-05-13T11:50:45.100Z INFO  [currency-service] Attempting fallback to cached rates cache_age_seconds=420 provider=local_cache\n2026-05-13T11:50:45.200Z WARN  [currency-service] Cached rates are stale: age=420s max_allowed_age=300s rejecting stale cache fallback\n2026-05-13T11:50:50.500Z INFO  [checkout-service] POST /checkout order_id=ord-88832 user_id=usr-8890 cart_items=4\n2026-05-13T11:50:50.588Z ERROR [checkout-service] Circuit breaker OPEN skipping currency-service call dependency=currency-service order_id=ord-88832\n2026-05-13T11:50:50.590Z ERROR [checkout-service] Cannot complete checkout: FX conversion unavailable order_id=ord-88832\n2026-05-13T11:50:50.601Z ERROR [checkout-service] Returning HTTP 503 to client order_id=ord-88832\n2026-05-13T11:51:00.000Z WARN  [currency-service] fxrates-api quota reset in approximately 260 seconds X-RateLimit-Reset=1747136400\n2026-05-13T11:51:05.200Z ERROR [checkout-service] Sustained outage: 18 consecutive checkout failures dependency=currency-service duration_seconds=95\n2026-05-13T11:51:10.000Z INFO  [otel-collector] level=info msg=spans-received service=currency-service span_count=8 error_spans=8 dropped=0",
+  "recent_deploys": [
+    {
+      "sha": "396eaec92110",
+      "timestamp": "2026-04-25T09:36:57Z",
+      "author": "Patrice Chalin",
+      "message": "Enable lychee cache for local checks too (#3315)",
+      "changed_files": [
+        ".github/workflows/links.yml",
+        ".lychee.toml",
+        "scripts/check-links.sh"
+      ]
+    },
+    {
+      "sha": "dc4785b348ba",
+      "timestamp": "2026-04-30T02:23:16Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump swoosh (#3323)",
+      "changed_files": [
+        "src/currency-service/mix.lock",
+        "src/currency-service/mix.exs"
+      ]
+    },
+    {
+      "sha": "997d9970c437",
+      "timestamp": "2026-05-05T08:45:37Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the go-production-dependencies group across 2 directories with",
+      "changed_files": [
+        "src/checkout-service/go.mod",
+        "src/checkout-service/go.sum",
+        "src/currency-service/go.mod",
+        "src/currency-service/go.sum"
+      ]
+    },
+    {
+      "sha": "6302e2c10e48",
+      "timestamp": "2026-05-05T10:28:04Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "fix(deps): resolve Ruby security advisories (#3349)",
+      "changed_files": [
+        "src/checkout-service/Gemfile.lock",
+        "src/checkout-service/Gemfile"
+      ]
+    },
+    {
+      "sha": "05fab63b804f",
+      "timestamp": "2026-05-06T14:43:41Z",
+      "author": "Shenoy Pratik",
+      "message": "fix: collector otelcol.signal scope attribute conflict in logs pipeline (#3321)",
+      "changed_files": [
+        "src/otel-collector/config.yaml",
+        "src/otel-collector/pipelines/logs.yaml"
+      ]
+    },
+    {
+      "sha": "52a8a76cf862",
+      "timestamp": "2026-05-07T07:06:44Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with ",
+      "changed_files": [
+        "src/currency-service/mix.lock",
+        "src/currency-service/mix.exs",
+        "src/currency-service/deps/fxrates_client/mix.exs"
+      ]
+    },
+    {
+      "sha": "94f8a915b080",
+      "timestamp": "2026-05-13T11:48:42Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "The upstream third-party forex API provider (fxrates-api) exhausted the currency-service API rate limit quota. Logs show X-RateLimit-Remaining dropping to 0 at 2026-05-13T11:49:22Z, followed by repeated HTTP 429 responses from fxrates-api. currency-service propagated 503 errors to checkout-service, triggering its circuit breaker to open after 3 consecutive failures at 2026-05-13T11:49:49Z. No recent deploy SHA is directly responsible; the rate limit was hit due to elevated call volume against a fixed quota cap on the fxrates-api subscription tier. The currency-service itself is operationally healthy. The root cause is the external fxrates-api dependency being rate-limited.",
+  "ground_truth_remediation": "1. Immediately: Instruct the currency-service team to relax the stale cache rejection threshold (increase max_allowed_age from 300s to 900s) to allow serving cached FX rates while the quota resets. 2. Wait for the fxrates-api quota reset at approximately 2026-05-13T11:55:20Z or switch to a pre-configured backup forex provider. 3. Once currency-service health endpoint returns OK, manually reset the checkout-service circuit breaker or wait for the 60s retry window to expire. 4. Long-term: upgrade the fxrates-api subscription tier and implement proactive rate-limit throttling in currency-service. Estimated time to restore service: 15-20 minutes.",
+  "red_herring": null
+}

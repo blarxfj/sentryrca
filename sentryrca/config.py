@@ -19,6 +19,13 @@ class Settings(BaseSettings):
     litellm_model_reasoning: str = "claude-sonnet-4-6"
     litellm_model_fast: str = "claude-haiku-4-5-20251001"
 
+    # Retrieval
+    embedding_model: str = "BAAI/bge-small-en-v1.5"
+    reranker_model: str = "BAAI/bge-reranker-base"
+    retrieval_top_k: int = 5
+    retrieval_n_dense: int = 20
+    retrieval_n_fts: int = 20
+
     # Anthropic
     anthropic_api_key: str | None = None
 

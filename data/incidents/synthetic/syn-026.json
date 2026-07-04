@@ -1,0 +1,87 @@
+{
+  "id": "syn-026",
+  "subset": "synthetic",
+  "category": "dependency_outage",
+  "affected_service": "frontend",
+  "severity": "high",
+  "alert_text": "ALERT: frontend p99 latency > 8000ms for 5+ minutes — personalization variant rendering degraded; ad-service timeout rate > 92% (threshold: 5%)",
+  "log_window": "2026-05-06T09:14:02.112Z [frontend] INFO  service=frontend version=2.3.1 env=production startup complete\n2026-05-06T09:14:03.445Z [frontend] INFO  service=frontend route=/ handler=HomePage user_id=anon render_start\n2026-05-06T09:14:03.512Z [frontend] DEBUG service=frontend calling dependency service=ad-service endpoint=/api/v2/personalization variant=B\n2026-05-06T09:14:03.515Z [ad-service-client] DEBUG attempt=1 url=http://ad-service:8080/api/v2/personalization timeout_ms=3000\n2026-05-06T09:14:06.520Z [ad-service-client] WARN  attempt=1 elapsed_ms=3005 result=timeout url=http://ad-service:8080/api/v2/personalization\n2026-05-06T09:14:06.521Z [ad-service-client] DEBUG attempt=2 url=http://ad-service:8080/api/v2/personalization timeout_ms=3000\n2026-05-06T09:14:09.528Z [ad-service-client] WARN  attempt=2 elapsed_ms=3007 result=timeout url=http://ad-service:8080/api/v2/personalization\n2026-05-06T09:14:09.530Z [frontend] WARN  service=frontend personalization_fetch failed after 2 retries, falling back to default ads\n2026-05-06T09:14:09.531Z [frontend] INFO  service=frontend route=/ render_complete latency_ms=6419 variant=default\n2026-05-06T09:14:10.001Z [frontend] INFO  service=frontend route=/product/42 handler=ProductPage user_id=u-88312 render_start\n2026-05-06T09:14:10.033Z [ad-service-client] DEBUG attempt=1 url=http://ad-service:8080/api/v2/personalization timeout_ms=3000\n2026-05-06T09:14:13.039Z [ad-service-client] WARN  attempt=1 elapsed_ms=3006 result=timeout url=http://ad-service:8080/api/v2/personalization\n2026-05-06T09:14:13.040Z [ad-service-client] DEBUG attempt=2 url=http://ad-service:8080/api/v2/personalization timeout_ms=3000\n2026-05-06T09:14:16.048Z [ad-service-client] WARN  attempt=2 elapsed_ms=3008 result=timeout url=http://ad-service:8080/api/v2/personalization\n2026-05-06T09:14:16.049Z [frontend] WARN  service=frontend personalization_fetch failed after 2 retries, falling back to default ads\n2026-05-06T09:14:16.050Z [frontend] INFO  service=frontend route=/product/42 render_complete latency_ms=6049 variant=default\n2026-05-06T09:14:17.300Z [ad-service] {\"level\":\"error\",\"ts\":\"2026-05-06T09:14:17.300Z\",\"msg\":\"personalization worker panic\",\"variant\":\"B\",\"goroutine\":\"worker-3\",\"error\":\"runtime error: index out of range [14] with length 14\"}\n2026-05-06T09:14:17.301Z [ad-service] {\"level\":\"error\",\"ts\":\"2026-05-06T09:14:17.301Z\",\"msg\":\"goroutine stack\",\"trace\":\"goroutine 47 [running]:\\nad-service/internal/personalization.(*VariantEngine).Compute(...)\\n  /src/internal/personalization/engine.go:214\"}\n2026-05-06T09:14:17.303Z [ad-service] {\"level\":\"warn\",\"ts\":\"2026-05-06T09:14:17.303Z\",\"msg\":\"worker pool degraded\",\"healthy_workers\":1,\"total_workers\":4,\"variant\":\"B\"}\n2026-05-06T09:14:18.110Z [frontend] INFO  service=frontend route=/cart handler=CartPage user_id=u-55021 render_start\n2026-05-06T09:14:18.140Z [ad-service-client] DEBUG attempt=1 url=http://ad-service:8080/api/v2/personalization timeout_ms=3000\n2026-05-06T09:14:21.148Z [ad-service-client] WARN  attempt=1 elapsed_ms=3008 result=timeout url=http://ad-service:8080/api/v2/personalization\n2026-05-06T09:14:21.149Z [ad-service-client] DEBUG attempt=2 url=http://ad-service:8080/api/v2/personalization timeout_ms=3000\n2026-05-06T09:14:24.157Z [ad-service-client] WARN  attempt=2 elapsed_ms=3009 result=timeout url=http://ad-service:8080/api/v2/personalization\n2026-05-06T09:14:24.158Z [frontend] WARN  service=frontend personalization_fetch failed after 2 retries, falling back to default ads\n2026-05-06T09:14:25.003Z [ad-service] {\"level\":\"error\",\"ts\":\"2026-05-06T09:14:25.003Z\",\"msg\":\"personalization worker panic\",\"variant\":\"B\",\"goroutine\":\"worker-1\",\"error\":\"runtime error: index out of range [14] with length 14\"}\n2026-05-06T09:14:25.005Z [ad-service] {\"level\":\"warn\",\"ts\":\"2026-05-06T09:14:25.005Z\",\"msg\":\"worker pool degraded\",\"healthy_workers\":0,\"total_workers\":4,\"variant\":\"B\"}\n2026-05-06T09:14:25.006Z [ad-service] {\"level\":\"fatal\",\"ts\":\"2026-05-06T09:14:25.006Z\",\"msg\":\"all variant-B workers exhausted, endpoint /api/v2/personalization unavailable\"}\n2026-05-06T09:14:26.200Z [frontend] INFO  service=frontend circuit_breaker name=ad-service-personalization state=CLOSED failures=4 threshold=5\n2026-05-06T09:14:27.500Z [frontend] INFO  service=frontend route=/checkout handler=CheckoutPage user_id=u-10291 render_start\n2026-05-06T09:14:27.533Z [ad-service-client] DEBUG attempt=1 url=http://ad-service:8080/api/v2/personalization timeout_ms=3000\n2026-05-06T09:14:30.540Z [ad-service-client] ERROR attempt=1 elapsed_ms=3007 result=timeout url=http://ad-service:8080/api/v2/personalization\n2026-05-06T09:14:30.541Z [ad-service-client] DEBUG attempt=2 url=http://ad-service:8080/api/v2/personalization timeout_ms=3000\n2026-05-06T09:14:33.549Z [ad-service-client] ERROR attempt=2 elapsed_ms=3008 result=timeout url=http://ad-service:8080/api/v2/personalization\n2026-05-06T09:14:33.550Z [frontend] ERROR service=frontend circuit_breaker name=ad-service-personalization state=OPEN failures=5 last_error=timeout\n2026-05-06T09:14:33.551Z [frontend] WARN  service=frontend circuit_breaker=OPEN skipping ad-service call, using cached fallback ads\n2026-05-06T09:14:33.552Z [frontend] INFO  service=frontend route=/checkout render_complete latency_ms=6052 variant=fallback_cached\n2026-05-06T09:14:34.000Z [otel-collector] level=warn msg=\"trace export latency elevated\" exporter=otlp destination=ad-service avg_latency_ms=6100 dropped_spans=0\n2026-05-06T09:14:35.210Z [frontend] WARN  service=frontend circuit_breaker name=ad-service-personalization state=OPEN — all personalization requests bypassed\n2026-05-06T09:14:36.001Z [ad-service] {\"level\":\"error\",\"ts\":\"2026-05-06T09:14:36.001Z\",\"msg\":\"HTTP handler stalled\",\"endpoint\":\"/api/v2/personalization\",\"pending_requests\":23,\"worker_pool_size\":0,\"variant\":\"B\"}\n2026-05-06T09:14:37.445Z [frontend] INFO  service=frontend route=/ user_id=u-20041 render_start\n2026-05-06T09:14:37.446Z [frontend] WARN  service=frontend circuit_breaker=OPEN skipping ad-service call, using cached fallback ads\n2026-05-06T09:14:37.501Z [frontend] INFO  service=frontend route=/ render_complete latency_ms=56 variant=fallback_cached\n2026-05-06T09:14:38.800Z [ad-service] {\"level\":\"error\",\"ts\":\"2026-05-06T09:14:38.800Z\",\"msg\":\"goroutine leak detected\",\"leaked_goroutines\":47,\"variant\":\"B\"}\n2026-05-06T09:14:39.100Z [otel-collector] level=warn msg=\"service ad-service reporting zero successful spans\" window_sec=30\n2026-05-06T09:14:40.220Z [frontend] INFO  service=frontend route=/product/7 user_id=u-30911 render_start\n2026-05-06T09:14:40.221Z [frontend] WARN  service=frontend circuit_breaker=OPEN skipping ad-service call, using cached fallback ads\n2026-05-06T09:14:40.310Z [frontend] INFO  service=frontend route=/product/7 render_complete latency_ms=89 variant=fallback_cached\n2026-05-06T09:14:41.005Z [ad-service] {\"level\":\"error\",\"ts\":\"2026-05-06T09:14:41.005Z\",\"msg\":\"health check failing\",\"check\":\"personalization_variant_B\",\"status\":\"unhealthy\",\"consecutive_failures\":8}\n2026-05-06T09:14:42.001Z [frontend] INFO  service=frontend ad_service_health_poll status=unhealthy endpoint=http://ad-service:8080/healthz\n2026-05-06T09:14:43.550Z [frontend] ERROR service=frontend ad_service health check returned 503 — circuit will remain OPEN\n2026-05-06T09:14:44.000Z [ad-service] {\"level\":\"error\",\"ts\":\"2026-05-06T09:14:44.000Z\",\"msg\":\"OOM pressure building\",\"heap_alloc_mb\":812,\"heap_sys_mb\":1024,\"goroutines\":312}\n2026-05-06T09:14:45.600Z [frontend] WARN  service=frontend personalization_cache age_sec=290 stale_threshold_sec=300 — cache nearly stale\n2026-05-06T09:14:47.001Z [otel-collector] level=error msg=\"ad-service trace pipeline backed up\" queued_batches=84 max_queue=100\n2026-05-06T09:14:48.200Z [frontend] ERROR service=frontend personalization_cache STALE age_sec=305 — cannot refresh, ad-service circuit OPEN\n2026-05-06T09:14:48.201Z [frontend] WARN  service=frontend serving degraded ads (stale cache) for all personalization requests\n2026-05-06T09:14:49.100Z [ad-service] {\"level\":\"fatal\",\"ts\":\"2026-05-06T09:14:49.100Z\",\"msg\":\"pod OOMKilled\",\"reason\":\"variant-B engine goroutine leak exhausted heap\",\"action\":\"restart\"}\n2026-05-06T09:14:49.210Z [frontend] WARN  service=frontend ad-service pod restarting — connection refused on next probe\n2026-05-06T09:14:50.001Z [ad-service-client] ERROR connection refused url=http://ad-service:8080/api/v2/personalization errno=ECONNREFUSED\n2026-05-06T09:14:50.900Z [frontend] WARN  service=frontend circuit_breaker name=ad-service-personalization state=OPEN (connection refused confirms dependency down)\n2026-05-06T09:14:52.005Z [otel-collector] level=warn msg=\"ad-service disappeared from service map\" last_seen_sec=3\n2026-05-06T09:14:54.120Z [frontend] INFO  service=frontend all routes operational with fallback ads — user impact: degraded personalization only\n2026-05-06T09:15:00.000Z [frontend] INFO  service=frontend health=ok cpu_pct=18 mem_mb=312 goroutines=42 — frontend itself healthy\n2026-05-06T09:15:05.110Z [ad-service] {\"level\":\"info\",\"ts\":\"2026-05-06T09:15:05.110Z\",\"msg\":\"pod restarted by kubelet\",\"restart_count\":1}\n2026-05-06T09:15:06.200Z [ad-service] {\"level\":\"error\",\"ts\":\"2026-05-06T09:15:06.200Z\",\"msg\":\"personalization worker panic on startup\",\"variant\":\"B\",\"error\":\"runtime error: index out of range [14] with length 14\",\"note\":\"crash loop detected\"}\n2026-05-06T09:15:06.201Z [ad-service] {\"level\":\"error\",\"ts\":\"2026-05-06T09:15:06.201Z\",\"msg\":\"goroutine stack\",\"trace\":\"goroutine 12 [running]:\\nad-service/internal/personalization.(*VariantEngine).Compute(...)\\n  /src/internal/personalization/engine.go:214\\nad-service/internal/personalization.(*VariantEngine).initWorkerPool(...)\\n  /src/internal/personalization/engine.go:87\"}\n2026-05-06T09:15:07.000Z [frontend] WARN  service=frontend ad-service still unavailable after restart — circuit OPEN maintained\n2026-05-06T09:15:10.500Z [frontend] ERROR service=frontend ad_service_health_poll consecutive_failures=12 — alerting on-call\n2026-05-06T09:15:12.000Z [otel-collector] level=error msg=\"ad-service in crash-loop\" restart_count=1 reason=OOMKilled\n2026-05-06T09:20:44.001Z [frontend] WARN  service=frontend circuit_breaker name=ad-service-personalization half-open probe attempt\n2026-05-06T09:20:44.110Z [ad-service-client] ERROR connection refused url=http://ad-service:8080/api/v2/personalization errno=ECONNREFUSED\n2026-05-06T09:20:44.111Z [frontend] WARN  service=frontend circuit_breaker returning to OPEN — dependency still unavailable\n2026-05-06T09:24:18.003Z [frontend] WARN  service=frontend circuit_breaker name=ad-service-personalization half-open probe attempt\n2026-05-06T09:24:18.150Z [ad-service-client] ERROR connection refused url=http://ad-service:8080/api/v2/personalization errno=ECONNREFUSED\n2026-05-06T09:24:18.151Z [frontend] WARN  service=frontend circuit_breaker returning to OPEN — dependency still unavailable\n2026-05-06T09:24:20.000Z [frontend] INFO  service=frontend health=ok cpu_pct=19 mem_mb=315 — frontend self-metrics nominal",
+  "recent_deploys": [
+    {
+      "sha": "0982a0268aec",
+      "timestamp": "2026-04-16T14:12:23Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump eslint-config-next (#3270)",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json",
+        ".eslintrc.json"
+      ]
+    },
+    {
+      "sha": "0410576889f7",
+      "timestamp": "2026-04-21T12:05:34Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/adservice/requirements.txt",
+        "src/recommendationservice/requirements.txt"
+      ]
+    },
+    {
+      "sha": "7d7e533c001a",
+      "timestamp": "2026-04-23T07:59:20Z",
+      "author": "Timur Olzhabayev",
+      "message": "[chore] exclude platform.openai.com and gnu.org from link check (#3289)",
+      "changed_files": [
+        ".github/workflows/link-check.yml",
+        "docs/link-check-config.json"
+      ]
+    },
+    {
+      "sha": "2b9113d98e20",
+      "timestamp": "2026-04-30T06:51:57Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] execute dependabot every Tuesday 3:00am+ (#3330)",
+      "changed_files": [
+        ".github/dependabot.yml"
+      ]
+    },
+    {
+      "sha": "5acdff618e47",
+      "timestamp": "2026-05-05T08:11:45Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Add Podman support (#3307)",
+      "changed_files": [
+        "src/adservice/internal/personalization/engine.go",
+        "src/adservice/internal/personalization/variant_b_config.go",
+        "src/adservice/Dockerfile",
+        "docker-compose.podman.yml"
+      ]
+    },
+    {
+      "sha": "23dc47f86f5b",
+      "timestamp": "2026-05-06T00:04:45Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json",
+        "src/checkoutservice/package.json"
+      ]
+    },
+    {
+      "sha": "313728caeedd",
+      "timestamp": "2026-05-06T00:11:01Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "The ad-service deploy in SHA 5acdff618e47 (2026-05-05T08:11:45Z) modified src/adservice/internal/personalization/engine.go and variant_b_config.go as part of Podman support changes. This introduced an off-by-one bug in the VariantEngine.Compute() method at engine.go:214, where the variant-B worker pool iterates to index 14 on a slice of length 14 (0-indexed), causing repeated 'index out of range [14] with length 14' panics. All variant-B worker goroutines crash in sequence, the worker pool drains to zero, the HTTP handler stalls with pending requests, goroutines leak, heap is exhausted, and the pod enters an OOMKill crash loop. The frontend (which is itself healthy) observes cascading timeouts then connection-refused errors, opens its circuit breaker for the ad-service personalization endpoint, and degrades to stale cached fallback ads.",
+  "ground_truth_remediation": "1. Immediately: roll back SHA 5acdff618e47 on ad-service to the previous stable image (SHA 2b9113d98e20 baseline) to stop the crash loop — estimated < 10 minutes. 2. Verify ad-service pod restarts cleanly and /healthz returns 200. 3. Frontend circuit breaker will auto-transition to half-open on next probe cycle (≤5 min); confirm successful half-open probe closes the circuit and personalization variant B resumes. 4. Ad-service team must fix the off-by-one in engine.go:214 (change loop bound from `len(pool)` to `len(pool)-1` or use range idiom) and re-deploy after validation. 5. Add an integration test covering variant-B worker pool initialization with boundary-length config slices.",
+  "red_herring": null
+}

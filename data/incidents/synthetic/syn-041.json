@@ -1,0 +1,90 @@
+{
+  "id": "syn-041",
+  "subset": "synthetic",
+  "category": "resource_exhaustion",
+  "affected_service": "frontend",
+  "severity": "critical",
+  "alert_text": "CRITICAL: frontend pod goroutine count exceeded 50000 (current: 63412). OOMKill imminent. P99 latency >8s. Multiple user-facing errors reported.",
+  "log_window": "2026-05-13T10:58:02.114Z [frontend] level=INFO msg=\"server started\" addr=:8080 grpc_upstream=productcatalog:7070\n2026-05-13T10:58:02.891Z [frontend] level=INFO msg=\"connected to productcatalog gRPC endpoint\" target=productcatalog:7070\n2026-05-13T10:58:03.201Z [frontend] level=DEBUG msg=\"gRPC stream opened\" stream_id=1001 user_session=abc123 method=/oteldemo.ProductCatalogService/SearchProducts\n2026-05-13T10:58:03.445Z [frontend] level=DEBUG msg=\"gRPC stream opened\" stream_id=1002 user_session=def456 method=/oteldemo.ProductCatalogService/SearchProducts\n2026-05-13T10:58:04.102Z [productcatalog] {\"level\":\"info\",\"msg\":\"handling SearchProducts\",\"session\":\"abc123\",\"ts\":\"2026-05-13T10:58:04.102Z\"}\n2026-05-13T10:58:04.317Z [productcatalog] {\"level\":\"info\",\"msg\":\"handling SearchProducts\",\"session\":\"def456\",\"ts\":\"2026-05-13T10:58:04.317Z\"}\n2026-05-13T10:58:05.001Z [frontend] level=INFO msg=\"goroutine count\" count=412 threshold=50000\n2026-05-13T10:58:07.334Z [frontend] level=DEBUG msg=\"client disconnected mid-stream\" stream_id=1001 user_session=abc123 reason=client_hangup\n2026-05-13T10:58:07.335Z [frontend] level=WARN msg=\"gRPC stream recv goroutine still running after client disconnect\" stream_id=1001 goroutine_id=10041\n2026-05-13T10:58:07.339Z [frontend] level=DEBUG msg=\"client disconnected mid-stream\" stream_id=1002 user_session=def456 reason=client_hangup\n2026-05-13T10:58:07.340Z [frontend] level=WARN msg=\"gRPC stream recv goroutine still running after client disconnect\" stream_id=1002 goroutine_id=10042\n2026-05-13T10:58:09.210Z [frontend] level=DEBUG msg=\"gRPC stream opened\" stream_id=1003 user_session=ghi789 method=/oteldemo.ProductCatalogService/SearchProducts\n2026-05-13T10:58:09.502Z [frontend] level=DEBUG msg=\"gRPC stream opened\" stream_id=1004 user_session=jkl012 method=/oteldemo.ProductCatalogService/SearchProducts\n2026-05-13T10:58:11.100Z [frontend] level=INFO msg=\"goroutine count\" count=618 threshold=50000\n2026-05-13T10:58:12.887Z [frontend] level=DEBUG msg=\"client disconnected mid-stream\" stream_id=1003 user_session=ghi789 reason=timeout\n2026-05-13T10:58:12.889Z [frontend] level=WARN msg=\"gRPC stream recv goroutine still running after client disconnect\" stream_id=1003 goroutine_id=10049\n2026-05-13T10:58:13.001Z [frontend] level=DEBUG msg=\"client disconnected mid-stream\" stream_id=1004 user_session=jkl012 reason=timeout\n2026-05-13T10:58:13.003Z [frontend] level=WARN msg=\"gRPC stream recv goroutine still running after client disconnect\" stream_id=1004 goroutine_id=10050\n2026-05-13T10:59:01.000Z [frontend] level=INFO msg=\"goroutine count\" count=2104 threshold=50000\n2026-05-13T10:59:14.221Z [productcatalog] {\"level\":\"warn\",\"msg\":\"upstream client closed connection, stream still open\",\"ts\":\"2026-05-13T10:59:14.221Z\"}\n2026-05-13T10:59:31.445Z [frontend] level=INFO msg=\"goroutine count\" count=5882 threshold=50000\n2026-05-13T10:59:45.112Z [frontend] level=WARN msg=\"GC pressure increasing\" heap_alloc_mb=812 heap_sys_mb=1024 gc_pause_ms=42\n2026-05-13T10:59:45.220Z [frontend] level=WARN msg=\"high goroutine count detected\" count=6201 threshold=50000\n2026-05-13T11:00:01.003Z [frontend] level=INFO msg=\"goroutine count\" count=9341 threshold=50000\n2026-05-13T11:00:14.771Z [frontend] level=WARN msg=\"GC pressure increasing\" heap_alloc_mb=934 heap_sys_mb=1024 gc_pause_ms=71\n2026-05-13T11:00:22.009Z [otel-collector] ts=2026-05-13T11:00:22Z level=warn component=receiver/otlp msg=\"dropping spans, exporter queue full\" dropped=12\n2026-05-13T11:00:31.445Z [frontend] level=INFO msg=\"goroutine count\" count=13998 threshold=50000\n2026-05-13T11:00:44.112Z [frontend] level=WARN msg=\"GC pause elevated\" heap_alloc_mb=989 heap_sys_mb=1024 gc_pause_ms=118\n2026-05-13T11:00:58.334Z [frontend] level=ERROR msg=\"request handler timeout\" path=/product latency_ms=8201 user_session=mno345\n2026-05-13T11:00:58.445Z [frontend] level=ERROR msg=\"request handler timeout\" path=/cart latency_ms=8554 user_session=pqr678\n2026-05-13T11:01:01.001Z [frontend] level=WARN msg=\"goroutine count approaching threshold\" count=18771 threshold=50000\n2026-05-13T11:01:05.334Z [frontend] level=ERROR msg=\"failed to schedule handler goroutine\" err=\"runtime: out of memory\"\n  goroutine 18800 [running]:\n  runtime.throw(0x1234abc, 0x18)\n  net/http.(*Server).Serve(0xc0001a2000, 0x7f3b9c)\n2026-05-13T11:01:10.221Z [productcatalog] {\"level\":\"error\",\"msg\":\"gRPC stream context cancelled but recv loop not exiting\",\"stream_id\":1003,\"ts\":\"2026-05-13T11:01:10.221Z\"}\n2026-05-13T11:01:15.009Z [frontend] level=ERROR msg=\"HTTP 500 returned to user\" path=/checkout user_session=stu901\n2026-05-13T11:01:15.112Z [frontend] level=ERROR msg=\"HTTP 500 returned to user\" path=/product user_session=vwx234\n2026-05-13T11:01:20.003Z [frontend] level=WARN msg=\"goroutine stack dump triggered\" count=22104\n2026-05-13T11:01:20.112Z [frontend] level=INFO msg=\"goroutine sample\" goroutine_state=chan_receive count_in_state=21844 func=google.golang.org/grpc/internal/transport.(*http2Client).reader\n2026-05-13T11:01:20.113Z [frontend] level=INFO msg=\"goroutine sample\" goroutine_state=select count_in_state=248 func=google.golang.org/grpc/stream.(*clientStream).RecvMsg\n2026-05-13T11:01:31.445Z [frontend] level=INFO msg=\"goroutine count\" count=29887 threshold=50000\n2026-05-13T11:01:44.881Z [frontend] level=ERROR msg=\"GC overhead limit exceeded\" heap_alloc_mb=1011 heap_sys_mb=1024\n2026-05-13T11:01:44.882Z [frontend] level=FATAL msg=\"runtime: out of memory: cannot allocate\" size_mb=128\n  goroutine 29901 [running]:\n  runtime.throw2(0x4a1bc0, 0x26)\n  runtime.(*mheap).allocLocked(0x7f, 0x0, 0x0)\n2026-05-13T11:01:50.334Z [frontend] level=ERROR msg=\"connection pool exhausted\" pool=grpc_productcatalog active=512 max=512\n2026-05-13T11:01:51.001Z [frontend] level=WARN msg=\"goroutine count approaching threshold\" count=38214 threshold=50000\n2026-05-13T11:01:55.772Z [otel-collector] ts=2026-05-13T11:01:55Z level=error component=exporter/otlp msg=\"export failed, target unreachable\" target=frontend:4317 err=\"connection refused\"\n2026-05-13T11:02:01.003Z [frontend] level=WARN msg=\"goroutine count\" count=44102 threshold=50000\n2026-05-13T11:02:10.445Z [frontend] level=ERROR msg=\"request processing failed\" path=/product err=\"context deadline exceeded\" latency_ms=9001\n2026-05-13T11:02:15.114Z [frontend] level=ERROR msg=\"request processing failed\" path=/cart err=\"context deadline exceeded\" latency_ms=9112\n2026-05-13T11:02:18.334Z [frontend] level=ERROR msg=\"gRPC dial failed, stream goroutine leaked\" stream_id=4201 err=\"transport: Error while dialing dial tcp productcatalog:7070: connect: connection refused\"\n2026-05-13T11:02:20.991Z [frontend] level=FATAL msg=\"goroutine count exceeded hard limit\" count=63412 limit=50000\n  goroutine 63412 [chan receive]:\n  google.golang.org/grpc/internal/transport.(*http2Client).reader(0xc0044a2000)\n  /go/pkg/mod/google.golang.org/grpc@v1.63.2/internal/transport/http2_client.go:1391\n2026-05-13T11:02:21.003Z [frontend] level=FATAL msg=\"process terminating due to resource exhaustion\"\n2026-05-13T11:02:21.112Z [kubernetes] event=OOMKill pod=frontend-7d9f8b6c4-xkp2r namespace=otel-demo reason=OOMKilled\n2026-05-13T11:02:22.001Z [kubernetes] event=Restart pod=frontend-7d9f8b6c4-xkp2r namespace=otel-demo restart_count=1\n2026-05-13T11:02:25.445Z [frontend] level=INFO msg=\"server started\" addr=:8080 grpc_upstream=productcatalog:7070\n2026-05-13T11:02:26.003Z [frontend] level=INFO msg=\"goroutine count\" count=38 threshold=50000\n2026-05-13T11:02:27.112Z [frontend] level=DEBUG msg=\"gRPC stream opened\" stream_id=5001 user_session=yza567 method=/oteldemo.ProductCatalogService/SearchProducts\n2026-05-13T11:02:28.334Z [frontend] level=DEBUG msg=\"client disconnected mid-stream\" stream_id=5001 user_session=yza567 reason=client_hangup\n2026-05-13T11:02:28.335Z [frontend] level=WARN msg=\"gRPC stream recv goroutine still running after client disconnect\" stream_id=5001 goroutine_id=201\n2026-05-13T11:02:35.001Z [frontend] level=INFO msg=\"goroutine count\" count=289 threshold=50000",
+  "recent_deploys": [
+    {
+      "sha": "0982a0268aec",
+      "timestamp": "2026-04-16T14:12:23Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump eslint-config-next (#3270)",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json",
+        ".eslintrc.json"
+      ]
+    },
+    {
+      "sha": "de201e875db5",
+      "timestamp": "2026-04-21T19:45:44Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 2 updates (#3284)",
+      "changed_files": [
+        "src/cartservice/cartservice.csproj",
+        "src/cartservice/packages.lock.json"
+      ]
+    },
+    {
+      "sha": "41b0e7b2e876",
+      "timestamp": "2026-04-24T03:35:36Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "7cdf4e6a5bb4",
+      "timestamp": "2026-04-27T06:41:57Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github.com/IBM/sarama (#3310)",
+      "changed_files": [
+        "src/kafka/go.mod",
+        "src/kafka/go.sum"
+      ]
+    },
+    {
+      "sha": "5acdff618e47",
+      "timestamp": "2026-05-05T08:11:45Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Add Podman support (#3307)",
+      "changed_files": [
+        "docker-compose.yml",
+        "docker-compose.podman.yml",
+        "Makefile",
+        "docs/podman.md"
+      ]
+    },
+    {
+      "sha": "997d9970c437",
+      "timestamp": "2026-05-05T08:45:37Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the go-production-dependencies group across 2 directories with",
+      "changed_files": [
+        "src/frontend/go.mod",
+        "src/frontend/go.sum",
+        "src/frontend/main.go",
+        "src/frontend/handlers/product.go",
+        "src/frontend/rpc/product_catalog.go"
+      ]
+    },
+    {
+      "sha": "449ee7cc0d6e",
+      "timestamp": "2026-05-13T10:41:00Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump github.com/IBM/sarama (#3360)",
+      "changed_files": [
+        "src/kafka/go.mod",
+        "src/kafka/go.sum"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy 997d9970c437 (2026-05-05T08:45:37Z) bumped the go-production-dependencies group and modified src/frontend/rpc/product_catalog.go. The change introduced a streaming gRPC client call to ProductCatalogService/SearchProducts without properly handling client-side context cancellation: when the HTTP client disconnects, the goroutine blocked on stream.RecvMsg() is never unblocked because the parent context is not propagated to the gRPC stream and stream.CloseSend() is never called. This causes one goroutine to leak per disconnecting client. Under moderate traffic (~300 req/s with typical early-disconnect rate), goroutines accumulate faster than GC can reclaim associated memory, leading to goroutine count exceeding 50k and OOMKill within ~4 minutes of sustained load.",
+  "ground_truth_remediation": "1. Immediately restart the frontend pod to restore service (kubectl rollout restart deployment/frontend -n otel-demo). 2. Roll back to the previous frontend image (pre-997d9970c437) using kubectl rollout undo deployment/frontend -n otel-demo to prevent recurrence on restart. 3. Fix src/frontend/rpc/product_catalog.go: pass the HTTP request context to grpc.NewStream(), call stream.CloseSend() in a deferred function upon handler return, and add a goroutine that calls stream.Cancel() when the HTTP request context is Done(). 4. Add a goroutine-count metric alert at threshold 5000 for earlier detection. 5. Deploy the fixed version after code review and regression testing.",
+  "red_herring": null
+}

@@ -1,0 +1,86 @@
+{
+  "id": "syn-034",
+  "subset": "synthetic",
+  "category": "config_error",
+  "affected_service": "currency-service",
+  "severity": "high",
+  "alert_text": "ALERT: currency-service health check failing for >5 minutes. Error rate 98.7%. Feature flag evaluation returning default (disabled) for all flags. Downstream services (checkout, cart) reporting currency conversion errors.",
+  "log_window": "2026-05-06T00:14:02.101Z [currency-service] INFO  Starting currency-service v2.4.1 (commit=313728caeedd)\n2026-05-06T00:14:02.203Z [currency-service] INFO  Loading configuration from /etc/currency-service/config.yaml\n2026-05-06T00:14:02.341Z [currency-service] INFO  Config loaded: exchange_rate_ttl=300s, base_currency=USD, supported_currencies=32\n2026-05-06T00:14:02.412Z [currency-service] INFO  Initializing feature-flag client\n2026-05-06T00:14:02.413Z [currency-service] DEBUG feature_flag_service_url=http://featureflag-service.internal:8013/flags\n2026-05-06T00:14:02.890Z [currency-service] WARN  Feature flag client connection attempt 1/3 failed: dial tcp: lookup featureflag-service.internal: no such host\n2026-05-06T00:14:03.891Z [currency-service] WARN  Feature flag client connection attempt 2/3 failed: dial tcp: lookup featureflag-service.internal: no such host\n2026-05-06T00:14:04.892Z [currency-service] WARN  Feature flag client connection attempt 3/3 failed: dial tcp: lookup featureflag-service.internal: no such host\n2026-05-06T00:14:04.893Z [currency-service] ERROR Feature flag client initialization failed: could not resolve host 'featureflag-service.internal' (config key: FEATURE_FLAG_SERVICE_URL)\n2026-05-06T00:14:04.894Z [currency-service] WARN  Falling back to default flag values (all flags disabled)\n2026-05-06T00:14:04.895Z [currency-service] INFO  currency-service HTTP server listening on :8080\n2026-05-06T00:14:05.012Z [feature-flag-svc] INFO  {\"level\":\"info\",\"msg\":\"flagd ready\",\"host\":\"flagd-service.svc.cluster.local\",\"port\":8013,\"ts\":\"2026-05-06T00:14:05.012Z\"}\n2026-05-06T00:14:07.334Z [currency-service] INFO  GET /health -> 200 OK (2ms)\n2026-05-06T00:14:09.445Z [checkout-service] INFO  {\"level\":\"info\",\"event\":\"currency_convert_request\",\"from\":\"EUR\",\"to\":\"USD\",\"amount\":42.50,\"ts\":\"2026-05-06T00:14:09.445Z\"}\n2026-05-06T00:14:09.501Z [currency-service] DEBUG Received conversion request: EUR->USD amount=42.50\n2026-05-06T00:14:09.502Z [currency-service] DEBUG flag=dynamic_exchange_rates value=false (default, flag client unhealthy)\n2026-05-06T00:14:09.503Z [currency-service] WARN  Using static exchange rates: dynamic_exchange_rates flag is disabled\n2026-05-06T00:14:09.510Z [currency-service] INFO  Conversion EUR->USD: 42.50 -> 46.28 (static rate)\n2026-05-06T00:14:10.102Z [checkout-service] WARN  {\"level\":\"warn\",\"event\":\"stale_exchange_rate\",\"age_seconds\":86412,\"threshold_seconds\":3600,\"ts\":\"2026-05-06T00:14:10.102Z\"}\n2026-05-06T00:14:12.881Z [currency-service] DEBUG flag=multi_currency_checkout value=false (default, flag client unhealthy)\n2026-05-06T00:14:12.882Z [currency-service] ERROR multi_currency_checkout flag required for non-USD checkout; returning error to caller\n2026-05-06T00:14:12.883Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:12.901Z [checkout-service] ERROR {\"level\":\"error\",\"event\":\"currency_service_error\",\"status\":500,\"msg\":\"feature flag not available\",\"ts\":\"2026-05-06T00:14:12.901Z\"}\n2026-05-06T00:14:13.004Z [cart-service] WARN  key=currency_conversion_failed val=true err=\"upstream 500 from currency-service\"\n2026-05-06T00:14:15.231Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:15.780Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:16.012Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:17.103Z [checkout-service] ERROR {\"level\":\"error\",\"event\":\"checkout_failed\",\"reason\":\"currency_conversion_error\",\"user_id\":\"usr_9921\",\"ts\":\"2026-05-06T00:14:17.103Z\"}\n2026-05-06T00:14:17.230Z [checkout-service] ERROR {\"level\":\"error\",\"event\":\"checkout_failed\",\"reason\":\"currency_conversion_error\",\"user_id\":\"usr_4410\",\"ts\":\"2026-05-06T00:14:17.230Z\"}\n2026-05-06T00:14:18.441Z [currency-service] WARN  flag client health check: UNHEALTHY (url=http://featureflag-service.internal:8013/flags unreachable)\n2026-05-06T00:14:18.442Z [currency-service] INFO  flag client retry scheduled in 30s\n2026-05-06T00:14:20.009Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:20.334Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:21.551Z [cart-service] ERROR key=cart_checkout_error val=\"currency-service returned 500\" err_count=8\n2026-05-06T00:14:22.008Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:23.119Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:24.660Z [checkout-service] FATAL {\"level\":\"fatal\",\"event\":\"circuit_breaker_open\",\"service\":\"currency-service\",\"error_rate\":0.987,\"ts\":\"2026-05-06T00:14:24.660Z\"}\n2026-05-06T00:14:24.661Z [checkout-service] ERROR {\"level\":\"error\",\"event\":\"all_checkouts_blocked\",\"reason\":\"circuit_breaker_currency_service\",\"ts\":\"2026-05-06T00:14:24.661Z\"}\n2026-05-06T00:14:25.000Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:25.771Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:26.112Z [cart-service] ERROR key=downstream_degraded val=true service=currency-service consecutive_failures=15\n2026-05-06T00:14:27.003Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:28.002Z [currency-service] INFO  Retrying feature flag client connection (attempt 1)\n2026-05-06T00:14:28.003Z [currency-service] DEBUG Resolving: featureflag-service.internal:8013\n2026-05-06T00:14:28.550Z [currency-service] ERROR Feature flag client retry failed: dial tcp: lookup featureflag-service.internal: no such host\n  at net.(*Resolver).lookupIPAddr (resolver.go:412)\n  at net.(*Dialer).DialContext (dial.go:311)\n2026-05-06T00:14:28.551Z [currency-service] WARN  Correct hostname should be 'flagd-service.svc.cluster.local' per service mesh registry\n2026-05-06T00:14:28.552Z [currency-service] WARN  Current config FEATURE_FLAG_SERVICE_URL=http://featureflag-service.internal:8013/flags does not match expected pattern '*.svc.cluster.local'\n2026-05-06T00:14:29.008Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:30.119Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:31.002Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:32.445Z [feature-flag-svc] INFO  {\"level\":\"info\",\"msg\":\"serving flags\",\"active_flags\":12,\"connections\":3,\"ts\":\"2026-05-06T00:14:32.445Z\"}\n2026-05-06T00:14:33.009Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:34.222Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:35.331Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:36.003Z [cart-service] ERROR key=user_facing_error val=\"checkout unavailable\" affected_sessions=47\n2026-05-06T00:14:37.441Z [currency-service] WARN  flag client health check: UNHEALTHY (url=http://featureflag-service.internal:8013/flags unreachable)\n2026-05-06T00:14:37.442Z [currency-service] INFO  flag client retry scheduled in 60s\n2026-05-06T00:14:38.009Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:39.110Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:40.003Z [checkout-service] ERROR {\"level\":\"error\",\"event\":\"checkout_failed\",\"reason\":\"circuit_breaker_open\",\"count_last_60s\":89,\"ts\":\"2026-05-06T00:14:40.003Z\"}\n2026-05-06T00:14:41.228Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:42.009Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:44.331Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:45.001Z [cart-service] FATAL key=service_degraded val=true msg=\"currency-service 500 error rate exceeded SLO threshold (98.7% > 5%)\"\n2026-05-06T00:14:45.002Z [cart-service] ERROR key=alertmanager_notify val=sent alert=currency_service_high_error_rate\n2026-05-06T00:14:46.110Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:47.003Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:48.440Z [currency-service] DEBUG config_snapshot: {FEATURE_FLAG_SERVICE_URL: 'http://featureflag-service.internal:8013/flags', BASE_CURRENCY: 'USD', EXCHANGE_RATE_TTL: '300'}\n2026-05-06T00:14:48.441Z [currency-service] WARN  FEATURE_FLAG_SERVICE_URL value 'featureflag-service.internal' was introduced in promoted config from deploy 83dce9a815b2; previous value was 'flagd-service.svc.cluster.local'\n2026-05-06T00:14:49.002Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:50.115Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:51.330Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:52.002Z [feature-flag-svc] INFO  {\"level\":\"info\",\"msg\":\"serving flags\",\"active_flags\":12,\"connections\":3,\"ts\":\"2026-05-06T00:14:52.002Z\"}\n2026-05-06T00:14:53.009Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:54.220Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:55.003Z [checkout-service] ERROR {\"level\":\"error\",\"event\":\"checkout_failed\",\"reason\":\"circuit_breaker_open\",\"count_last_60s\":134,\"ts\":\"2026-05-06T00:14:55.003Z\"}\n2026-05-06T00:14:56.441Z [currency-service] WARN  flag client health check: UNHEALTHY (url=http://featureflag-service.internal:8013/flags unreachable)\n2026-05-06T00:14:56.442Z [currency-service] INFO  flag client next retry in 120s\n2026-05-06T00:14:57.009Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:58.110Z [currency-service] ERROR handler=/convert status=500 error=\"feature flag 'multi_currency_checkout' not available\"\n2026-05-06T00:14:59.003Z [cart-service] ERROR key=cart_checkout_error val=\"currency-service returned 500\" err_count=201",
+  "recent_deploys": [
+    {
+      "sha": "7b1231238df3",
+      "timestamp": "2026-04-23T08:01:17Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] Fix dependabot configuration (#3298)",
+      "changed_files": [
+        ".github/dependabot.yml"
+      ]
+    },
+    {
+      "sha": "396eaec92110",
+      "timestamp": "2026-04-25T09:36:57Z",
+      "author": "Patrice Chalin",
+      "message": "Enable lychee cache for local checks too (#3315)",
+      "changed_files": [
+        ".github/workflows/links.yml",
+        ".lychee.toml"
+      ]
+    },
+    {
+      "sha": "3e626da455a9",
+      "timestamp": "2026-04-28T14:08:34Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory",
+      "changed_files": [
+        "src/currency-service/package.json",
+        "src/currency-service/package-lock.json"
+      ]
+    },
+    {
+      "sha": "bade4db5c2e0",
+      "timestamp": "2026-04-28T14:14:11Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/currency-service/package.json",
+        "src/checkout-service/package.json",
+        "src/currency-service/package-lock.json"
+      ]
+    },
+    {
+      "sha": "30ba52fd9566",
+      "timestamp": "2026-05-05T06:33:05Z",
+      "author": "Jonathan Munz",
+      "message": "Update React Native example app dependencies (#3296)",
+      "changed_files": [
+        "examples/react-native/package.json",
+        "examples/react-native/package-lock.json"
+      ]
+    },
+    {
+      "sha": "83dce9a815b2",
+      "timestamp": "2026-05-05T09:51:41Z",
+      "author": "Juliano Costa",
+      "message": "[chore] Promote Dónal to approver (#3336)",
+      "changed_files": [
+        "src/currency-service/config/production.yaml",
+        "src/currency-service/config/staging.yaml",
+        "deploy/helm/currency-service/values.yaml",
+        "CODEOWNERS"
+      ]
+    },
+    {
+      "sha": "313728caeedd",
+      "timestamp": "2026-05-06T00:11:01Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory",
+      "changed_files": [
+        "src/currency-service/package.json",
+        "src/currency-service/package-lock.json"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy 83dce9a815b2 modified 'src/currency-service/config/production.yaml' and 'deploy/helm/currency-service/values.yaml', incorrectly setting FEATURE_FLAG_SERVICE_URL to 'http://featureflag-service.internal:8013/flags' (a non-resolvable internal DNS alias) instead of the correct Kubernetes in-cluster address 'http://flagd-service.svc.cluster.local:8013/flags'. This caused currency-service to be unable to reach the feature-flag service (flagd) on startup, forcing all feature flags to their default disabled state. The 'multi_currency_checkout' flag being disabled causes the /convert endpoint to return HTTP 500 for all non-trivial conversion requests, producing a 98.7% error rate.",
+  "ground_truth_remediation": "1. Immediately patch the Helm values override: set FEATURE_FLAG_SERVICE_URL back to 'http://flagd-service.svc.cluster.local:8013/flags' in deploy/helm/currency-service/values.yaml (reverting the change introduced in 83dce9a815b2). 2. Apply the config change via 'helm upgrade currency-service ./deploy/helm/currency-service' or patch the ConfigMap directly with 'kubectl patch configmap currency-service-config -p \"{\\\"data\\\":{\\\"FEATURE_FLAG_SERVICE_URL\\\":\\\"http://flagd-service.svc.cluster.local:8013/flags\\\"}}\"'. 3. Trigger a rolling restart of currency-service pods: 'kubectl rollout restart deployment/currency-service'. 4. Verify the feature flag client reconnects (look for 'Feature flag client initialized successfully' in logs) and that the /convert error rate drops below 1%. 5. Reset the checkout-service circuit breaker if it does not auto-close within 60 seconds.",
+  "red_herring": null
+}

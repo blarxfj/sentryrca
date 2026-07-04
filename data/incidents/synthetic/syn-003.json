@@ -1,0 +1,85 @@
+{
+  "id": "syn-003",
+  "subset": "synthetic",
+  "category": "db_saturation",
+  "affected_service": "cart-service",
+  "severity": "high",
+  "alert_text": "ALERT: cart-service P95 latency > 8000ms for 5 consecutive minutes; error rate 23% and rising. DB connection pool exhaustion detected. Page on-call immediately.",
+  "log_window": "2026-05-05T05:41:02.114Z INFO  [cart-service] Starting up cart-service v2.14.1 (sha=974792d4cdda)\n2026-05-05T05:41:02.831Z INFO  [cart-service] DB pool initialized: min=5 max=30 host=postgres-primary:5432 db=cartdb\n2026-05-05T05:41:03.204Z INFO  [cart-service] HTTP server listening on :8080\n2026-05-05T05:42:15.009Z INFO  [cart-service] {\"level\":\"info\",\"msg\":\"GET /cart/user/19283 200 12ms\"}\n2026-05-05T05:42:15.311Z INFO  [cart-service] {\"level\":\"info\",\"msg\":\"POST /cart/user/19284/item 201 18ms\"}\n2026-05-05T05:42:15.987Z INFO  [cart-service] {\"level\":\"info\",\"msg\":\"GET /cart/user/19285 200 14ms\"}\n2026-05-05T05:43:00.001Z INFO  [bulk-import-job] Starting scheduled bulk import: job_id=bulk-2026-05-05-0543 records=142000 target=cartdb\n2026-05-05T05:43:00.114Z INFO  [bulk-import-job] Acquired DB connection pool: pool_size=20 host=postgres-primary:5432\n2026-05-05T05:43:00.872Z INFO  [cart-service] {\"level\":\"info\",\"msg\":\"GET /cart/user/19291 200 19ms\"}\n2026-05-05T05:43:01.204Z INFO  [bulk-import-job] Executing UPSERT batch 1/1420 rows_per_batch=100\n2026-05-05T05:43:01.556Z DEBUG [postgres-primary] statement duration: 22ms  pid=3841 query=\"INSERT INTO cart_items (user_id, product_id, quantity, updated_at) VALUES ...\"\n2026-05-05T05:43:05.123Z INFO  [cart-service] {\"level\":\"info\",\"msg\":\"GET /cart/user/19300 200 24ms\"}\n2026-05-05T05:43:10.004Z INFO  [bulk-import-job] Executing UPSERT batch 10/1420\n2026-05-05T05:43:10.777Z DEBUG [postgres-primary] statement duration: 35ms  pid=3841 query=\"INSERT INTO cart_items ...\"\n2026-05-05T05:43:15.229Z WARN  [postgres-primary] lock contention detected: relation=cart_items pid=3902 waiting_on=3841\n2026-05-05T05:43:15.441Z INFO  [cart-service] {\"level\":\"info\",\"msg\":\"POST /cart/user/19310/item 201 88ms\"}\n2026-05-05T05:43:18.992Z WARN  [cart-service] {\"level\":\"warn\",\"msg\":\"DB query slow\",\"query\":\"SELECT * FROM cart_items WHERE user_id=$1\",\"duration_ms\":312}\n2026-05-05T05:43:20.001Z INFO  [bulk-import-job] Executing UPSERT batch 30/1420\n2026-05-05T05:43:20.334Z WARN  [postgres-primary] lock contention detected: relation=cart_items pid=3910 waiting_on=3841 wait_duration=4812ms\n2026-05-05T05:43:21.009Z WARN  [cart-service] {\"level\":\"warn\",\"msg\":\"DB query slow\",\"query\":\"SELECT * FROM cart_items WHERE user_id=$1\",\"duration_ms\":891}\n2026-05-05T05:43:22.118Z WARN  [cart-service] pool_used=24 pool_max=30 pool_available=6 msg=\"connection pool pressure rising\"\n2026-05-05T05:43:25.004Z INFO  [bulk-import-job] Executing UPSERT batch 50/1420\n2026-05-05T05:43:25.671Z WARN  [postgres-primary] statement duration: 1842ms  pid=3841 query=\"INSERT INTO cart_items ... ON CONFLICT (user_id, product_id) DO UPDATE ...\"\n2026-05-05T05:43:26.203Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"GET /cart/user/19350 500 context deadline exceeded\",\"duration_ms\":5000}\n2026-05-05T05:43:26.451Z WARN  [cart-service] pool_used=28 pool_max=30 pool_available=2 msg=\"connection pool nearly exhausted\"\n2026-05-05T05:43:27.009Z WARN  [postgres-primary] autovacuum: table cartdb.public.cart_items; index scans: 0 pages removed: 0 tuples removed: 0 elapsed: 15.2s\n2026-05-05T05:43:28.112Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"POST /cart/user/19355/item 500 context deadline exceeded\",\"duration_ms\":5000}\n2026-05-05T05:43:28.774Z ERROR [cart-service] pool_used=30 pool_max=30 pool_available=0 msg=\"connection pool exhausted — requests queuing\"\n2026-05-05T05:43:29.001Z INFO  [bulk-import-job] Executing UPSERT batch 70/1420\n2026-05-05T05:43:29.338Z ERROR [postgres-primary] ERROR:  deadlock detected\n2026-05-05T05:43:29.340Z ERROR [postgres-primary]   Process 3902: INSERT INTO cart_items (user_id, product_id, quantity, updated_at) ...\n2026-05-05T05:43:29.341Z ERROR [postgres-primary]   Process 3841: UPDATE cart_items SET quantity=$3 WHERE user_id=$1 AND product_id=$2\n2026-05-05T05:43:29.342Z ERROR [postgres-primary] HINT:  See server log for query details.\n2026-05-05T05:43:29.901Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"DB error\",\"error\":\"pq: deadlock detected\",\"query\":\"UPDATE cart_items SET quantity=$3 WHERE user_id=$1 AND product_id=$2\"}\n2026-05-05T05:43:30.004Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"GET /cart/user/19360 500 internal server error\",\"duration_ms\":5013}\n2026-05-05T05:43:30.445Z ERROR [cart-service] pool_acquired_wait_ms=4821 msg=\"thread blocked waiting for connection\"\n2026-05-05T05:43:31.009Z INFO  [bulk-import-job] Executing UPSERT batch 90/1420 — throughput degraded, retrying failed batches\n2026-05-05T05:43:32.114Z WARN  [cart-service] {\"level\":\"warn\",\"msg\":\"Circuit breaker half-open: DB read path\"}\n2026-05-05T05:43:33.558Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"GET /cart/user/19370 503 service unavailable\",\"duration_ms\":5001}\n2026-05-05T05:43:34.002Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"POST /cart/user/19372/item 503 service unavailable\",\"duration_ms\":5002}\n2026-05-05T05:43:34.812Z WARN  [postgres-primary] WARNING:  out of shared memory; consider increasing max_locks_per_transaction\n2026-05-05T05:43:35.004Z INFO  [bulk-import-job] Executing UPSERT batch 100/1420\n2026-05-05T05:43:35.334Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"DB query timeout\",\"query\":\"SELECT * FROM cart_items WHERE user_id=$1\",\"duration_ms\":9002,\"error\":\"context deadline exceeded\"}\n2026-05-05T05:43:35.889Z ERROR [cart-service] pool_used=30 pool_max=30 queue_depth=47 msg=\"connection queue backing up\"\n2026-05-05T05:43:36.114Z WARN  [frontend-service] upstream=cart-service status=503 path=/api/cart latency_ms=5102 msg=\"cart unavailable, returning cached response\"\n2026-05-05T05:43:36.781Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"GET /cart/user/19381 503 service unavailable\"}\n2026-05-05T05:43:37.004Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"POST /cart/user/19385/checkout 500 internal server error\",\"error\":\"pq: sorry, too many clients already\"}\n2026-05-05T05:43:37.445Z FATAL [cart-service] FATAL: connection pool exhausted and queue limit (50) reached; dropping new requests\n2026-05-05T05:43:37.447Z ERROR [postgres-primary] FATAL:  remaining connection slots are reserved for non-replication superuser connections\n2026-05-05T05:43:37.892Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"GET /cart/user/19390 500\",\"error\":\"pq: sorry, too many clients already\"}\n2026-05-05T05:43:38.011Z WARN  [bulk-import-job] WARN: bulk import batch 105 failed with deadlock, will retry job_id=bulk-2026-05-05-0543\n2026-05-05T05:43:38.334Z ERROR [frontend-service] upstream=cart-service consecutive_5xx=14 msg=\"alerting on-call: cart-service degraded\"\n2026-05-05T05:43:39.004Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"POST /cart/user/19395/item 503\"}\n2026-05-05T05:43:39.441Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"POST /cart/user/19396/item 503\"}\n2026-05-05T05:43:40.112Z WARN  [cart-service] {\"level\":\"warn\",\"msg\":\"Retrying DB connection\",\"attempt\":1,\"backoff_ms\":500}\n2026-05-05T05:43:40.614Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"GET /cart/user/19400 503\"}\n2026-05-05T05:43:41.001Z INFO  [bulk-import-job] Executing UPSERT batch 115/1420 — holding 20 DB connections\n2026-05-05T05:43:41.334Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"DB query timeout\",\"duration_ms\":9003,\"error\":\"context deadline exceeded\"}\n2026-05-05T05:43:42.005Z WARN  [postgres-primary] statement duration: 8914ms  pid=3841 query=\"INSERT INTO cart_items (user_id, product_id, quantity, updated_at) SELECT ... FROM staging_import WHERE ...\"\n2026-05-05T05:43:42.118Z ERROR [cart-service] pool_used=30 pool_max=30 queue_depth=62 msg=\"queue depth critical\"\n2026-05-05T05:43:43.004Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"GET /cart/user/19411 503\"}\n2026-05-05T05:43:43.551Z WARN  [cart-service] {\"level\":\"warn\",\"msg\":\"Retrying DB connection\",\"attempt\":2,\"backoff_ms\":1000}\n2026-05-05T05:43:45.001Z INFO  [bulk-import-job] Executing UPSERT batch 130/1420\n2026-05-05T05:43:45.334Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"POST /cart/user/19421/checkout 500\",\"error\":\"pq: deadlock detected\"}\n2026-05-05T05:43:46.004Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"GET /cart/user/19430 503\"}\n2026-05-05T05:43:47.112Z ERROR [postgres-primary] ERROR:  deadlock detected\n2026-05-05T05:43:47.113Z ERROR [postgres-primary]   Process 3950: INSERT INTO cart_items ... ON CONFLICT DO UPDATE\n2026-05-05T05:43:47.114Z ERROR [postgres-primary]   Process 3912: SELECT * FROM cart_items WHERE user_id=$1 FOR UPDATE\n2026-05-05T05:43:48.001Z WARN  [bulk-import-job] WARN: 18 batches failed due to lock contention; job_id=bulk-2026-05-05-0543 progress=9.2%\n2026-05-05T05:43:48.334Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"GET /cart/user/19440 503\"}\n2026-05-05T05:43:49.004Z ERROR [cart-service] error_rate=0.78 p95_latency_ms=9100 p99_latency_ms=9400 msg=\"SLO breach: error rate exceeds 25% threshold\"\n2026-05-05T05:43:50.112Z WARN  [frontend-service] upstream=cart-service status=503 path=/api/cart latency_ms=9201 msg=\"degraded: showing stale cart data to users\"\n2026-05-05T05:43:51.001Z INFO  [bulk-import-job] Executing UPSERT batch 145/1420 — 20 connections held\n2026-05-05T05:43:52.334Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"GET /health 200\"}\n2026-05-05T05:43:53.004Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"DB connection wait timeout after 9000ms\",\"pool_available\":0}\n2026-05-05T05:43:54.112Z WARN  [cart-service] {\"level\":\"warn\",\"msg\":\"Retrying DB connection\",\"attempt\":3,\"backoff_ms\":2000}\n2026-05-05T05:43:55.001Z INFO  [bulk-import-job] bulk import job_id=bulk-2026-05-05-0543 progress=10.5% connections_held=20 avg_batch_latency_ms=7210\n2026-05-05T05:43:56.334Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"POST /cart/user/19460/item 503\"}\n2026-05-05T05:43:57.004Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"GET /cart/user/19465 503\"}\n2026-05-05T05:43:57.441Z FATAL [cart-service] FATAL: unable to acquire DB connection after 3 retries, request aborted user_id=19465\n2026-05-05T05:44:00.112Z ERROR [cart-service] error_rate=0.83 p95_latency_ms=9302 msg=\"SLO breach sustained — paging on-call\"\n2026-05-05T05:44:01.004Z WARN  [bulk-import-job] WARN: bulk import slowing dramatically; avg_batch_ms=9100 connections_held=20 consider aborting job\n2026-05-05T05:44:02.334Z ERROR [cart-service] {\"level\":\"error\",\"msg\":\"POST /cart/user/19470/checkout 500\",\"error\":\"pq: sorry, too many clients already\"}\n2026-05-05T05:44:03.004Z ERROR [frontend-service] upstream=cart-service consecutive_5xx=41 latency_ms=9408 msg=\"escalating: cart-service fully degraded\"",
+  "recent_deploys": [
+    {
+      "sha": "de201e875db5",
+      "timestamp": "2026-04-21T19:45:44Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 2 updates (#3284)",
+      "changed_files": [
+        "src/cart-service/cart-service.csproj",
+        "src/cart-service/packages.lock.json"
+      ]
+    },
+    {
+      "sha": "7b1231238df3",
+      "timestamp": "2026-04-23T08:01:17Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] Fix dependabot configuration (#3298)",
+      "changed_files": [
+        ".github/dependabot.yml"
+      ]
+    },
+    {
+      "sha": "41b0e7b2e876",
+      "timestamp": "2026-04-24T03:35:36Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "51f1a6bba4e8",
+      "timestamp": "2026-04-24T06:02:13Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Remove tag from the docker logging used via docker compose (#3304)",
+      "changed_files": [
+        "docker-compose.yml",
+        "docker-compose.override.yml"
+      ]
+    },
+    {
+      "sha": "1d475a67d631",
+      "timestamp": "2026-04-24T06:49:14Z",
+      "author": "Juliano Costa",
+      "message": "chore: add retry configuration parameters to lychee (#3306)",
+      "changed_files": [
+        ".lychee.toml",
+        ".github/workflows/links.yml"
+      ]
+    },
+    {
+      "sha": "3caa0e226a7f",
+      "timestamp": "2026-04-24T11:49:05Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the pip-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/recommendation-service/requirements.txt",
+        "src/load-generator/requirements.txt"
+      ]
+    },
+    {
+      "sha": "974792d4cdda",
+      "timestamp": "2026-05-05T05:40:26Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with ",
+      "changed_files": [
+        "src/cart-service/jobs/bulk_import_job.ex",
+        "src/cart-service/db/migrations/20260505_add_bulk_import_upsert.sql",
+        "src/cart-service/mix.exs",
+        "src/cart-service/mix.lock"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=974792d4cdda introduced a bulk import job (bulk_import_job.ex) that runs at startup and acquires 20 of the 30 available DB connections from the shared postgres-primary pool to execute 1420 batched UPSERT statements against the cart_items table. The migration added in 20260505_add_bulk_import_upsert.sql performs ON CONFLICT DO UPDATE without a covering index on (user_id, product_id), causing full sequential scans and table-level lock escalation on every batch. During peak traffic this starves cart-service of DB connections, triggers deadlocks between the import and live user queries, exhausts the connection pool, and causes cascading 503/500 errors across all cart endpoints.",
+  "ground_truth_remediation": "1. Immediately kill the running bulk import job (bulk-2026-05-05-0543) via the job scheduler to release the 20 held DB connections and restore cart-service availability. 2. Add a unique index on cart_items(user_id, product_id) to support the ON CONFLICT clause and eliminate sequential scans: `CREATE UNIQUE INDEX CONCURRENTLY idx_cart_items_user_product ON cart_items(user_id, product_id);` 3. Reschedule the bulk import job to run during off-peak hours (e.g., 02:00–04:00 UTC) with connection pool limits capped at 5 connections and batch sizes reduced to 20 rows. 4. If the index cannot be added within the maintenance window, roll back sha=974792d4cdda by reverting bulk_import_job.ex and the migration, then redeploy.",
+  "red_herring": null
+}

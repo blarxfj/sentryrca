@@ -1,0 +1,91 @@
+{
+  "id": "syn-024",
+  "subset": "synthetic",
+  "category": "dependency_outage",
+  "affected_service": "checkout-service",
+  "severity": "high",
+  "alert_text": "ALERT: checkout-service order confirmation rate dropped below 20% — email-service queue depth > 50,000 messages, p99 confirmation latency > 30s, ErrorBudgetBurnRate 14x normal",
+  "log_window": "2026-05-16T12:08:03.112Z [checkout-service] INFO  order_id=ORD-998811 user_id=u-44521 stage=payment_confirmed awaiting_confirmation_email=true\n2026-05-16T12:08:03.201Z [checkout-service] DEBUG order_id=ORD-998811 action=enqueue_confirmation target=email-service queue=order-confirmations\n2026-05-16T12:08:03.450Z [email-service] INFO  {\"level\":\"info\",\"queue\":\"order-confirmations\",\"depth\":12043,\"workers\":8,\"msg\":\"queue stats\"}\n2026-05-16T12:08:03.891Z [checkout-service] INFO  order_id=ORD-998812 user_id=u-55902 stage=payment_confirmed awaiting_confirmation_email=true\n2026-05-16T12:08:04.100Z [email-service] WARN  {\"level\":\"warn\",\"queue\":\"order-confirmations\",\"depth\":12891,\"msg\":\"queue depth rising above threshold 10000\"}\n2026-05-16T12:08:04.340Z [checkout-service] DEBUG order_id=ORD-998812 action=enqueue_confirmation target=email-service queue=order-confirmations\n2026-05-16T12:08:05.003Z [email-service] INFO  {\"level\":\"info\",\"worker_id\":\"w-3\",\"status\":\"processing\",\"job_id\":\"job-7741\",\"msg\":\"processing email job\"}\n2026-05-16T12:08:05.880Z [email-service] ERROR {\"level\":\"error\",\"worker_id\":\"w-3\",\"job_id\":\"job-7741\",\"error\":\"SMTPConnectionError: connect ECONNREFUSED 10.0.4.22:587\",\"msg\":\"failed to deliver email\"}\n2026-05-16T12:08:05.881Z [email-service] WARN  {\"level\":\"warn\",\"worker_id\":\"w-3\",\"job_id\":\"job-7741\",\"retry_attempt\":1,\"next_retry_in_ms\":2000,\"msg\":\"scheduling retry\"}\n2026-05-16T12:08:06.210Z [checkout-service] INFO  order_id=ORD-998813 user_id=u-60011 stage=payment_confirmed awaiting_confirmation_email=true\n2026-05-16T12:08:07.001Z [email-service] ERROR {\"level\":\"error\",\"worker_id\":\"w-5\",\"job_id\":\"job-7738\",\"error\":\"SMTPConnectionError: connect ECONNREFUSED 10.0.4.22:587\",\"msg\":\"failed to deliver email\"}\n2026-05-16T12:08:07.440Z [smtp-relay] WARN  level=warn ts=2026-05-16T12:08:07.440Z msg=\"connection pool exhausted\" pool_size=50 active=50 waiting=214\n2026-05-16T12:08:07.889Z [smtp-relay] ERROR level=error ts=2026-05-16T12:08:07.889Z msg=\"worker thread panic\" thread=smtp-delivery-4 err=\"thread 'smtp-delivery-4' panicked at 'called `Result::unwrap()` on an `Err` value: Os { code: 104, kind: ConnectionReset'\"\n2026-05-16T12:08:07.890Z [smtp-relay] ERROR level=error ts=2026-05-16T12:08:07.890Z msg=\"stack trace\" at=\"smtp_relay/src/pool.rs:214\"\n2026-05-16T12:08:07.891Z [smtp-relay] ERROR level=error ts=2026-05-16T12:08:07.891Z msg=\"stack trace\" at=\"smtp_relay/src/worker.rs:88\"\n2026-05-16T12:08:08.012Z [email-service] ERROR {\"level\":\"error\",\"worker_id\":\"w-1\",\"job_id\":\"job-7729\",\"error\":\"SMTPConnectionError: connect ECONNREFUSED 10.0.4.22:587\",\"msg\":\"failed to deliver email\"}\n2026-05-16T12:08:08.390Z [checkout-service] DEBUG order_id=ORD-998815 action=enqueue_confirmation target=email-service queue=order-confirmations\n2026-05-16T12:08:09.001Z [email-service] WARN  {\"level\":\"warn\",\"queue\":\"order-confirmations\",\"depth\":14220,\"msg\":\"queue depth rising above threshold 10000\"}\n2026-05-16T12:08:09.450Z [smtp-relay] ERROR level=error ts=2026-05-16T12:08:09.450Z msg=\"all SMTP upstreams unhealthy\" upstream_count=3 healthy=0\n2026-05-16T12:08:09.451Z [smtp-relay] FATAL level=fatal ts=2026-05-16T12:08:09.451Z msg=\"entering degraded mode, refusing new connections\"\n2026-05-16T12:08:10.200Z [email-service] ERROR {\"level\":\"error\",\"component\":\"smtp-relay-client\",\"error\":\"connection refused 10.0.4.22:587\",\"msg\":\"smtp relay unreachable, all retries exhausted for job-7741\"}\n2026-05-16T12:08:10.550Z [email-service] WARN  {\"level\":\"warn\",\"queue\":\"order-confirmations\",\"depth\":15001,\"msg\":\"DLQ overflow threshold reached — moving jobs to dead-letter queue\"}\n2026-05-16T12:08:11.003Z [checkout-service] INFO  order_id=ORD-998820 user_id=u-70044 stage=payment_confirmed awaiting_confirmation_email=true\n2026-05-16T12:08:11.210Z [checkout-service] WARN  order_id=ORD-998816 confirmation_status=pending elapsed_ms=8109 threshold_ms=5000 msg=\"confirmation email SLA breach\"\n2026-05-16T12:08:11.980Z [email-service] ERROR {\"level\":\"error\",\"worker_id\":\"w-2\",\"job_id\":\"job-7750\",\"error\":\"SMTPConnectionError: connect ECONNREFUSED 10.0.4.22:587\",\"retry_attempt\":3,\"msg\":\"max retries exceeded, moving to DLQ\"}\n2026-05-16T12:08:12.400Z [checkout-service] WARN  order_id=ORD-998817 confirmation_status=pending elapsed_ms=9200 threshold_ms=5000 msg=\"confirmation email SLA breach\"\n2026-05-16T12:08:13.100Z [email-service] INFO  {\"level\":\"info\",\"queue\":\"order-confirmations\",\"depth\":17890,\"dlq_depth\":312,\"msg\":\"queue stats\"}\n2026-05-16T12:08:13.550Z [smtp-relay] ERROR level=error ts=2026-05-16T12:08:13.550Z msg=\"health check failed\" target=\"smtp.internal:587\" latency_ms=30001 err=\"i/o timeout\"\n2026-05-16T12:08:14.001Z [checkout-service] WARN  order_id=ORD-998818 confirmation_status=pending elapsed_ms=11000 threshold_ms=5000 msg=\"confirmation email SLA breach\"\n2026-05-16T12:08:14.780Z [email-service] WARN  {\"level\":\"warn\",\"worker_id\":\"w-6\",\"msg\":\"all SMTP relay endpoints returning connection refused, suspending worker\"}\n2026-05-16T12:08:15.200Z [email-service] WARN  {\"level\":\"warn\",\"worker_id\":\"w-7\",\"msg\":\"all SMTP relay endpoints returning connection refused, suspending worker\"}\n2026-05-16T12:08:15.890Z [checkout-service] ERROR order_id=ORD-998819 msg=\"order confirmation timeout\" elapsed_ms=13000 confirmation_sla_ms=5000 status=unconfirmed\n2026-05-16T12:08:16.340Z [email-service] ERROR {\"level\":\"error\",\"component\":\"queue-manager\",\"queue\":\"order-confirmations\",\"depth\":20440,\"msg\":\"queue growth rate unsustainable, consumer throughput near zero\"}\n2026-05-16T12:08:17.001Z [checkout-service] ERROR order_id=ORD-998820 msg=\"order confirmation timeout\" elapsed_ms=14500 confirmation_sla_ms=5000 status=unconfirmed\n2026-05-16T12:08:17.555Z [smtp-relay] ERROR level=error ts=2026-05-16T12:08:17.555Z msg=\"firepit profiling thread consuming 94% CPU — possible runaway loop\" commit=49a7631b1ddb thread=firepit-profiler-0\n2026-05-16T12:08:18.001Z [email-service] ERROR {\"level\":\"error\",\"job_id\":\"job-7760\",\"error\":\"SMTPConnectionError: connect ECONNREFUSED 10.0.4.22:587\",\"retry_attempt\":3,\"msg\":\"max retries exceeded, moving to DLQ\"}\n2026-05-16T12:08:18.340Z [checkout-service] ERROR order_id=ORD-998822 msg=\"order confirmation timeout\" elapsed_ms=15000 status=unconfirmed\n2026-05-16T12:08:19.100Z [smtp-relay] FATAL level=fatal ts=2026-05-16T12:08:19.100Z msg=\"OOM kill imminent — heap 98% utilized\" heap_used_mb=3980 heap_max_mb=4096\n2026-05-16T12:08:19.450Z [smtp-relay] FATAL level=fatal ts=2026-05-16T12:08:19.450Z msg=\"process exiting\" reason=\"out of memory\" pid=19822\n2026-05-16T12:08:19.780Z [email-service] ERROR {\"level\":\"error\",\"component\":\"smtp-relay-client\",\"msg\":\"connection refused 10.0.4.22:587 — smtp-relay process appears down\"}\n2026-05-16T12:08:20.001Z [checkout-service] ERROR order_id=ORD-998824 msg=\"order confirmation timeout\" elapsed_ms=17000 status=unconfirmed\n2026-05-16T12:08:20.450Z [email-service] WARN  {\"level\":\"warn\",\"component\":\"circuit-breaker\",\"dependency\":\"smtp-relay\",\"state\":\"OPEN\",\"failure_count\":18,\"threshold\":10,\"msg\":\"circuit breaker opened for smtp-relay\"}\n2026-05-16T12:08:20.890Z [checkout-service] WARN  msg=\"email-service queue backup detected\" queue_depth=22100 dlq_depth=890 msg2=\"order confirmation emails not being delivered\"\n2026-05-16T12:08:21.200Z [email-service] INFO  {\"level\":\"info\",\"component\":\"circuit-breaker\",\"dependency\":\"smtp-relay\",\"state\":\"OPEN\",\"msg\":\"dropping all new smtp deliveries until relay recovers\"}\n2026-05-16T12:08:21.560Z [checkout-service] ERROR order_id=ORD-998826 msg=\"order confirmation timeout\" elapsed_ms=18500 status=unconfirmed\n2026-05-16T12:08:22.100Z [email-service] ERROR {\"level\":\"error\",\"queue\":\"order-confirmations\",\"depth\":25300,\"dlq_depth\":1204,\"msg\":\"queue depth critical — 25300 unprocessed messages\"}\n2026-05-16T12:08:22.780Z [checkout-service] ERROR order_id=ORD-998827 msg=\"order confirmation timeout\" elapsed_ms=19200 status=unconfirmed\n2026-05-16T12:08:23.500Z [smtp-relay] INFO  level=info ts=2026-05-16T12:08:23.500Z msg=\"process restarting via supervisor\" attempt=1\n2026-05-16T12:08:24.100Z [smtp-relay] ERROR level=error ts=2026-05-16T12:08:24.100Z msg=\"restart failed — firepit profiler reattaching and consuming memory\" commit=49a7631b1ddb\n2026-05-16T12:08:24.560Z [email-service] ERROR {\"level\":\"error\",\"component\":\"smtp-relay-client\",\"msg\":\"smtp-relay restart failed, still connection refused 10.0.4.22:587\"}\n2026-05-16T12:08:25.001Z [checkout-service] ERROR order_id=ORD-998830 msg=\"order confirmation timeout\" elapsed_ms=22000 status=unconfirmed\n2026-05-16T12:08:25.450Z [checkout-service] WARN  msg=\"degrading gracefully: order accepted but confirmation email deferred\" deferral_queue_depth=25300\n2026-05-16T12:08:26.100Z [email-service] WARN  {\"level\":\"warn\",\"component\":\"queue-manager\",\"msg\":\"pausing new job acceptance to prevent unbounded queue growth\",\"current_depth\":27100}\n2026-05-16T12:08:26.780Z [checkout-service] ERROR msg=\"email-service returned 503 Service Unavailable for enqueue request\" order_id=ORD-998832\n2026-05-16T12:08:27.100Z [checkout-service] ERROR msg=\"email-service returned 503 Service Unavailable for enqueue request\" order_id=ORD-998833\n2026-05-16T12:08:27.660Z [smtp-relay] ERROR level=error ts=2026-05-16T12:08:27.660Z msg=\"second OOM — firepit profiler heap leak unresolved\" heap_used_mb=4090 commit=49a7631b1ddb\n2026-05-16T12:08:28.200Z [email-service] ERROR {\"level\":\"error\",\"component\":\"health-check\",\"dependency\":\"smtp-relay\",\"status\":\"DOWN\",\"consecutive_failures\":24,\"msg\":\"smtp-relay health check failing\"}\n2026-05-16T12:08:28.780Z [checkout-service] ERROR msg=\"circuit breaker OPEN for email-service\" failure_rate=0.91 threshold=0.5 window_s=60\n2026-05-16T12:08:29.100Z [checkout-service] WARN  msg=\"order confirmation pipeline fully stalled\" confirmed_last_60s=3 expected_per_60s=200\n2026-05-16T12:08:29.560Z [email-service] FATAL {\"level\":\"fatal\",\"queue\":\"order-confirmations\",\"depth\":29800,\"dlq_depth\":2100,\"msg\":\"queue backup unrecoverable without smtp-relay restart\"}\n2026-05-16T12:08:30.100Z [checkout-service] ERROR msg=\"ALERT FIRING: order confirmation rate 1.5% — SLA breach\" confirmed_rate=0.015 sla_threshold=0.95\n2026-05-16T12:08:30.450Z [smtp-relay] FATAL level=fatal ts=2026-05-16T12:08:30.450Z msg=\"process crashed — OOM\" pid=19901 commit=49a7631b1ddb heap_used_mb=4096\n2026-05-16T12:08:31.001Z [checkout-service] WARN  msg=\"falling back to async confirmation deferral — customer will receive email once smtp-relay recovers\"\n2026-05-16T12:08:31.780Z [email-service] ERROR {\"level\":\"error\",\"component\":\"smtp-relay-client\",\"consecutive_failures\":28,\"msg\":\"smtp-relay unresponsive — no recovery in sight without manual intervention\"}\n2026-05-16T12:08:32.500Z [checkout-service] ERROR msg=\"email-service queue depth 30200 exceeds hard limit 30000 — rejecting new confirmation requests\"\n2026-05-16T12:08:33.100Z [smtp-relay] INFO  level=info ts=2026-05-16T12:08:33.100Z msg=\"supervisor attempting restart\" attempt=2\n2026-05-16T12:08:34.200Z [smtp-relay] ERROR level=error ts=2026-05-16T12:08:34.200Z msg=\"restart failed again — firepit profiler process leaking 600MB on attach\" commit=49a7631b1ddb\n2026-05-16T12:08:35.001Z [checkout-service] ERROR msg=\"order confirmation service fully unavailable — manual escalation required\" email_queue_depth=30200 dlq_depth=2800",
+  "recent_deploys": [
+    {
+      "sha": "c789fc89a688",
+      "timestamp": "2026-04-21T11:57:50Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "package-lock.json",
+        "package.json"
+      ]
+    },
+    {
+      "sha": "b6de548594c2",
+      "timestamp": "2026-04-21T15:46:42Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the cargo-production-dependencies group across 1 directory wit",
+      "changed_files": [
+        "Cargo.lock",
+        "Cargo.toml",
+        "smtp-relay/Cargo.toml"
+      ]
+    },
+    {
+      "sha": "c92f3bc755e8",
+      "timestamp": "2026-04-24T03:26:57Z",
+      "author": "Timur Olzhabayev",
+      "message": "chore(grafana): bump image to 13.0.1 and provision default-email receiver (#3288",
+      "changed_files": [
+        "docker-compose.yml",
+        "grafana/provisioning/alerting/email-receiver.yaml",
+        "grafana/provisioning/datasources/default.yaml"
+      ]
+    },
+    {
+      "sha": "dc4785b348ba",
+      "timestamp": "2026-04-30T02:23:16Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump swoosh (#3323)",
+      "changed_files": [
+        "email-service/mix.lock",
+        "email-service/mix.exs"
+      ]
+    },
+    {
+      "sha": "30ba52fd9566",
+      "timestamp": "2026-05-05T06:33:05Z",
+      "author": "Jonathan Munz",
+      "message": "Update React Native example app dependencies (#3296)",
+      "changed_files": [
+        "examples/react-native/package.json",
+        "examples/react-native/package-lock.json"
+      ]
+    },
+    {
+      "sha": "23dc47f86f5b",
+      "timestamp": "2026-05-06T00:04:45Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "checkout-service/package.json",
+        "checkout-service/package-lock.json",
+        "frontend/package.json",
+        "frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "49a7631b1ddb",
+      "timestamp": "2026-05-16T12:04:07Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Profiling with firepit (#3333)",
+      "changed_files": [
+        "smtp-relay/src/profiler.rs",
+        "smtp-relay/src/main.rs",
+        "smtp-relay/src/pool.rs",
+        "smtp-relay/Cargo.toml",
+        "docker-compose.yml"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha 49a7631b1ddb ('Profiling with firepit') introduced a firepit-based memory profiler into smtp-relay that contains a heap memory leak. When smtp-relay starts, the firepit profiler attaches and continuously leaks ~600MB per restart attempt, rapidly exhausting the 4GB heap. The smtp-relay process crashes with OOM, refuses all new connections on port 587, and cannot recover via supervisor restarts because the profiler re-attaches each time. This causes email-service workers to receive ECONNREFUSED on every SMTP delivery attempt, backing up the order-confirmations queue to 30,000+ messages and preventing checkout-service from sending order confirmation emails.",
+  "ground_truth_remediation": "1. Immediately roll back smtp-relay to the previous stable commit (23dc47f86f5b or earlier) to remove the firepit profiler code and restore SMTP relay functionality. 2. Restart smtp-relay after rollback and verify it binds successfully on port 587 with no OOM. 3. Reset the email-service circuit breaker for smtp-relay dependency to allow worker threads to resume. 4. Drain the order-confirmations dead-letter queue (DLQ) by reprocessing the ~2,800 DLQ jobs once smtp-relay is healthy. 5. Monitor queue depth until it drains below 1,000. 6. If a profiler is needed in production, reproduce the firepit memory leak in a staging environment before re-deploying with appropriate heap limits and profiler isolation.",
+  "red_herring": null
+}

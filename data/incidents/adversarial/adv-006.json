@@ -1,0 +1,93 @@
+{
+  "id": "adv-006",
+  "subset": "adversarial",
+  "category": "config_error",
+  "affected_service": "payment-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: payment-service error rate 98.7% over last 5 minutes — all payment requests failing with HTTP 401 Unauthorized. Zero successful transactions since 14:23 UTC.",
+  "log_window": "2024-03-15T14:18:02Z [email-service] INFO  SMTP relay switched to Postmark (api.postmarkapp.com:587)\n2024-03-15T14:18:04Z [email-service] INFO  Test email dispatched successfully via Postmark\n2024-03-15T14:18:06Z [email-service] INFO  Email delivery confirmation received, latency=340ms\n2024-03-15T14:19:11Z [payment-service] INFO  Payment request accepted, transaction_id=txn_8821af, user_id=u_4492\n2024-03-15T14:19:13Z [payment-service] INFO  JWT validation OK, sub=u_4492, exp=1710510000\n2024-03-15T14:19:15Z [payment-service] INFO  Stripe charge initiated, amount=4999, currency=USD\n2024-03-15T14:20:02Z [ntpd] WARN   frontend-node-01: clock offset +47.312s detected, peer=ntp1.internal\n2024-03-15T14:20:02Z [ntpd] WARN   frontend-node-02: clock offset +47.089s detected, peer=ntp1.internal\n2024-03-15T14:20:03Z [ntpd] ERROR  frontend-node-01: step threshold exceeded (128s limit not reached), slewing disabled - manual intervention required\n2024-03-15T14:20:03Z [ntpd] ERROR  frontend-node-02: step threshold exceeded, slewing disabled - manual intervention required\n2024-03-15T14:20:44Z [payment-service] INFO  Payment request accepted, transaction_id=txn_8822bc, user_id=u_7731\n2024-03-15T14:20:46Z [payment-service] INFO  JWT validation OK, sub=u_7731, exp=1710510120\n2024-03-15T14:21:09Z [payment-service] INFO  Stripe charge succeeded, transaction_id=txn_8822bc\n2024-03-15T14:22:51Z [nginx] INFO   frontend-node-01 reloaded reverse proxy config\n2024-03-15T14:22:52Z [nginx] INFO   frontend-node-02 reloaded reverse proxy config\n2024-03-15T14:23:00Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...7fa2, exp=1710510180, server_time=1710510227, delta=+47s, client_ip=203.0.113.44\n2024-03-15T14:23:00Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...9bc1, exp=1710510175, server_time=1710510222, delta=+47s, client_ip=198.51.100.12\n2024-03-15T14:23:01Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...3de8, exp=1710510179, server_time=1710510226, delta=+47s, client_ip=203.0.113.91\n2024-03-15T14:23:01Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...1ab4, exp=1710510182, server_time=1710510229, delta=+47s, client_ip=198.51.100.77\n2024-03-15T14:23:01Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...5cc9, exp=1710510177, server_time=1710510224, delta=+47s, client_ip=203.0.113.18\n2024-03-15T14:23:02Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...2ff3, exp=1710510180, server_time=1710510227, delta=+47s, client_ip=198.51.100.55\n2024-03-15T14:23:02Z [payment-service] WARN  High rate of JWT expiry errors - possible clock skew on validating node\n2024-03-15T14:23:03Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...8aa1, exp=1710510183, server_time=1710510230, delta=+47s, client_ip=203.0.113.63\n2024-03-15T14:23:03Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...4bd7, exp=1710510178, server_time=1710510225, delta=+47s, client_ip=198.51.100.30\n2024-03-15T14:23:04Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...6ea2, exp=1710510181, server_time=1710510228, delta=+47s, client_ip=203.0.113.102\n2024-03-15T14:23:05Z [auth-service] INFO  Token issued, jti=eyJhbGc...9xq1, iat=1710510104, exp=1710510404, sub=u_8847 (token valid, issued 2m ago)\n2024-03-15T14:23:05Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...9xq1, exp=1710510404, server_time=1710510451, delta=+47s\n2024-03-15T14:23:06Z [payment-service] ERROR JWT validation failed: token is expired - NOTE: token exp=1710510404 is 6 minutes in the future per auth-service, but local clock reads 1710510451\n2024-03-15T14:23:07Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...2mn5, exp=1710510200, server_time=1710510247, delta=+47s, client_ip=203.0.113.9\n2024-03-15T14:23:08Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...7op3, exp=1710510195, server_time=1710510242, delta=+47s, client_ip=198.51.100.88\n2024-03-15T14:23:09Z [monitoring] ALERT  payment-service HTTP 401 rate: 94.2% (threshold: 5%)\n2024-03-15T14:23:10Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...1qr8, delta=+47s, client_ip=203.0.113.201\n2024-03-15T14:23:10Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...5st4, delta=+47s, client_ip=198.51.100.44\n2024-03-15T14:23:11Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...3uv6, delta=+47s, client_ip=203.0.113.77\n2024-03-15T14:23:12Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...8wx2, delta=+47s, client_ip=198.51.100.19\n2024-03-15T14:23:13Z [payment-service] WARN  All failing JWT errors show consistent server_time delta of approximately +47 seconds above token exp\n2024-03-15T14:23:14Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...4yz9, delta=+47s, client_ip=203.0.113.55\n2024-03-15T14:23:15Z [email-service] INFO  Postmark relay healthy, 3 transactional emails delivered, avg_latency=312ms\n2024-03-15T14:23:15Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...6ab1, delta=+47s, client_ip=198.51.100.66\n2024-03-15T14:23:16Z [monitoring] ALERT  payment-service HTTP 401 rate: 98.7% (CRITICAL)\n2024-03-15T14:23:17Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...2cd5, delta=+47s, client_ip=203.0.113.134\n2024-03-15T14:23:18Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...9ef3, delta=+47s, client_ip=198.51.100.92\n2024-03-15T14:23:19Z [ntpd] ERROR  frontend-node-01: clock remains +47s ahead of stratum-2 peer, automatic correction suspended\n2024-03-15T14:23:19Z [ntpd] ERROR  frontend-node-02: clock remains +47s ahead of stratum-2 peer, automatic correction suspended\n2024-03-15T14:23:20Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...7gh1, delta=+47s, client_ip=203.0.113.200\n2024-03-15T14:23:21Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...4ij8, delta=+47s, client_ip=198.51.100.11\n2024-03-15T14:23:22Z [payment-service] WARN  Email-service SMTP migration completed at 14:18 UTC - email subsystem healthy, unrelated to current auth failures\n2024-03-15T14:23:23Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...1kl2, delta=+47s, client_ip=203.0.113.88\n2024-03-15T14:23:24Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...6mn4, delta=+47s, client_ip=198.51.100.73\n2024-03-15T14:23:25Z [payment-service] ERROR JWT validation failed: token is expired, jti=eyJhbGc...3op7, delta=+47s, client_ip=203.0.113.45\n2024-03-15T14:24:01Z [on-call] PAGE   payment-service critical - 98.7% 401 error rate, possible auth misconfiguration",
+  "recent_deploys": [
+    {
+      "sha": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0",
+      "timestamp": "2024-03-15T08:05:00Z",
+      "author": "sarah.chen",
+      "message": "chore: upgrade payment-service dependency stripe-go v74.1.0",
+      "changed_files": [
+        "go.mod",
+        "go.sum",
+        "internal/stripe/client.go"
+      ]
+    },
+    {
+      "sha": "b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1",
+      "timestamp": "2024-03-15T09:30:00Z",
+      "author": "marcus.williams",
+      "message": "feat: add idempotency key support to POST /payments endpoint",
+      "changed_files": [
+        "internal/handlers/payment_handler.go",
+        "internal/middleware/idempotency.go",
+        "db/migrations/20240315_add_idempotency_keys.sql"
+      ]
+    },
+    {
+      "sha": "c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2",
+      "timestamp": "2024-03-15T10:15:00Z",
+      "author": "priya.patel",
+      "message": "fix: correct currency rounding error for JPY transactions",
+      "changed_files": [
+        "internal/currency/rounding.go",
+        "internal/currency/rounding_test.go"
+      ]
+    },
+    {
+      "sha": "d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3",
+      "timestamp": "2024-03-15T11:45:00Z",
+      "author": "james.okonkwo",
+      "message": "refactor: extract payment audit logger into standalone package",
+      "changed_files": [
+        "internal/audit/logger.go",
+        "internal/audit/logger_test.go",
+        "internal/handlers/payment_handler.go",
+        "cmd/payment-service/main.go"
+      ]
+    },
+    {
+      "sha": "e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4",
+      "timestamp": "2024-03-15T13:10:00Z",
+      "author": "lisa.tran",
+      "message": "chore: switch email-service SMTP relay from SendGrid to Postmark",
+      "changed_files": [
+        "services/email-service/config/smtp.yaml",
+        "services/email-service/internal/relay/postmark_client.go",
+        "services/email-service/internal/relay/sendgrid_client.go",
+        "services/email-service/internal/relay/relay_factory.go",
+        "helm/email-service/values.yaml"
+      ]
+    },
+    {
+      "sha": "f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5",
+      "timestamp": "2024-03-15T13:55:00Z",
+      "author": "devops-bot",
+      "message": "ci: rotate internal TLS certificates for inter-service mTLS (scheduled)",
+      "changed_files": [
+        "certs/internal/payment-service.crt",
+        "certs/internal/payment-service.key",
+        "certs/internal/email-service.crt",
+        "certs/internal/email-service.key"
+      ]
+    },
+    {
+      "sha": "a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6",
+      "timestamp": "2024-03-15T14:10:00Z",
+      "author": "alex.nguyen",
+      "message": "docs: update payment-service API reference for v2 endpoints",
+      "changed_files": [
+        "docs/api/payment-service-v2.md",
+        "docs/api/openapi.yaml"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "NTP clock synchronization failure on frontend-node-01 and frontend-node-02 caused both nodes to run +47 seconds ahead of actual time. When these nodes handle payment requests, the payment-service JWT validator compares the token exp claim against the node local clock. With the clock skewed +47 seconds forward, all JWTs including freshly issued ones with 5-minute lifetimes appear expired, causing 100% of requests routed through these two frontend nodes to receive HTTP 401. The ntpd logs at 14:20:02 UTC explicitly record clock offset +47.312s detected on both nodes and report that automatic slewing was disabled, meaning the skew was not self-correcting. The payment-service logs consistently show delta=+47s on every failed JWT validation.",
+  "ground_truth_remediation": "1. Immediately force ntpd step correction on both frontend nodes: sudo systemctl stop ntpd and sudo ntpdate -b ntp1.internal and sudo systemctl start ntpd. 2. Verify clock sync via chronyc tracking or ntpq -p on both nodes and confirm offset falls below 1 second. 3. Confirm payment-service recovers automatically once clocks are corrected with no restart required. 4. If ntpd is misconfigured check /etc/ntp.conf for correct stratum-2 peers and ensure firewall allows UDP 123 to NTP servers. 5. Post-incident: add a monitoring alert for NTP offset greater than 5 seconds on all frontend nodes to catch clock drift before it impacts JWT validation.",
+  "red_herring": "The email-service deploy (SHA e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4, authored by lisa.tran at 13:10 UTC) appears suspicious because: (a) it was deployed exactly 35 minutes before the incident began at 14:23 UTC and touches SMTP relay configuration, a change to external service credentials that could plausibly affect downstream payment flows if payment confirmations or fraud-check callbacks depend on email delivery state; (b) however the logs exonerate this deploy entirely: at 14:18:04 UTC the email-service logs confirm Test email dispatched successfully via Postmark, at 14:23:15 UTC Postmark relay is logged as healthy with 3 transactional emails delivered, and at 14:23:22 UTC the payment-service itself logs that email-service SMTP migration completed at 14:18 UTC and email subsystem is healthy and unrelated to current auth failures. The true cause is unambiguously visible in the logs: ntpd errors at 14:20:02-03 UTC show both frontend nodes at +47s clock offset with automatic correction suspended, and every single JWT failure log entry shows delta=+47s, with payment-service itself warning at 14:23:13 that all failing JWT errors show consistent server_time delta of approximately +47 seconds above token exp."
+}

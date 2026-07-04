@@ -1,0 +1,89 @@
+{
+  "id": "syn-015",
+  "subset": "synthetic",
+  "category": "deploy_regression",
+  "affected_service": "ad-service",
+  "severity": "medium",
+  "alert_text": "ALERT: ad-service p99 latency exceeded 2500ms for 10 consecutive minutes; CPU utilization at 94%; possible log I/O saturation detected on ad-service pods.",
+  "log_window": "2026-05-13T11:50:02.113Z [ad-service] INFO  Starting ad-service version=2.7.4 sha=94f8a915b080\n2026-05-13T11:50:02.341Z [ad-service] INFO  Connected to ad-db host=ad-db.internal port=5432\n2026-05-13T11:50:02.512Z [ad-service] INFO  gRPC server listening on :9555\n2026-05-13T11:50:03.021Z [ad-service] DEBUG Loaded ad config: max_ads=10 refresh_interval=30s cache_ttl=60s\n2026-05-13T11:50:03.105Z [ad-service] DEBUG Registered 42 ad entries from database\n2026-05-13T11:50:03.220Z [ad-service] DEBUG Ad category index built: categories=[electronics,apparel,garden,automotive,sports]\n2026-05-13T11:50:04.017Z [frontend] INFO  GET /api/ads?context=homepage status=200 latency=45ms\n2026-05-13T11:50:04.312Z [ad-service] DEBUG Received GetAds request: context_keys=[homepage] caller=frontend\n2026-05-13T11:50:04.313Z [ad-service] DEBUG Querying ad_db for context_keys=[homepage] limit=10\n2026-05-13T11:50:04.315Z [ad-service] DEBUG SQL: SELECT id, text, redirect_url FROM ads WHERE category IN ('homepage') ORDER BY priority DESC LIMIT 10\n2026-05-13T11:50:04.320Z [ad-service] DEBUG ad_db query complete rows_returned=5 duration=5ms\n2026-05-13T11:50:04.321Z [ad-service] DEBUG Applying relevance scoring for 5 ads context=homepage\n2026-05-13T11:50:04.322Z [ad-service] DEBUG Returning 5 ads to caller=frontend\n2026-05-13T11:50:04.410Z [ad-service] INFO  GetAds rpc completed context_keys=[homepage] ads_returned=5 duration=98ms\n2026-05-13T11:51:14.003Z [frontend] INFO  GET /api/ads?context=product-detail status=200 latency=112ms\n2026-05-13T11:51:14.221Z [ad-service] DEBUG Received GetAds request: context_keys=[product-detail] caller=frontend\n2026-05-13T11:51:14.222Z [ad-service] DEBUG Querying ad_db for context_keys=[product-detail] limit=10\n2026-05-13T11:51:14.224Z [ad-service] DEBUG SQL: SELECT id, text, redirect_url FROM ads WHERE category IN ('product-detail') ORDER BY priority DESC LIMIT 10\n2026-05-13T11:51:14.230Z [ad-service] DEBUG ad_db query complete rows_returned=8 duration=6ms\n2026-05-13T11:51:14.231Z [ad-service] DEBUG Applying relevance scoring for 8 ads context=product-detail\n2026-05-13T11:51:14.232Z [ad-service] DEBUG Returning 8 ads to caller=frontend\n2026-05-13T11:51:14.337Z [ad-service] INFO  GetAds rpc completed context_keys=[product-detail] ads_returned=8 duration=116ms\n2026-05-13T11:53:00.001Z [ad-service] DEBUG Cache miss for context_keys=[cart] fetching from ad_db\n2026-05-13T11:53:00.003Z [ad-service] DEBUG SQL: SELECT id, text, redirect_url FROM ads WHERE category IN ('cart') ORDER BY priority DESC LIMIT 10\n2026-05-13T11:53:00.009Z [ad-service] DEBUG ad_db query complete rows_returned=3 duration=6ms\n2026-05-13T11:53:00.011Z [ad-service] DEBUG Returning 3 ads to caller=frontend\n2026-05-13T11:54:30.100Z [ad-service] WARN  Log buffer utilization at 62%: high-frequency DEBUG output may impact throughput\n2026-05-13T11:55:00.112Z [ad-service] DEBUG Received GetAds request: context_keys=[checkout] caller=frontend\n2026-05-13T11:55:00.113Z [ad-service] DEBUG Querying ad_db for context_keys=[checkout] limit=10\n2026-05-13T11:55:00.115Z [ad-service] DEBUG SQL: SELECT id, text, redirect_url FROM ads WHERE category IN ('checkout') ORDER BY priority DESC LIMIT 10\n2026-05-13T11:55:00.119Z [ad-service] DEBUG ad_db query complete rows_returned=6 duration=4ms\n2026-05-13T11:55:00.120Z [ad-service] DEBUG Applying relevance scoring for 6 ads context=checkout\n2026-05-13T11:55:00.121Z [ad-service] DEBUG Returning 6 ads to caller=frontend\n2026-05-13T11:55:00.240Z [ad-service] INFO  GetAds rpc completed context_keys=[checkout] ads_returned=6 duration=128ms\n2026-05-13T11:56:10.004Z [ad-service] WARN  Log buffer utilization at 78%: consider reducing log verbosity in production\n2026-05-13T11:56:10.220Z [ad-service] DEBUG Flushing log buffer to stdout: queued_entries=1847 flush_duration=34ms\n2026-05-13T11:56:45.001Z [frontend] WARN  GET /api/ads?context=homepage status=200 latency=820ms upstream=ad-service\n2026-05-13T11:56:45.112Z [ad-service] DEBUG Received GetAds request: context_keys=[homepage] caller=frontend\n2026-05-13T11:56:45.113Z [ad-service] DEBUG Querying ad_db for context_keys=[homepage] limit=10\n2026-05-13T11:56:45.195Z [ad-service] DEBUG ad_db query complete rows_returned=5 duration=82ms\n2026-05-13T11:56:45.196Z [ad-service] DEBUG Applying relevance scoring for 5 ads context=homepage\n2026-05-13T11:56:45.197Z [ad-service] DEBUG Returning 5 ads to caller=frontend\n2026-05-13T11:56:45.830Z [ad-service] INFO  GetAds rpc completed context_keys=[homepage] ads_returned=5 duration=718ms\n2026-05-13T11:57:02.005Z [ad-service] WARN  Log buffer utilization at 91%: blocking I/O detected on log writer thread\n2026-05-13T11:57:02.450Z [ad-service] DEBUG Flushing log buffer to stdout: queued_entries=5231 flush_duration=411ms\n2026-05-13T11:57:20.003Z [frontend] ERROR GET /api/ads?context=product-detail status=504 latency=3200ms upstream=ad-service\n2026-05-13T11:57:20.110Z [ad-service] WARN  GetAds rpc slow: duration=3100ms context_keys=[product-detail] threshold=500ms\n2026-05-13T11:57:20.112Z [ad-service] DEBUG Received GetAds request: context_keys=[product-detail] caller=frontend\n2026-05-13T11:57:20.114Z [ad-service] DEBUG Querying ad_db for context_keys=[product-detail] limit=10\n2026-05-13T11:57:20.690Z [ad-service] DEBUG ad_db query complete rows_returned=8 duration=576ms\n2026-05-13T11:57:20.695Z [ad-service] DEBUG log_writer blocked for 492ms waiting for buffer drain\n2026-05-13T11:57:21.110Z [ad-service] ERROR GetAds rpc timeout: context_keys=[product-detail] elapsed=3098ms gRPC_status=DEADLINE_EXCEEDED\n2026-05-13T11:57:21.115Z [ad-service] ERROR   at adservice.AdServiceImpl.getAds(AdServiceImpl.java:88)\n2026-05-13T11:57:21.116Z [ad-service] ERROR   at adservice.AdServiceGrpc$MethodHandlers.invoke(AdServiceGrpc.java:214)\n2026-05-13T11:57:30.001Z [ad-service] WARN  CPU usage: 88% (threshold=80%) — log serialization consuming significant cycles\n2026-05-13T11:57:45.220Z [ad-service] DEBUG Received GetAds request: context_keys=[cart] caller=frontend\n2026-05-13T11:57:45.221Z [ad-service] DEBUG Querying ad_db for context_keys=[cart] limit=10\n2026-05-13T11:57:45.412Z [ad-service] DEBUG log_writer blocked for 191ms waiting for buffer drain\n2026-05-13T11:57:46.810Z [ad-service] ERROR GetAds rpc timeout: context_keys=[cart] elapsed=2590ms gRPC_status=DEADLINE_EXCEEDED\n2026-05-13T11:57:46.812Z [ad-service] ERROR   at adservice.AdServiceImpl.getAds(AdServiceImpl.java:88)\n2026-05-13T11:58:01.003Z [ad-service] WARN  Log buffer utilization at 98%: log lines may be dropped\n2026-05-13T11:58:01.110Z [ad-service] ERROR Log writer thread stalled: unable to drain buffer within 1000ms — dropping 312 log entries\n2026-05-13T11:58:01.115Z [ad-service] DEBUG Flushing log buffer to stdout: queued_entries=9812 flush_duration=889ms\n2026-05-13T11:58:10.002Z [frontend] ERROR GET /api/ads?context=checkout status=504 latency=4100ms upstream=ad-service\n2026-05-13T11:58:10.340Z [ad-service] ERROR GetAds rpc timeout: context_keys=[checkout] elapsed=4022ms gRPC_status=DEADLINE_EXCEEDED\n2026-05-13T11:58:12.001Z [ad-service] WARN  CPU usage: 94% — goroutine/thread contention on log I/O mutex\n2026-05-13T11:58:12.004Z [ad-service] DEBUG log_writer blocked for 871ms waiting for buffer drain\n2026-05-13T11:58:30.022Z [otel-collector] {\"level\":\"warn\",\"ts\":\"2026-05-13T11:58:30.022Z\",\"msg\":\"ad-service log export queue at capacity\",\"queue_size\":10000,\"dropped_spans\":14}\n2026-05-13T11:58:30.025Z [otel-collector] {\"level\":\"error\",\"ts\":\"2026-05-13T11:58:30.025Z\",\"msg\":\"exporter/otlp backpressure from ad-service\",\"service\":\"ad-service\",\"queue_drop_rate\":\"142/s\"}\n2026-05-13T11:58:45.001Z [ad-service] ERROR GetAds rpc timeout: context_keys=[homepage] elapsed=5210ms gRPC_status=DEADLINE_EXCEEDED\n2026-05-13T11:58:45.003Z [ad-service] ERROR   at adservice.AdServiceImpl.getAds(AdServiceImpl.java:88)\n2026-05-13T11:58:45.005Z [ad-service] ERROR   at adservice.AdServiceGrpc$MethodHandlers.invoke(AdServiceGrpc.java:214)\n2026-05-13T11:58:50.110Z [frontend] ERROR Multiple upstream ad-service failures: circuit_breaker=open fallback=empty_ads\n2026-05-13T11:59:00.001Z [ad-service] FATAL Log writer thread terminated: out-of-memory allocating log buffer — heap_used=98% max_heap=512MB\n2026-05-13T11:59:00.004Z [ad-service] FATAL   at adservice.logging.AsyncLogWriter.allocateBuffer(AsyncLogWriter.java:132)\n2026-05-13T11:59:00.006Z [ad-service] FATAL   at adservice.logging.AsyncLogWriter.run(AsyncLogWriter.java:87)\n2026-05-13T11:59:05.331Z [otel-collector] {\"level\":\"error\",\"ts\":\"2026-05-13T11:59:05.331Z\",\"msg\":\"lost connection to ad-service log stream\",\"service\":\"ad-service\",\"reconnect_attempt\":1}\n2026-05-13T12:00:11.001Z [ad-service] WARN  Restarting log writer thread after OOM recovery\n2026-05-13T12:00:11.220Z [ad-service] WARN  Log volume since startup: 182,441 lines in 10m09s — log_level=DEBUG is set in production config\n2026-05-13T12:00:11.225Z [ad-service] WARN  Recommended action: set log_level=INFO or higher for production deployments\n2026-05-13T12:00:30.001Z [ad-service] ERROR p99 latency=5800ms error_rate=67% — service degraded\n2026-05-13T12:00:30.004Z [ad-service] INFO  Build info: version=2.7.4 sha=94f8a915b080 log_level=DEBUG environment=production\n",
+  "recent_deploys": [
+    {
+      "sha": "53f46ae9eb45",
+      "timestamp": "2026-04-22T13:56:23Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 6 updates (#3295)",
+      "changed_files": [
+        "src/ad-service/pom.xml",
+        "src/ad-service/packages.lock.json"
+      ]
+    },
+    {
+      "sha": "c92f3bc755e8",
+      "timestamp": "2026-04-24T03:26:57Z",
+      "author": "Timur Olzhabayev",
+      "message": "chore(grafana): bump image to 13.0.1 and provision default-email receiver (#3288",
+      "changed_files": [
+        "grafana/dashboards/ad-service.json",
+        "grafana/provisioning/alerting/receivers.yaml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "sha": "30ba52fd9566",
+      "timestamp": "2026-05-05T06:33:05Z",
+      "author": "Jonathan Munz",
+      "message": "Update React Native example app dependencies (#3296)",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json",
+        "examples/react-native/package.json"
+      ]
+    },
+    {
+      "sha": "997d9970c437",
+      "timestamp": "2026-05-05T08:45:37Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the go-production-dependencies group across 2 directories with",
+      "changed_files": [
+        "src/ad-service/go.mod",
+        "src/ad-service/go.sum",
+        "src/checkout-service/go.mod"
+      ]
+    },
+    {
+      "sha": "313728caeedd",
+      "timestamp": "2026-05-06T00:11:01Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "05fab63b804f",
+      "timestamp": "2026-05-06T14:43:41Z",
+      "author": "Shenoy Pratik",
+      "message": "fix: collector otelcol.signal scope attribute conflict in logs pipeline (#3321)",
+      "changed_files": [
+        "src/ad-service/src/main/resources/log4j2.xml",
+        "src/ad-service/src/main/resources/application.properties",
+        "otelcollector/otelcol-config.yml"
+      ]
+    },
+    {
+      "sha": "94f8a915b080",
+      "timestamp": "2026-05-13T11:48:42Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json",
+        "src/ad-service/package-lock.json"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=05fab63b804f (2026-05-06T14:43:41Z) by Shenoy Pratik modified src/ad-service/src/main/resources/log4j2.xml and accidentally set the root log level to DEBUG instead of INFO for the production artifact. As a result, ad-service has been emitting extremely high-volume DEBUG logs (182,000+ lines in ~10 minutes) since that deploy reached production. The DEBUG log flood saturates the async log writer's buffer, causes blocking I/O on the log writer thread, consumes ~94% CPU, and ultimately triggers heap OOM in the log buffer allocator — cascading into gRPC DEADLINE_EXCEEDED errors and a 67% error rate.",
+  "ground_truth_remediation": "1. Immediately roll back ad-service to the previous known-good deploy sha=997d9970c437 to restore INFO-level logging and relieve the I/O and CPU pressure. 2. Restart the ad-service pods after rollback to clear the bloated log buffer and recover heap memory. 3. In a follow-up PR, restore log4j2.xml to use log_level=INFO for the production profile and add a CI lint/gate that rejects production build artifacts with root log level set to DEBUG. 4. Verify p99 latency and error rate return to baseline before closing the incident.",
+  "red_herring": null
+}

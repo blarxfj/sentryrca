@@ -1,0 +1,79 @@
+{
+  "id": "real-006",
+  "subset": "real_derived",
+  "category": "config_error",
+  "affected_service": "email-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: email-service delivery failure rate >95% for 30+ minutes. DNS resolution failures detected for MX records. Multiple services reporting connectivity timeouts to migrated infrastructure endpoints.",
+  "log_window": "2022-01-15T09:00:12Z [INFO] email-service starting planned maintenance migration window\n2022-01-15T09:00:15Z [INFO] email-service current config: smtp_host=mail.enom-legacy.internal, dns_resolver=10.0.1.53\n2022-01-15T09:02:33Z [INFO] infrastructure: initiating cutover to cloud-east-2 region\n2022-01-15T09:02:45Z [INFO] email-service DNS resolver update triggered: 10.0.1.53 -> 10.128.0.10\n2022-01-15T09:03:01Z [WARN] email-service failed to resolve MX record for outbound domain: NXDOMAIN (attempt 1/3)\n2022-01-15T09:03:04Z [WARN] email-service failed to resolve MX record for outbound domain: NXDOMAIN (attempt 2/3)\n2022-01-15T09:03:07Z [ERROR] email-service MX lookup failed after 3 retries: dns_resolver=10.128.0.10 domain=enom.com\n2022-01-15T09:03:08Z [ERROR] email-service SMTP connection failed: smtp_host=mail.enom-legacy.internal connection refused\n2022-01-15T09:03:10Z [ERROR] email-service delivery failed: msg_id=eml-20220115-000421 recipient=user@example.com error=smtp_connect_timeout\n2022-01-15T09:03:12Z [ERROR] email-service delivery failed: msg_id=eml-20220115-000422 recipient=admin@domain.org error=smtp_connect_timeout\n2022-01-15T09:03:15Z [WARN] email-service queue depth rising: queued=142 failed=31 rate_last_60s=0.12 deliveries/s\n2022-01-15T09:05:22Z [ERROR] email-service DNS resolution error: no such host mail.enom-cloud.internal (resolver=10.128.0.10)\n2022-01-15T09:05:25Z [ERROR] email-service SMTP relay unreachable: host=mail.enom-cloud.internal port=587\n2022-01-15T09:06:01Z [ERROR] frontend HTTP 503: upstream email-service /api/v1/send returned connection refused\n2022-01-15T09:06:10Z [ERROR] email-service replication lag detected: primary=db-cloud-east-2 replica=db-legacy lag=47382ms\n2022-01-15T09:06:14Z [WARN] postgres replication slot lag exceeding threshold: slot=email_service_slot lag_bytes=1847392018\n2022-01-15T09:07:30Z [ERROR] email-service queue depth critical: queued=891 failed=203 rate_last_60s=0.0 deliveries/s\n2022-01-15T09:08:00Z [ERROR] email-service dns_resolver=10.128.0.10 returned SERVFAIL for enom.com MX query\n2022-01-15T09:08:03Z [ERROR] email-service dns_resolver=10.128.0.10 returned SERVFAIL for tucowsdomains.com MX query\n2022-01-15T09:08:45Z [CRITICAL] email-service delivery_success_rate=0.02 threshold=0.95 ALERT TRIGGERED\n2022-01-15T09:09:12Z [ERROR] email-service smtp_host config unresolvable: mail.enom-cloud.internal - DNS entry missing in new zone\n2022-01-15T09:10:00Z [INFO] ops team investigating: reviewing DNS zone files for cloud-east-2\n2022-01-15T09:11:15Z [ERROR] email-service outbound relay pool exhausted: all 8 relay hosts unreachable\n2022-01-15T09:11:30Z [ERROR] redis connection timeout: host=redis-cloud-east-2.internal:6379 timeout=5000ms\n2022-01-15T09:11:33Z [ERROR] email-service session cache unavailable: redis_host=redis-cloud-east-2.internal\n2022-01-15T09:12:00Z [ERROR] email-service queue depth: queued=1842 failed=1102 pending=312\n2022-01-15T09:13:45Z [WARN] ops: DNS zone file for cloud-east-2 missing A records for mail relay hosts\n2022-01-15T09:14:01Z [ERROR] email-service SMTP AUTH failed: smtp_host=10.128.44.22 (manual IP fallback) error=535 Auth credentials invalid\n2022-01-15T09:14:20Z [WARN] email-service attempting fallback to legacy SMTP: smtp_host=mail.enom-legacy.internal\n2022-01-15T09:14:22Z [ERROR] email-service legacy SMTP unreachable: legacy network routes removed during cutover\n2022-01-15T09:15:00Z [ERROR] email-service ALL delivery paths exhausted: queued=2341\n2022-01-15T09:16:33Z [INFO] ops: attempting to restore DNS zone records for mail hosts in cloud-east-2\n2022-01-15T09:18:10Z [INFO] ops: DNS zone update applied - propagation in progress\n2022-01-15T09:18:45Z [WARN] email-service DNS probe: mail.enom-cloud.internal still NXDOMAIN (propagation delay)\n2022-01-15T09:22:00Z [INFO] email-service DNS probe: mail.enom-cloud.internal resolved to 10.128.44.22 SUCCESS\n2022-01-15T09:22:05Z [WARN] email-service SMTP AUTH still failing on new host: credentials not migrated\n2022-01-15T09:24:00Z [ERROR] email-service SMTP relay 10.128.44.22 rejecting connections: firewall rule missing port 587 inbound\n2022-01-15T09:25:30Z [INFO] ops: opening firewall rule cloud-east-2 sg-0a9f3d ingress tcp/587\n2022-01-15T09:27:01Z [INFO] email-service SMTP connection established to mail.enom-cloud.internal:587\n2022-01-15T09:27:04Z [WARN] email-service SMTP AUTH failed: username=emailrelay@enom.com error=invalid credentials\n2022-01-15T09:28:30Z [INFO] ops: rotating SMTP relay credentials and updating email-service config\n2022-01-15T09:30:00Z [ERROR] postgres replication still lagging: lag=38291ms primary=db-cloud-east-2\n2022-01-15T09:31:15Z [INFO] email-service config hot-reload: smtp_host=mail.enom-cloud.internal smtp_user=emailrelay-new@enom.com\n2022-01-15T09:31:22Z [INFO] email-service SMTP AUTH SUCCESS: mail.enom-cloud.internal:587\n2022-01-15T09:31:30Z [INFO] email-service resuming queue drain: queued=2341 delivering...\n2022-01-15T09:31:45Z [INFO] email-service delivery_success_rate=0.78 recovering\n2022-01-15T09:33:00Z [INFO] email-service delivery_success_rate=0.94 queue_depth=1201\n2022-01-15T09:35:00Z [INFO] email-service delivery_success_rate=0.99 queue_depth=380\n2022-01-15T09:37:20Z [INFO] postgres replication lag resolved: lag=120ms\n2022-01-15T09:40:00Z [INFO] email-service fully recovered: delivery_success_rate=1.0 queue_depth=0\n2022-01-15T09:40:05Z [INFO] email-service migration window COMPLETE for email routing path",
+  "recent_deploys": [
+    {
+      "sha": "a1f3e92",
+      "timestamp": "2022-01-14T18:00:00Z",
+      "author": "maya.chen",
+      "message": "Pre-migration: update email-service config templates for cloud-east-2 infrastructure",
+      "changed_files": [
+        "config/email-service/smtp_config.yaml",
+        "config/email-service/dns_resolvers.yaml",
+        "deploy/cloud-east-2/email-service.tf"
+      ]
+    },
+    {
+      "sha": "b7c2d44",
+      "timestamp": "2022-01-14T19:30:00Z",
+      "author": "raj.patel",
+      "message": "Add cloud-east-2 network routing rules for internal services",
+      "changed_files": [
+        "infra/network/routing_tables.tf",
+        "infra/network/security_groups.tf",
+        "infra/network/vpc_peering.tf"
+      ]
+    },
+    {
+      "sha": "c9e5f18",
+      "timestamp": "2022-01-14T21:00:00Z",
+      "author": "sarah.kowalski",
+      "message": "Migrate postgres primary to cloud-east-2 with streaming replication setup",
+      "changed_files": [
+        "infra/postgres/primary.tf",
+        "infra/postgres/replication_slots.yaml",
+        "config/postgres/pg_hba.conf"
+      ]
+    },
+    {
+      "sha": "d4a8301",
+      "timestamp": "2022-01-15T07:45:00Z",
+      "author": "maya.chen",
+      "message": "Update DNS resolver endpoints for cloud-east-2 migration cutover",
+      "changed_files": [
+        "config/dns/resolvers.yaml",
+        "config/email-service/dns_resolvers.yaml",
+        "infra/dns/zone_files/cloud-east-2.yaml"
+      ]
+    },
+    {
+      "sha": "e2b7c55",
+      "timestamp": "2022-01-15T08:30:00Z",
+      "author": "raj.patel",
+      "message": "Cutover: switch email-service smtp_host to cloud-east-2 mail relay",
+      "changed_files": [
+        "config/email-service/smtp_config.yaml",
+        "k8s/email-service/deployment.yaml",
+        "k8s/email-service/configmap.yaml"
+      ]
+    },
+    {
+      "sha": "f0d1e77",
+      "timestamp": "2022-01-15T08:55:00Z",
+      "author": "sarah.kowalski",
+      "message": "Remove legacy network routes after cloud-east-2 cutover confirmed",
+      "changed_files": [
+        "infra/network/routing_tables.tf",
+        "infra/network/legacy_routes.tf"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "The cloud-east-2 DNS zone file (deployed in sha d4a8301) was missing A records for the new mail relay hosts (mail.enom-cloud.internal), causing NXDOMAIN failures for all MX and SMTP hostname lookups. Compounded by sha e2b7c55 updating smtp_host to mail.enom-cloud.internal before DNS propagation was verified, and sha f0d1e77 removing legacy network routes simultaneously, all email delivery paths became unavailable. Additionally, the SMTP relay credentials and security group ingress rule for port 587 were not provisioned in cloud-east-2 prior to cutover.",
+  "ground_truth_remediation": "1. Immediately add missing A records for mail.enom-cloud.internal to the cloud-east-2 DNS zone and allow propagation (~5 min). 2. Open security group ingress rule for TCP/587 on the new mail relay host (sg-0a9f3d). 3. Provision and configure new SMTP relay credentials in cloud-east-2 and hot-reload the email-service configmap with updated smtp_user and password. 4. Verify SMTP AUTH success and monitor delivery success rate recovery. 5. Drain the accumulated queue and confirm replication lag resolves.",
+  "red_herring": null
+}

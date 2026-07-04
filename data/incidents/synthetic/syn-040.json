@@ -1,0 +1,86 @@
+{
+  "id": "syn-040",
+  "subset": "synthetic",
+  "category": "config_error",
+  "affected_service": "payment-service",
+  "severity": "high",
+  "alert_text": "ALERT: payment-service circuit breaker is OPEN — 100% of payment requests failing for >5 minutes. Error rate: 100%. P99 latency: N/A (requests rejected immediately). Threshold: errorRateThreshold=0.001 (configured), expected=0.5.",
+  "log_window": "2026-05-05T05:48:12.003Z [payment-service] INFO  Starting payment-service v2.14.3 (sha=781c571cc008)\n2026-05-05T05:48:12.104Z [payment-service] INFO  Loading Helm-injected configuration from /etc/payment/config.yaml\n2026-05-05T05:48:12.211Z [payment-service] INFO  Config loaded: db.host=postgres-payment:5432 db.pool=20 grpc.port=8080\n2026-05-05T05:48:12.315Z [payment-service] INFO  Config loaded: circuitBreaker.errorRateThreshold=0.001 circuitBreaker.volumeThreshold=5 circuitBreaker.sleepWindowMs=5000\n2026-05-05T05:48:12.317Z [payment-service] WARN  circuitBreaker.errorRateThreshold=0.001 is unusually low (expected range 0.1-1.0); proceeding with configured value\n2026-05-05T05:48:12.450Z [payment-service] INFO  Connected to postgres-payment:5432 successfully\n2026-05-05T05:48:12.551Z [payment-service] INFO  gRPC server listening on :8080\n2026-05-05T05:48:12.553Z [payment-service] INFO  Circuit breaker initialized: state=CLOSED threshold=0.001 volume=5\n2026-05-05T05:48:14.102Z [payment-service] INFO  Health check OK - payment-service ready\n2026-05-05T05:48:20.441Z [payment-service] INFO  event=payment_request trace_id=3a1f92b amount=49.99 currency=USD\n2026-05-05T05:48:20.512Z [fraud-service] INFO  level=info msg=fraud_check_passed trace_id=3a1f92b risk_score=0.12\n2026-05-05T05:48:20.601Z [payment-service] INFO  event=payment_request trace_id=3a1f92b status=submitted upstream=stripe-gateway\n2026-05-05T05:48:20.988Z [payment-service] ERROR event=upstream_error trace_id=3a1f92b upstream=stripe-gateway code=503 message=upstream_connect_error_or_disconnect\n2026-05-05T05:48:21.003Z [payment-service] WARN  circuit breaker recording failure: errorCount=1 totalCount=1 errorRate=1.000 threshold=0.001\n2026-05-05T05:48:21.004Z [payment-service] WARN  circuit breaker volume threshold check: totalCount=1 >= volumeThreshold=5? NO - accumulating\n2026-05-05T05:48:22.115Z [payment-service] INFO  event=payment_request trace_id=9c3d01e amount=120.00 currency=EUR\n2026-05-05T05:48:22.201Z [fraud-service] INFO  level=info msg=fraud_check_passed trace_id=9c3d01e risk_score=0.08\n2026-05-05T05:48:22.287Z [payment-service] INFO  event=payment_request trace_id=9c3d01e status=submitted upstream=stripe-gateway\n2026-05-05T05:48:22.491Z [payment-service] INFO  event=upstream_response trace_id=9c3d01e status=success\n2026-05-05T05:48:22.492Z [payment-service] INFO  circuit breaker recording success: errorCount=1 totalCount=2 errorRate=0.500\n2026-05-05T05:48:22.493Z [payment-service] WARN  errorRate=0.500 exceeds threshold=0.001 - evaluating trip condition, totalCount=2 < volumeThreshold=5\n2026-05-05T05:48:25.771Z [payment-service] INFO  event=payment_request trace_id=b7e204f amount=200.00 currency=USD\n2026-05-05T05:48:25.855Z [fraud-service] INFO  level=info msg=fraud_check_passed trace_id=b7e204f risk_score=0.05\n2026-05-05T05:48:25.940Z [payment-service] INFO  event=payment_request trace_id=b7e204f status=submitted upstream=stripe-gateway\n2026-05-05T05:48:26.201Z [payment-service] INFO  event=upstream_response trace_id=b7e204f status=success\n2026-05-05T05:48:26.202Z [payment-service] INFO  circuit breaker: errorCount=1 totalCount=3 errorRate=0.333 threshold=0.001\n2026-05-05T05:48:26.203Z [payment-service] WARN  errorRate=0.333 exceeds threshold=0.001 - totalCount=3 < volumeThreshold=5, not tripping yet\n2026-05-05T05:48:29.012Z [payment-service] INFO  event=payment_request trace_id=0af193c amount=75.50 currency=GBP\n2026-05-05T05:48:29.099Z [fraud-service] INFO  level=info msg=fraud_check_passed trace_id=0af193c risk_score=0.19\n2026-05-05T05:48:29.185Z [payment-service] INFO  event=payment_request trace_id=0af193c status=submitted upstream=stripe-gateway\n2026-05-05T05:48:29.420Z [payment-service] INFO  event=upstream_response trace_id=0af193c status=success\n2026-05-05T05:48:29.421Z [payment-service] INFO  circuit breaker: errorCount=1 totalCount=4 errorRate=0.250 threshold=0.001\n2026-05-05T05:48:29.422Z [payment-service] WARN  errorRate=0.250 exceeds threshold=0.001 - totalCount=4 < volumeThreshold=5, not tripping yet\n2026-05-05T05:48:31.881Z [payment-service] INFO  event=payment_request trace_id=cc8f50d amount=310.00 currency=USD\n2026-05-05T05:48:31.960Z [fraud-service] INFO  level=info msg=fraud_check_passed trace_id=cc8f50d risk_score=0.11\n2026-05-05T05:48:32.044Z [payment-service] INFO  event=payment_request trace_id=cc8f50d status=submitted upstream=stripe-gateway\n2026-05-05T05:48:32.301Z [payment-service] INFO  event=upstream_response trace_id=cc8f50d status=success\n2026-05-05T05:48:32.302Z [payment-service] INFO  circuit breaker: errorCount=1 totalCount=5 errorRate=0.200 threshold=0.001\n2026-05-05T05:48:32.303Z [payment-service] WARN  volumeThreshold reached: totalCount=5 >= 5\n2026-05-05T05:48:32.304Z [payment-service] ERROR circuit breaker TRIPPED: errorRate=0.200 > threshold=0.001 - transitioning CLOSED -> OPEN\n2026-05-05T05:48:32.305Z [payment-service] FATAL circuit breaker is now OPEN - all payment requests will be rejected immediately\n2026-05-05T05:48:32.401Z [payment-service] ERROR event=payment_rejected trace_id=next_req reason=circuit_breaker_open state=OPEN\n2026-05-05T05:48:33.102Z [checkout-service] ERROR level=error msg=payment_grpc_call_failed error=circuit_breaker_open trace_id=next_req status=503\n2026-05-05T05:48:33.200Z [checkout-service] WARN  retrying payment call (attempt 1/3) trace_id=next_req\n2026-05-05T05:48:33.810Z [payment-service] ERROR event=payment_rejected trace_id=next_req reason=circuit_breaker_open state=OPEN\n2026-05-05T05:48:34.011Z [checkout-service] WARN  retrying payment call (attempt 2/3) trace_id=next_req\n2026-05-05T05:48:34.620Z [payment-service] ERROR event=payment_rejected trace_id=next_req reason=circuit_breaker_open state=OPEN\n2026-05-05T05:48:34.621Z [checkout-service] ERROR payment call permanently failed after 3 retries trace_id=next_req - returning 500 to user\n2026-05-05T05:48:35.001Z [payment-service] ERROR event=payment_rejected trace_id=a1b2c3d reason=circuit_breaker_open state=OPEN\n2026-05-05T05:48:35.100Z [checkout-service] ERROR level=error msg=payment_grpc_call_failed error=circuit_breaker_open trace_id=a1b2c3d status=503\n2026-05-05T05:48:38.445Z [payment-service] INFO  circuit breaker sleep window check: elapsed=6141ms >= sleepWindowMs=5000 - entering HALF_OPEN\n2026-05-05T05:48:38.501Z [payment-service] INFO  event=payment_request trace_id=d9e405a status=submitted upstream=stripe-gateway state=HALF_OPEN\n2026-05-05T05:48:38.799Z [payment-service] INFO  event=upstream_response trace_id=d9e405a status=success\n2026-05-05T05:48:38.800Z [payment-service] INFO  circuit breaker probe succeeded - resetting counters: errorCount=0 totalCount=1 errorRate=0.000\n2026-05-05T05:48:39.001Z [payment-service] INFO  event=payment_request trace_id=e0f506b status=submitted upstream=stripe-gateway state=HALF_OPEN\n2026-05-05T05:48:39.220Z [payment-service] ERROR event=upstream_error trace_id=e0f506b code=500\n2026-05-05T05:48:39.221Z [payment-service] WARN  circuit breaker: errorCount=1 totalCount=2 errorRate=0.500 threshold=0.001 - re-evaluating\n2026-05-05T05:48:39.222Z [payment-service] ERROR circuit breaker RE-TRIPPED in HALF_OPEN: errorRate=0.500 > threshold=0.001 - transitioning HALF_OPEN -> OPEN\n2026-05-05T05:48:39.223Z [payment-service] FATAL circuit breaker is OPEN again - all requests rejected\n2026-05-05T05:48:40.111Z [checkout-service] ERROR level=error msg=payment_service_unavailable consecutive_failures=8\n2026-05-05T05:48:40.112Z [checkout-service] WARN  checkout degraded mode activated - cart saves disabled\n2026-05-05T05:48:45.001Z [payment-service] ERROR event=payment_rejected reason=circuit_breaker_open state=OPEN rejected_count=42\n2026-05-05T05:48:55.002Z [payment-service] ERROR event=payment_rejected reason=circuit_breaker_open state=OPEN rejected_count=89\n2026-05-05T05:49:05.003Z [payment-service] ERROR event=payment_rejected reason=circuit_breaker_open state=OPEN rejected_count=137\n2026-05-05T05:49:15.004Z [payment-service] ERROR event=payment_rejected reason=circuit_breaker_open state=OPEN rejected_count=184\n2026-05-05T05:49:25.005Z [payment-service] ERROR event=payment_rejected reason=circuit_breaker_open state=OPEN rejected_count=231\n2026-05-05T05:49:35.006Z [payment-service] ERROR event=payment_rejected reason=circuit_breaker_open state=OPEN rejected_count=278\n2026-05-05T05:49:45.007Z [payment-service] ERROR event=payment_rejected reason=circuit_breaker_open state=OPEN rejected_count=325\n2026-05-05T05:50:00.111Z [fraud-service] INFO  level=info msg=health_check_ok uptime=108s\n2026-05-05T05:50:12.009Z [payment-service] ERROR event=payment_rejected reason=circuit_breaker_open state=OPEN rejected_count=412\n2026-05-05T05:50:12.010Z [payment-service] WARN  circuit breaker has been OPEN for 99708ms - sleepWindowMs=5000 but HALF_OPEN probe re-trips immediately due to misconfigured threshold\n2026-05-05T05:51:00.500Z [checkout-service] ERROR level=error msg=payment_unavailable error_rate_1m=1.00 alert=true\n2026-05-05T05:51:00.600Z [payment-service] ERROR event=payment_rejected reason=circuit_breaker_open state=OPEN rejected_count=501\n2026-05-05T05:52:00.700Z [payment-service] ERROR event=payment_rejected reason=circuit_breaker_open state=OPEN rejected_count=623\n2026-05-05T05:53:01.800Z [payment-service] ERROR event=payment_rejected reason=circuit_breaker_open state=OPEN rejected_count=749\n2026-05-05T05:53:02.100Z [payment-service] WARN  Helm config dump: circuitBreaker.errorRateThreshold=0.001 circuitBreaker.volumeThreshold=5 circuitBreaker.sleepWindowMs=5000 - expected errorRateThreshold=0.50\n2026-05-05T05:54:01.900Z [payment-service] ERROR event=payment_rejected reason=circuit_breaker_open state=OPEN rejected_count=875\n2026-05-05T05:55:00.001Z [payment-service] ERROR event=payment_rejected reason=circuit_breaker_open state=OPEN rejected_count=1001\n2026-05-05T05:55:00.002Z [payment-service] FATAL circuit breaker stuck OPEN: 1001 requests rejected since 2026-05-05T05:48:32Z - manual intervention required\n  at com.otel.payment.CircuitBreaker.rejectRequest(CircuitBreaker.java:214)\n  at com.otel.payment.PaymentHandler.handle(PaymentHandler.java:88)\n2026-05-05T05:56:00.003Z [payment-service] ERROR event=payment_rejected reason=circuit_breaker_open state=OPEN rejected_count=1127\n2026-05-05T05:57:00.004Z [payment-service] ERROR event=payment_rejected reason=circuit_breaker_open state=OPEN rejected_count=1253\n2026-05-05T05:58:00.005Z [payment-service] ERROR event=payment_rejected reason=circuit_breaker_open state=OPEN rejected_count=1379",
+  "recent_deploys": [
+    {
+      "sha": "53f46ae9eb45",
+      "timestamp": "2026-04-22T13:56:23Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 6 updates (#3295)",
+      "changed_files": [
+        "src/payment-service/payment-service.csproj",
+        "src/payment-service/packages.lock.json"
+      ]
+    },
+    {
+      "sha": "d8fd7bba8052",
+      "timestamp": "2026-04-23T08:11:22Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 1 update (#3300)",
+      "changed_files": [
+        "src/payment-service/payment-service.csproj"
+      ]
+    },
+    {
+      "sha": "51f1a6bba4e8",
+      "timestamp": "2026-04-24T06:02:13Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Remove tag from the docker logging used via docker compose (#3304)",
+      "changed_files": [
+        "docker-compose.yml",
+        "docker-compose.override.yml"
+      ]
+    },
+    {
+      "sha": "81528af3e3be",
+      "timestamp": "2026-04-28T14:09:01Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump idna_adapter (#3320)",
+      "changed_files": [
+        "src/fraud-service/requirements.txt",
+        "src/fraud-service/poetry.lock"
+      ]
+    },
+    {
+      "sha": "bade4db5c2e0",
+      "timestamp": "2026-04-28T14:14:11Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/checkout-service/package.json",
+        "src/checkout-service/package-lock.json",
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "2b9113d98e20",
+      "timestamp": "2026-04-30T06:51:57Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] execute dependabot every Tuesday 3:00am+ (#3330)",
+      "changed_files": [
+        ".github/dependabot.yml",
+        "helm/payment-service/values.yaml",
+        "helm/payment-service/values.production.yaml"
+      ]
+    },
+    {
+      "sha": "781c571cc008",
+      "timestamp": "2026-05-05T05:40:16Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump bytestring (#3345)",
+      "changed_files": [
+        "src/fraud-service/stack.yaml",
+        "src/fraud-service/fraud-service.cabal"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Commit 2b9113d98e20 modified helm/payment-service/values.production.yaml and accidentally set circuitBreaker.errorRateThreshold to 0.001 (0.1%) instead of the correct value of 0.50 (50%). This extremely low threshold causes the circuit breaker to trip after just one transient upstream error once the volumeThreshold of 5 requests is reached. Because 0.001 is far below any realistic steady-state error rate, every HALF_OPEN recovery probe that encounters a single failure immediately re-trips the breaker, making automatic recovery impossible and resulting in 100% of payment requests being rejected.",
+  "ground_truth_remediation": "1. Edit helm/payment-service/values.production.yaml and restore circuitBreaker.errorRateThreshold from 0.001 to 0.50. 2. Apply the corrected Helm values: helm upgrade payment-service ./helm/payment-service -f helm/payment-service/values.production.yaml. 3. Perform a rolling restart: kubectl rollout restart deployment/payment-service. 4. Verify in pod logs that circuit breaker initializes with threshold=0.50 and confirm payment requests succeed end-to-end. 5. Add a Helm values validation policy (OPA/Conftest) asserting circuitBreaker.errorRateThreshold >= 0.05 to prevent recurrence.",
+  "red_herring": null
+}

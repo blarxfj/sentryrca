@@ -1,0 +1,86 @@
+{
+  "id": "syn-032",
+  "subset": "synthetic",
+  "category": "config_error",
+  "affected_service": "payment-service",
+  "severity": "critical",
+  "alert_text": "CRITICAL: payment-service is DOWN — all payment processing requests failing with TLS handshake errors; 0% success rate over last 5 minutes (threshold: >1% for alert)",
+  "log_window": "2026-05-07T07:08:01.112Z [vault-agent] INFO  secrets_rotation: starting scheduled rotation for service=payment-service\n2026-05-07T07:08:03.441Z [vault-agent] INFO  secrets_rotation: writing new cert to /vault/secrets/payment/tls/client.crt\n2026-05-07T07:08:03.449Z [vault-agent] INFO  secrets_rotation: writing new key to /vault/secrets/payment/tls/client.key\n2026-05-07T07:08:03.457Z [vault-agent] INFO  secrets_rotation: writing new CA bundle to /vault/secrets/payment/tls/ca-bundle.crt\n2026-05-07T07:08:03.812Z [vault-agent] INFO  secrets_rotation: rotation complete for service=payment-service\n2026-05-07T07:08:04.001Z [payment-service] INFO  config_watcher: detected secrets rotation signal, reloading TLS config\n2026-05-07T07:08:04.018Z [payment-service] INFO  config_loader: loading TLS configuration from environment\n2026-05-07T07:08:04.021Z [payment-service] DEBUG config_loader: MTLS_CLIENT_CERT_PATH=/run/secrets/payment-tls/client.crt\n2026-05-07T07:08:04.022Z [payment-service] DEBUG config_loader: MTLS_CLIENT_KEY_PATH=/run/secrets/payment-tls/client.key\n2026-05-07T07:08:04.023Z [payment-service] DEBUG config_loader: MTLS_CA_BUNDLE_PATH=/run/secrets/payment-tls/ca-bundle.crt\n2026-05-07T07:08:04.031Z [payment-service] WARN  tls_manager: cert file not found at path=/run/secrets/payment-tls/client.crt\n2026-05-07T07:08:04.032Z [payment-service] WARN  tls_manager: key file not found at path=/run/secrets/payment-tls/client.key\n2026-05-07T07:08:04.033Z [payment-service] WARN  tls_manager: CA bundle not found at path=/run/secrets/payment-tls/ca-bundle.crt\n2026-05-07T07:08:04.041Z [payment-service] ERROR tls_manager: failed to reload mTLS credentials: no such file or directory\n2026-05-07T07:08:04.042Z [payment-service] ERROR tls_manager: expected vault-agent to write to /run/secrets/payment-tls/ but actual write path is /vault/secrets/payment/tls/\n2026-05-07T07:08:04.044Z [payment-service] WARN  tls_manager: falling back to previous in-memory TLS config (may be expired)\n2026-05-07T07:08:05.101Z [payment-service] INFO  http_server: POST /v1/payments/charge request_id=req-9a1f2c latency_ms=12\n2026-05-07T07:08:05.203Z [payment-gateway-client] ERROR mtls_handshake: certificate verify failed: certificate has expired or is not yet valid peer=payment-processor.internal:8443\n2026-05-07T07:08:05.204Z [payment-service] ERROR handler: charge request failed request_id=req-9a1f2c error=\"mTLS handshake failure\" status=502\n2026-05-07T07:08:06.312Z [payment-service] INFO  http_server: POST /v1/payments/charge request_id=req-9b3d4e latency_ms=11\n2026-05-07T07:08:06.401Z [payment-gateway-client] ERROR mtls_handshake: certificate verify failed: certificate has expired or is not yet valid peer=payment-processor.internal:8443\n2026-05-07T07:08:06.402Z [payment-service] ERROR handler: charge request failed request_id=req-9b3d4e error=\"mTLS handshake failure\" status=502\n2026-05-07T07:08:08.551Z [payment-service] INFO  http_server: POST /v1/payments/charge request_id=req-9c7f1a latency_ms=10\n2026-05-07T07:08:08.612Z [payment-gateway-client] ERROR mtls_handshake: certificate verify failed: certificate has expired or is not yet valid peer=payment-processor.internal:8443\n2026-05-07T07:08:08.613Z [payment-service] ERROR handler: charge request failed request_id=req-9c7f1a error=\"mTLS handshake failure\" status=502\n2026-05-07T07:08:10.002Z [payment-service] WARN  tls_manager: mTLS reload retry #1 — cert path mismatch persists\n2026-05-07T07:08:10.003Z [payment-service] ERROR tls_manager: stat /run/secrets/payment-tls/client.crt: no such file or directory\n  at tls.(*Config).loadCertificate(config.go:214)\n  at tls.(*Manager).Reload(manager.go:87)\n2026-05-07T07:08:12.881Z [fraud-detection-service] INFO  grpc_server: RPC CheckTransaction request_id=txn-0044 status=OK latency_ms=8\n2026-05-07T07:08:14.002Z [payment-service] WARN  tls_manager: mTLS reload retry #2 — cert path mismatch persists\n2026-05-07T07:08:14.004Z [payment-service] ERROR tls_manager: stat /run/secrets/payment-tls/client.crt: no such file or directory\n  at tls.(*Config).loadCertificate(config.go:214)\n  at tls.(*Manager).Reload(manager.go:87)\n2026-05-07T07:08:15.200Z [payment-service] INFO  http_server: POST /v1/payments/charge request_id=req-9e2b5c latency_ms=13\n2026-05-07T07:08:15.301Z [payment-gateway-client] ERROR mtls_handshake: certificate verify failed: certificate has expired or is not yet valid peer=payment-processor.internal:8443\n2026-05-07T07:08:15.302Z [payment-service] ERROR handler: charge request failed request_id=req-9e2b5c error=\"mTLS handshake failure\" status=502\n2026-05-07T07:08:17.101Z [alertmanager] INFO  alert fired: payment-service mTLS failure rate=100% window=1m\n2026-05-07T07:08:18.002Z [payment-service] WARN  tls_manager: mTLS reload retry #3 — cert path mismatch persists\n2026-05-07T07:08:18.004Z [payment-service] ERROR tls_manager: stat /run/secrets/payment-tls/client.crt: no such file or directory\n2026-05-07T07:08:19.551Z [fraud-detection-service] INFO  grpc_server: RPC CheckTransaction request_id=txn-0051 status=OK latency_ms=7\n2026-05-07T07:08:20.440Z [payment-service] INFO  http_server: POST /v1/payments/charge request_id=req-9f8d3b latency_ms=11\n2026-05-07T07:08:20.531Z [payment-gateway-client] ERROR mtls_handshake: certificate verify failed: certificate has expired or is not yet valid peer=payment-processor.internal:8443\n2026-05-07T07:08:20.532Z [payment-service] ERROR handler: charge request failed request_id=req-9f8d3b error=\"mTLS handshake failure\" status=502\n2026-05-07T07:08:22.002Z [payment-service] WARN  tls_manager: exhausted reload retries (max=3), staying on expired in-memory certs\n2026-05-07T07:08:22.003Z [payment-service] ERROR tls_manager: all retry attempts failed; mTLS will continue failing until config is corrected\n2026-05-07T07:08:25.881Z [payment-service] INFO  http_server: POST /v1/payments/charge request_id=req-a01c9d latency_ms=12\n2026-05-07T07:08:25.962Z [payment-gateway-client] ERROR mtls_handshake: certificate verify failed: certificate has expired or is not yet valid peer=payment-processor.internal:8443\n2026-05-07T07:08:25.963Z [payment-service] ERROR handler: charge request failed request_id=req-a01c9d error=\"mTLS handshake failure\" status=502\n2026-05-07T07:09:01.002Z [payment-service] INFO  metrics: error_rate=1.000 success_rate=0.000 window=60s\n2026-05-07T07:09:01.003Z [payment-service] FATAL tls_manager: mTLS certificate path misconfiguration unresolved — MTLS_CLIENT_CERT_PATH=/run/secrets/payment-tls/client.crt does not exist on filesystem\n2026-05-07T07:09:05.441Z [vault-agent] INFO  status: vault-agent healthy, secrets written to /vault/secrets/payment/tls/ (correct path)\n2026-05-07T07:09:12.001Z [payment-service] INFO  http_server: POST /v1/payments/charge request_id=req-a12e8f latency_ms=10\n2026-05-07T07:09:12.091Z [payment-gateway-client] ERROR mtls_handshake: certificate verify failed: certificate has expired or is not yet valid peer=payment-processor.internal:8443\n2026-05-07T07:09:12.092Z [payment-service] ERROR handler: charge request failed request_id=req-a12e8f error=\"mTLS handshake failure\" status=502\n2026-05-07T07:10:01.002Z [payment-service] INFO  metrics: error_rate=1.000 success_rate=0.000 window=60s\n2026-05-07T07:11:01.002Z [payment-service] INFO  metrics: error_rate=1.000 success_rate=0.000 window=60s\n2026-05-07T07:11:14.881Z [fraud-detection-service] INFO  grpc_server: RPC CheckTransaction request_id=txn-0082 status=OK latency_ms=9\n2026-05-07T07:12:01.002Z [payment-service] INFO  metrics: error_rate=1.000 success_rate=0.000 window=60s\n2026-05-07T07:12:01.003Z [payment-service] ERROR health_check: /healthz degraded — mTLS subsystem reporting unhealthy\n2026-05-07T07:13:01.002Z [payment-service] INFO  metrics: error_rate=1.000 success_rate=0.000 window=60s\n2026-05-07T07:14:01.002Z [payment-service] INFO  metrics: error_rate=1.000 success_rate=0.000 window=60s\n2026-05-07T07:15:01.002Z [payment-service] INFO  metrics: error_rate=1.000 success_rate=0.000 window=60s\n2026-05-07T07:15:09.441Z [vault-agent] INFO  status: vault-agent healthy, secrets written to /vault/secrets/payment/tls/ (correct path)\n2026-05-07T07:16:01.002Z [payment-service] INFO  metrics: error_rate=1.000 success_rate=0.000 window=60s\n2026-05-07T07:16:33.112Z [payment-service] ERROR tls_manager: periodic check — cert path still misconfigured MTLS_CLIENT_CERT_PATH=/run/secrets/payment-tls/client.crt expected=/vault/secrets/payment/tls/client.crt\n2026-05-07T07:17:01.002Z [payment-service] INFO  metrics: error_rate=1.000 success_rate=0.000 window=60s\n2026-05-07T07:18:01.002Z [payment-service] INFO  metrics: error_rate=1.000 success_rate=0.000 window=60s",
+  "recent_deploys": [
+    {
+      "sha": "0982a0268aec",
+      "timestamp": "2026-04-16T14:12:23Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump eslint-config-next (#3270)",
+      "changed_files": [
+        "package.json",
+        "package-lock.json"
+      ]
+    },
+    {
+      "sha": "d8fd7bba8052",
+      "timestamp": "2026-04-23T08:11:22Z",
+      "author": "dependabot[bot]",
+      "message": "Bump the nuget-production-dependencies group with 1 update (#3300)",
+      "changed_files": [
+        "payment-service/payment-service.csproj",
+        "payment-service/packages.lock.json"
+      ]
+    },
+    {
+      "sha": "310357e9b0b4",
+      "timestamp": "2026-04-28T02:25:29Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the cargo-production-dependencies group across 1 directory wit",
+      "changed_files": [
+        "payment-service/Cargo.toml",
+        "payment-service/Cargo.lock"
+      ]
+    },
+    {
+      "sha": "0e6ca5152176",
+      "timestamp": "2026-04-30T03:12:04Z",
+      "author": "Roman Dmytrenko",
+      "message": "fix(frontend): handle corrupted session data in localStorage (#3313)",
+      "changed_files": [
+        "frontend/src/utils/session.ts",
+        "frontend/src/hooks/useSession.ts",
+        "frontend/tests/session.test.ts"
+      ]
+    },
+    {
+      "sha": "2b9113d98e20",
+      "timestamp": "2026-04-30T06:51:57Z",
+      "author": "Piotr Kiełkowicz",
+      "message": "[chore] execute dependabot every Tuesday 3:00am+ (#3330)",
+      "changed_files": [
+        ".github/dependabot.yml"
+      ]
+    },
+    {
+      "sha": "997d9970c437",
+      "timestamp": "2026-05-05T08:45:37Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the go-production-dependencies group across 2 directories with",
+      "changed_files": [
+        "payment-service/go.mod",
+        "payment-service/go.sum",
+        "payment-service/internal/tls/manager.go"
+      ]
+    },
+    {
+      "sha": "52a8a76cf862",
+      "timestamp": "2026-05-07T07:06:44Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the mix-production-dependencies group across 1 directory with ",
+      "changed_files": [
+        "deploy/vault/payment-service-vault-agent.hcl",
+        "deploy/k8s/payment-service/deployment.yaml",
+        "deploy/k8s/payment-service/secrets-env-configmap.yaml"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy 52a8a76cf862 (2026-05-07T07:06:44Z) modified deploy/vault/payment-service-vault-agent.hcl and deploy/k8s/payment-service/secrets-env-configmap.yaml during a secrets rotation update. The vault-agent HCL was correctly updated to write rotated certs to /vault/secrets/payment/tls/, but the Kubernetes ConfigMap that sets the MTLS_CLIENT_CERT_PATH, MTLS_CLIENT_KEY_PATH, and MTLS_CA_BUNDLE_PATH environment variables was not updated to match — it still references the old mount path /run/secrets/payment-tls/. As a result, after secrets rotation triggered a TLS config reload at 07:08:04Z, payment-service could not find the cert files at the stale path and fell back to expired in-memory certificates, causing 100% mTLS handshake failures against payment-processor.internal:8443.",
+  "ground_truth_remediation": "1. Edit deploy/k8s/payment-service/secrets-env-configmap.yaml (introduced in commit 52a8a76cf862) and update the three env vars to the correct vault-agent write path: MTLS_CLIENT_CERT_PATH=/vault/secrets/payment/tls/client.crt, MTLS_CLIENT_KEY_PATH=/vault/secrets/payment/tls/client.key, MTLS_CA_BUNDLE_PATH=/vault/secrets/payment/tls/ca-bundle.crt. 2. Apply the corrected ConfigMap with `kubectl apply -f deploy/k8s/payment-service/secrets-env-configmap.yaml`. 3. Perform a rolling restart of the payment-service deployment (`kubectl rollout restart deployment/payment-service`) so pods pick up the new env vars. 4. Verify payment-service logs show successful TLS reload and confirm charge requests return 200 OK.",
+  "red_herring": null
+}

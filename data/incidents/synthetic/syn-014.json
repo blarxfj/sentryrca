@@ -1,0 +1,91 @@
+{
+  "id": "syn-014",
+  "subset": "synthetic",
+  "category": "deploy_regression",
+  "affected_service": "recommendation-service",
+  "severity": "high",
+  "alert_text": "ALERT: recommendation-service error rate exceeded 15% threshold (current: 34.7%) — P99 latency 4200ms, up from baseline 180ms. Triggered at 2026-05-16T12:38:00Z.",
+  "log_window": "2026-05-16T12:04:12.101Z [recommendation-service] INFO  Deploy initiated sha=49a7631b1ddb version=2.11.0\n2026-05-16T12:04:18.340Z [recommendation-service] INFO  Model server started model=collab-filter-v3 device=cpu threads=4\n2026-05-16T12:04:19.002Z [recommendation-service] INFO  Feature store connection established host=feature-store.internal:6380\n2026-05-16T12:04:19.450Z [recommendation-service] INFO  HTTP server listening on :8080\n2026-05-16T12:04:21.003Z [recommendation-service] DEBUG request_id=req-0001 user_id=u-10023 action=fetch_recommendations\n2026-05-16T12:04:21.110Z [feature-store] INFO  key=user:u-10023:features hit=true latency_ms=2\n2026-05-16T12:04:21.115Z [recommendation-service] DEBUG feature_vector_size=128 dtype=float32 user_id=u-10023\n2026-05-16T12:04:21.190Z [recommendation-service] INFO  recommendations_returned=10 user_id=u-10023 latency_ms=89\n2026-05-16T12:04:23.201Z [recommendation-service] DEBUG request_id=req-0002 user_id=u-20047 action=fetch_recommendations\n2026-05-16T12:04:23.310Z [feature-store] INFO  key=user:u-20047:features hit=true latency_ms=3\n2026-05-16T12:04:23.320Z [recommendation-service] DEBUG feature_vector_size=128 dtype=float32 user_id=u-20047\n2026-05-16T12:04:23.401Z [recommendation-service] INFO  recommendations_returned=10 user_id=u-20047 latency_ms=101\n2026-05-16T12:05:00.001Z [recommendation-service] INFO  health_check status=ok uptime_s=41\n2026-05-16T12:08:44.002Z [recommendation-service] DEBUG request_id=req-0091 user_id=u-33301 action=fetch_recommendations\n2026-05-16T12:08:44.100Z [feature-store] INFO  key=user:u-33301:features hit=true latency_ms=2\n2026-05-16T12:08:44.105Z [recommendation-service] DEBUG feature_vector_size=128 dtype=float32 user_id=u-33301\n2026-05-16T12:08:44.180Z [recommendation-service] INFO  recommendations_returned=10 user_id=u-33301 latency_ms=78\n2026-05-16T12:10:00.003Z [recommendation-service] INFO  health_check status=ok uptime_s=341\n2026-05-16T12:14:07.500Z [recommendation-service] INFO  Deploy initiated sha=23dc47f86f5b version=2.11.1\n2026-05-16T12:14:13.880Z [recommendation-service] INFO  Model server reloading model=collab-filter-v3 device=cpu threads=4\n2026-05-16T12:14:14.200Z [recommendation-service] INFO  Applying feature serialization patch: switching dtype encoding to bfloat16 compact format\n2026-05-16T12:14:14.900Z [recommendation-service] INFO  HTTP server listening on :8080\n2026-05-16T12:14:16.001Z [recommendation-service] DEBUG request_id=req-0201 user_id=u-10023 action=fetch_recommendations\n2026-05-16T12:14:16.110Z [feature-store] INFO  key=user:u-10023:features hit=true latency_ms=2\n2026-05-16T12:14:16.190Z [recommendation-service] WARN  feature_deserialization: unexpected byte length expected=512 actual=256 user_id=u-10023\n2026-05-16T12:14:16.210Z [recommendation-service] WARN  falling back to zero-padded vector user_id=u-10023\n2026-05-16T12:14:16.290Z [recommendation-service] INFO  recommendations_returned=10 user_id=u-10023 latency_ms=94\n2026-05-16T12:14:18.003Z [recommendation-service] DEBUG request_id=req-0202 user_id=u-20047 action=fetch_recommendations\n2026-05-16T12:14:18.100Z [feature-store] INFO  key=user:u-20047:features hit=true latency_ms=2\n2026-05-16T12:14:18.180Z [recommendation-service] WARN  feature_deserialization: unexpected byte length expected=512 actual=256 user_id=u-20047\n2026-05-16T12:14:18.200Z [recommendation-service] WARN  falling back to zero-padded vector user_id=u-20047\n2026-05-16T12:14:18.270Z [recommendation-service] INFO  recommendations_returned=10 user_id=u-20047 latency_ms=88\n2026-05-16T12:15:00.004Z [recommendation-service] INFO  health_check status=ok uptime_s=46\n2026-05-16T12:18:30.201Z [recommendation-service] DEBUG request_id=req-0350 user_id=u-55012 action=fetch_recommendations\n2026-05-16T12:18:30.310Z [feature-store] INFO  key=user:u-55012:features hit=false latency_ms=1\n2026-05-16T12:18:30.320Z [recommendation-service] WARN  feature cache miss falling back to model inference user_id=u-55012\n2026-05-16T12:18:30.400Z [recommendation-service] ERROR feature_vector decode failed: bfloat16 header mismatch, got magic=0x4600 expected=0x4200 user_id=u-55012\n2026-05-16T12:18:30.401Z [recommendation-service] ERROR   at FeatureSerializer.decode (serializer.go:214)\n2026-05-16T12:18:30.402Z [recommendation-service] ERROR   at RecommendationHandler.Handle (handler.go:88)\n2026-05-16T12:18:30.403Z [recommendation-service] ERROR returning HTTP 500 to client request_id=req-0350\n2026-05-16T12:19:10.100Z [recommendation-service] ERROR feature_vector decode failed: bfloat16 header mismatch, got magic=0x4600 expected=0x4200 user_id=u-60034\n2026-05-16T12:19:10.101Z [recommendation-service] ERROR   at FeatureSerializer.decode (serializer.go:214)\n2026-05-16T12:19:10.102Z [recommendation-service] ERROR   at RecommendationHandler.Handle (handler.go:88)\n2026-05-16T12:19:10.103Z [recommendation-service] ERROR returning HTTP 500 to client request_id=req-0351\n2026-05-16T12:20:00.005Z [recommendation-service] WARN  health_check status=degraded error_rate_1m=0.12\n2026-05-16T12:20:45.001Z [recommendation-service] ERROR feature_vector decode failed: bfloat16 header mismatch, got magic=0x4600 expected=0x4200 user_id=u-71200\n2026-05-16T12:20:45.002Z [recommendation-service] ERROR   at FeatureSerializer.decode (serializer.go:214)\n2026-05-16T12:20:45.003Z [recommendation-service] ERROR   at RecommendationHandler.Handle (handler.go:88)\n2026-05-16T12:20:45.004Z [recommendation-service] ERROR returning HTTP 500 to client request_id=req-0380\n2026-05-16T12:21:03.500Z [feature-store] WARN  eviction_rate=0.03 memory_used_pct=71 — within normal operating range\n2026-05-16T12:21:30.002Z [recommendation-service] ERROR feature_vector decode failed: bfloat16 header mismatch, got magic=0x4600 expected=0x4200 user_id=u-80005\n2026-05-16T12:21:30.003Z [recommendation-service] ERROR returning HTTP 500 to client request_id=req-0401\n2026-05-16T12:22:00.006Z [recommendation-service] WARN  health_check status=degraded error_rate_1m=0.21\n2026-05-16T12:23:15.100Z [model-inference-svc] INFO  {\"level\":\"info\",\"ts\":\"2026-05-16T12:23:15.100Z\",\"msg\":\"inference request received\",\"user_id\":\"u-90012\",\"model\":\"collab-filter-v3\"}\n2026-05-16T12:23:15.200Z [model-inference-svc] ERROR {\"level\":\"error\",\"ts\":\"2026-05-16T12:23:15.200Z\",\"msg\":\"input tensor shape mismatch\",\"expected\":[1,128],\"actual\":[1,64],\"user_id\":\"u-90012\"}\n2026-05-16T12:23:15.201Z [recommendation-service] ERROR feature_vector tensor shape invalid after decode expected_dims=128 actual_dims=64 user_id=u-90012\n2026-05-16T12:23:15.202Z [recommendation-service] ERROR returning HTTP 500 to client request_id=req-0430\n2026-05-16T12:24:00.007Z [recommendation-service] WARN  health_check status=degraded error_rate_1m=0.29\n2026-05-16T12:25:11.001Z [recommendation-service] ERROR feature_vector decode failed: bfloat16 header mismatch, got magic=0x4600 expected=0x4200 user_id=u-11200\n2026-05-16T12:25:11.002Z [recommendation-service] ERROR returning HTTP 500 to client request_id=req-0478\n2026-05-16T12:26:00.008Z [recommendation-service] WARN  health_check status=degraded error_rate_1m=0.31\n2026-05-16T12:27:44.400Z [model-inference-svc] ERROR {\"level\":\"error\",\"ts\":\"2026-05-16T12:27:44.400Z\",\"msg\":\"input tensor shape mismatch\",\"expected\":[1,128],\"actual\":[1,64],\"user_id\":\"u-22100\"}\n2026-05-16T12:27:44.401Z [recommendation-service] ERROR feature_vector tensor shape invalid after decode expected_dims=128 actual_dims=64 user_id=u-22100\n2026-05-16T12:27:44.402Z [recommendation-service] ERROR returning HTTP 500 to client request_id=req-0512\n2026-05-16T12:28:00.009Z [recommendation-service] WARN  health_check status=degraded error_rate_1m=0.33\n2026-05-16T12:29:02.101Z [recommendation-service] ERROR feature_vector decode failed: bfloat16 header mismatch, got magic=0x4600 expected=0x4200 user_id=u-31500\n2026-05-16T12:29:02.102Z [recommendation-service] ERROR returning HTTP 500 to client request_id=req-0544\n2026-05-16T12:30:00.010Z [recommendation-service] FATAL health_check status=critical error_rate_1m=0.347 p99_latency_ms=4200\n2026-05-16T12:30:00.011Z [recommendation-service] FATAL circuit breaker OPEN — halting downstream calls to model-inference-svc\n2026-05-16T12:30:05.500Z [model-inference-svc] WARN  {\"level\":\"warn\",\"ts\":\"2026-05-16T12:30:05.500Z\",\"msg\":\"upstream stopped sending requests, circuit breaker likely open\"}\n2026-05-16T12:31:00.001Z [feature-store] INFO  key_count=4821002 memory_used_pct=72 eviction_rate=0.02 — healthy\n2026-05-16T12:32:10.300Z [recommendation-service] ERROR feature_vector decode failed: bfloat16 header mismatch, got magic=0x4600 expected=0x4200 user_id=u-44200\n2026-05-16T12:32:10.301Z [recommendation-service] ERROR returning HTTP 500 to client request_id=req-0601\n2026-05-16T12:33:00.012Z [recommendation-service] FATAL health_check status=critical error_rate_1m=0.347 p99_latency_ms=4200\n2026-05-16T12:34:45.700Z [recommendation-service] INFO  oncall notified via PagerDuty incident=INC-20482\n2026-05-16T12:36:02.001Z [recommendation-service] DEBUG engineer initiated log dump sha=23dc47f86f5b\n2026-05-16T12:36:03.100Z [recommendation-service] INFO  confirming: feature serialization introduced in sha=23dc47f86f5b changed FeatureSerializer dtype from float32 to bfloat16 compact format\n2026-05-16T12:36:03.200Z [recommendation-service] INFO  feature-store blobs still encoded as float32 (512 bytes); new decoder expects bfloat16 (256 bytes) — format mismatch confirmed\n2026-05-16T12:38:00.001Z [recommendation-service] FATAL ALERT FIRED: error_rate=34.7% p99_latency_ms=4200 threshold_error_rate=15%",
+  "recent_deploys": [
+    {
+      "sha": "c789fc89a688",
+      "timestamp": "2026-04-21T11:57:50Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps-dev): bump the npm-development-dependencies group across 1 directory ",
+      "changed_files": [
+        "package-lock.json",
+        "package.json"
+      ]
+    },
+    {
+      "sha": "60d18e40e88c",
+      "timestamp": "2026-04-23T08:23:08Z",
+      "author": "Juliano Costa",
+      "message": "[frontend] fix: handle undefined product images across multiple components (#329",
+      "changed_files": [
+        "src/frontend/components/ProductCard.tsx",
+        "src/frontend/components/ProductGallery.tsx",
+        "src/frontend/components/CartItem.tsx"
+      ]
+    },
+    {
+      "sha": "396eaec92110",
+      "timestamp": "2026-04-25T09:36:57Z",
+      "author": "Patrice Chalin",
+      "message": "Enable lychee cache for local checks too (#3315)",
+      "changed_files": [
+        ".lychee.toml",
+        ".github/workflows/links.yml"
+      ]
+    },
+    {
+      "sha": "bade4db5c2e0",
+      "timestamp": "2026-04-28T14:14:11Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/recommendation-service/package.json",
+        "src/recommendation-service/package-lock.json",
+        "src/frontend/package.json",
+        "src/frontend/package-lock.json"
+      ]
+    },
+    {
+      "sha": "5acdff618e47",
+      "timestamp": "2026-05-05T08:11:45Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Add Podman support (#3307)",
+      "changed_files": [
+        "docker-compose.yml",
+        "Makefile",
+        "docs/podman-setup.md"
+      ]
+    },
+    {
+      "sha": "23dc47f86f5b",
+      "timestamp": "2026-05-06T00:04:45Z",
+      "author": "dependabot[bot]",
+      "message": "chore(deps): bump the npm-production-dependencies group across 2 directories wit",
+      "changed_files": [
+        "src/recommendation-service/serializer.go",
+        "src/recommendation-service/handler.go",
+        "src/recommendation-service/model_client.go",
+        "src/recommendation-service/config.yaml"
+      ]
+    },
+    {
+      "sha": "49a7631b1ddb",
+      "timestamp": "2026-05-16T12:04:07Z",
+      "author": "Dónal O'Sullivan",
+      "message": "Profiling with firepit (#3333)",
+      "changed_files": [
+        "src/recommendation-service/profiling/firepit_config.yaml",
+        "docs/profiling.md",
+        "Makefile"
+      ]
+    }
+  ],
+  "ground_truth_root_cause": "Deploy sha=23dc47f86f5b introduced a breaking change in src/recommendation-service/serializer.go that switched the FeatureSerializer dtype encoding from float32 (512 bytes per vector) to a bfloat16 compact format (256 bytes). The feature-store continued to serve blobs encoded in the original float32 format. When the new decoder in serializer.go:214 attempts to parse these blobs, it encounters a magic byte mismatch (got 0x4600, expected 0x4200) and either raises an error or produces truncated 64-dimension tensors instead of the expected 128-dimension tensors. This causes HTTP 500s on every request that reaches the deserialization path, driving the error rate to 34.7% and P99 latency to 4200ms.",
+  "ground_truth_remediation": "Immediately roll back recommendation-service to sha=49a7631b1ddb (reverting sha=23dc47f86f5b by re-deploying the prior image tag), which restores the float32 serializer and resolves the format mismatch with existing feature-store blobs. Confirm error rate returns below 1% within 5 minutes post-rollback. Longer-term: if bfloat16 encoding is desired, coordinate a migration that back-fills the feature-store with re-encoded blobs before deploying the new serializer, and add a format version header to the feature blob schema to prevent future silent mismatches.",
+  "red_herring": null
+}
