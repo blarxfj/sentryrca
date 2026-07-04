@@ -51,6 +51,7 @@ services:
       CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
     volumes:
       - clickhouse_data:/var/lib/clickhouse
+      - ./docker/clickhouse/config.d:/etc/clickhouse-server/config.d:ro
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8123/ping || exit 1"]
       interval: 5s
@@ -93,9 +94,8 @@ services:
   # ─── Langfuse v3 (single image, web + worker split by command) ────────────
 
   langfuse-web:
-    image: langfuse/langfuse:3
+    image: langfuse/langfuse:3.167.4
     container_name: langfuse-web
-    command: web
     depends_on:
       langfuse-postgres:
         condition: service_healthy
@@ -106,10 +106,10 @@ services:
       minio:
         condition: service_healthy
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       DATABASE_URL: postgresql://${LANGFUSE_DB_USER:-langfuse}:${LANGFUSE_DB_PASSWORD:-langfuse}@langfuse-postgres:5432/${LANGFUSE_DB_NAME:-langfuse}
-      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3001}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?NEXTAUTH_SECRET is required}
       SALT: ${LANGFUSE_SALT:?LANGFUSE_SALT is required}
       ENCRYPTION_KEY: ${LANGFUSE_ENCRYPTION_KEY:?LANGFUSE_ENCRYPTION_KEY is required}
@@ -131,6 +131,7 @@ services:
       LANGFUSE_INIT_PROJECT_NAME: ${LANGFUSE_INIT_PROJECT_NAME:-sentryrca}
       LANGFUSE_INIT_USER_EMAIL: ${LANGFUSE_INIT_USER_EMAIL:?LANGFUSE_INIT_USER_EMAIL is required}
       LANGFUSE_INIT_USER_PASSWORD: ${LANGFUSE_INIT_USER_PASSWORD:?LANGFUSE_INIT_USER_PASSWORD is required}
+      DD_TRACE_ENABLED: "false"
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/public/health || exit 1"]
       interval: 10s
@@ -139,9 +140,8 @@ services:
     restart: unless-stopped
 
   langfuse-worker:
-    image: langfuse/langfuse:3
+    image: langfuse/langfuse-worker:3.167.4
     container_name: langfuse-worker
-    command: worker
     depends_on:
       langfuse-postgres:
         condition: service_healthy
@@ -167,8 +167,35 @@ services:
       LANGFUSE_S3_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-minioadmin}
       LANGFUSE_S3_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-minioadmin}
       LANGFUSE_S3_BUCKET_EVENTS: ${LANGFUSE_S3_BUCKET_EVENTS:-langfuse-events}
+      LANGFUSE_S3_EVENT_UPLOAD_BUCKET: ${LANGFUSE_S3_BUCKET_EVENTS:-langfuse-events}
+      DD_TRACE_ENABLED: "false"
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3030/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  # ─── SentryRCA API ────────────────────────────────────────────────────────
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sentryrca-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-sentryrca}:${POSTGRES_PASSWORD:-sentryrca}@postgres:5432/${POSTGRES_DB:-sentryrca}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?ANTHROPIC_API_KEY is required}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\""]
       interval: 10s
       timeout: 5s
       retries: 10
